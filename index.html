@@ -1852,7 +1852,7 @@ document.querySelectorAll('.lore-ref:not(.lore-ref-broken)').forEach(function(re
 (function(){
   var body = document.body;
   var buttons = document.querySelectorAll('[data-set-lang]');
-  var landSound = new Audio('land.wav');
+  var landSound = new Audio('off.ogg');
   landSound.preload = 'auto';
 
   var TITLES = { ru: 'ULTRAKILL — КНИГА ЛОРА', en: 'ULTRAKILL — LOREBOOK' };
@@ -1911,7 +1911,7 @@ document.querySelectorAll('.lore-ref:not(.lore-ref-broken)').forEach(function(re
    OFF SOUND — plays when clicking a link / lore reference
    ============================================================ */
 (function(){
-  var offSound = new Audio('off.ogg');
+  var offSound = new Audio('land.wav');
   offSound.preload = 'auto';
 
   function playOff(){
