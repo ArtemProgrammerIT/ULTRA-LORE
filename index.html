@@ -140,17 +140,6 @@ body.vhs-active .obj-tag{
   animation:vhs-text .6s steps(6) 1;
 }
 
-/* old line-glitch kept for compatibility (unused on lang switch now) */
-@keyframes line-glitch{
-  0%{transform:translate(0);opacity:1;filter:none}
-  15%{transform:translate(-3px,1px);opacity:.7;filter:hue-rotate(90deg)}
-  30%{transform:translate(3px,-1px);opacity:1;filter:none}
-  45%{transform:translate(-1px,2px);opacity:.8;filter:contrast(1.3)}
-  60%{transform:translate(2px,-2px);opacity:1;filter:none}
-  75%{transform:translate(-2px,-1px);opacity:.9;filter:hue-rotate(-60deg)}
-  100%{transform:translate(0);opacity:1;filter:none}
-}
-
 /* ============================================================
    LANGUAGE VISIBILITY
    ============================================================ */
@@ -176,6 +165,9 @@ body[data-lang="en"] .lang-en.inline{display:inline}
   letter-spacing:.16em;color:#fff;white-space:nowrap;
 }
 .brand span{color:var(--red);font-weight:400}
+.brand .brand-main{color:#fff;font-weight:700}
+.brand .brand-slash{color:var(--red);font-weight:400}
+.brand-sub-hidden{opacity:0;transition:opacity .45s ease}
 .topbar-actions{display:flex;align-items:center;gap:1.5rem}
 .topbar nav{display:flex;gap:1.2rem}
 .topbar nav a{
@@ -184,6 +176,19 @@ body[data-lang="en"] .lang-en.inline{display:inline}
   white-space:nowrap;
 }
 .topbar nav a:hover{color:var(--red-bright)}
+
+/* music toggle */
+.music-toggle{
+  font-family:'Share Tech Mono',monospace;font-size:.7rem;
+  letter-spacing:.08em;padding:.3rem .6rem;
+  background:transparent;border:1px solid var(--border);
+  color:var(--text-dim);cursor:pointer;transition:.2s;
+  white-space:nowrap;
+}
+.music-toggle.active{
+  background:var(--red);border-color:var(--red-bright);color:#fff;
+}
+.music-toggle:hover:not(.active){color:#fff}
 
 .lang-switch{
   display:flex;gap:.3rem;background:rgba(0,0,0,.4);
@@ -280,11 +285,24 @@ body[data-lang="en"] .lang-en.inline{display:inline}
   clear:right;
 }
 .lore-body h3:first-child{margin-top:0}
-.lore-body em{color:var(--gold);font-style:normal}
+
+/* plain emphasis → red, links stay gold, broken links → red + no underline */
+.lore-body em{color:var(--red-bright);font-style:normal;text-decoration:none;border-bottom:none}
 .lore-body strong{color:var(--red-bright);font-weight:400;letter-spacing:.03em}
 
+em.lore-ref{
+  color:var(--gold);font-style:normal;cursor:pointer;
+  border-bottom:1px dashed rgba(217,168,56,.5);
+  transition:color .2s,border-color .2s;
+}
+em.lore-ref:hover{color:#f0c050;border-bottom-color:var(--gold)}
+em.lore-ref.lore-ref-broken{
+  color:var(--red-bright);cursor:default;pointer-events:none;
+  border-bottom:none;text-decoration:none;
+}
+
 /* ============================================================
-   FLOATING LORE CARD (replaces old desc-block)
+   FLOATING LORE CARD
    ============================================================ */
 .lore-card{
   float:right;
@@ -345,16 +363,6 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     clear:none;
   }
 }
-
-/* ============================================================
-   CLICKABLE LORE REFERENCE
-   ============================================================ */
-.lore-ref{
-  color:var(--gold);font-style:normal;cursor:pointer;
-  border-bottom:1px dashed rgba(217,168,56,.5);
-  transition:color .2s,border-color .2s;
-}
-.lore-ref:hover{color:#f0c050;border-bottom-color:var(--gold)}
 
 /* ============================================================
    VS GRID
@@ -527,12 +535,13 @@ body[data-lang="en"] .lang-en.inline{display:inline}
      TOPBAR
      ============================================================ -->
 <header class="topbar">
-  <div class="brand">ULTRAKILL<span> // </span><span id="brand-sub">КНИГА ЛОРА</span></div>
+  <div class="brand"><span class="brand-main" id="brand-main"></span><span id="brand-sub" class="brand-sub-hidden">КНИГА ЛОРА</span></div>
   <div class="topbar-actions">
     <nav>
       <a href="#lore" id="nav-lore">Лор</a>
       <a href="#bestiary" id="nav-bestiary">Бестиарий</a>
     </nav>
+    <button class="music-toggle" id="music-toggle" aria-label="Toggle music">♪ OFF</button>
     <div class="lang-switch" role="group" aria-label="Language">
       <button data-set-lang="ru" class="active">RU</button>
       <button data-set-lang="en">EN</button>
@@ -559,7 +568,7 @@ body[data-lang="en"] .lang-en.inline{display:inline}
 </section>
 
 <!-- ============================================================
-     CHRONOLOGY — links now point to specific text anchors
+     CHRONOLOGY
      ============================================================ -->
 <section class="chronology" id="chronology">
   <div class="chrono-header" onclick="toggleChrono()">
@@ -752,8 +761,8 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     <p class="lang-ru">Первые десятилетия повторяли окопную войну прошлого: линии обороны, пулемёты, газ, атаки волнами. Прорыв измерялся метрами, человеческая жизнь — килограммами металла. Ни одна из держав не могла сломать фронт, и обе стороны, отчаявшись, начали искать выход в инженерии. Ответ нашла Российская империя: она первой вывела на фронт <em class="lore-ref" data-ref="gutterman">Guttermen</em> — одну из первых удачных машин, работающих на человеческой крови.</p>
     <p class="lang-en">The first decades mirrored the trench wars of the past: defensive lines, machine guns, gas, attacks in waves. Advances were measured in meters, human lives in kilograms of steel. Neither power could break the front, and both, in desperation, turned to engineering. The Russian Empire found the answer: it was the first to field <em class="lore-ref" data-ref="gutterman">Guttermen</em> — among the first successful machines to run on human blood.</p>
 
-    <p class="lang-ru">Получившие имя в честь сточных жёлобов Guttermen были не танками, а живыми могилами: исследователи ещё не умели консервировать кровь внутри машины, поэтому внутрь корпуса ставили живой источник топлива — человека на минимальном жизнеобеспечении — и заваривали броню наглухо. Официально это называли «добровольцами-патриотами»; на деле внутрь отправляли дезертиров, измотанных солдат и пленных. Их страдания не остались незамеченными: силы «из далеко за пределами этого мира» приметили жестокость людей и позже использовали её как образец при создании <em class="lore-ref" data-ref="mannequin">Mannequins</em>. Сброшенные с воздуха на вражеские окопы, Guttermen методично зачищали их метр за метром: солдаты выбирали между тем, чтобы быть перемолотыми машиной, или выскочить из траншеи под пулемёты. Так была закончена «человеческая» фаза войны.</p>
-    <p class="lang-en">Named for the gutters, Guttermen were not tanks but walking tombs: researchers had not yet learned to keep blood fresh inside a machine, so a living fuel source — a human kept alive by minimal life support — was strapped inside, and the armor was welded shut. Publicly they were called "volunteer patriots"; in truth, most were deserters, battle-fatigued returnees or prisoners of war. Their suffering did not go unnoticed: forces from far beyond took note of the cruelty man was capable of, and it later served as the inspiration for the creation of <em class="lore-ref" data-ref="mannequin">Mannequins</em>. Airdropped into enemy trenches, Guttermen cleared them meter by meter: soldiers had to choose between being minced by the machine or climbing out into machine-gun fire. Thus ended the "human" phase of the war.</p>
+    <p class="lang-ru">Получившие имя в честь сточных жёлобов Guttermen были не танками, а живыми могилами: исследователи ещё не умели консервировать кровь внутри машины, поэтому внутрь корпуса ставили живой источник топлива — человека на минимальном жизнеобеспечении — и заваривали броню наглухо. Официально это называли «добровольцами-патриотами»; на деле внутрь отправляли дезертиров, измотанных солдат и пленных. Их страдания не остались незамеченными: силы из-за пределов этого мира приметили жестокость людей и позже использовали её как образец при создании <em class="lore-ref" data-ref="mannequin">Mannequins</em>. Сброшенные с воздуха на вражеские окопы, Guttermen методично зачищали их метр за метром: солдаты выбирали между тем, чтобы быть перемолотыми машиной, или выскочить из траншеи под пулемёты. Так была закончена «человеческая» фаза войны.</p>
+    <p class="lang-en">Named for the gutters, Guttermen were not tanks but walking tombs: researchers had not yet learned to keep blood fresh inside a machine, so a living fuel source — a human kept alive by minimal life support — was strapped inside, and the armor was welded shut. Publicly they were called "volunteer patriots"; in truth, most were deserters, battle-fatigued returnees or prisoners of war. Their suffering did not go unnoticed: forces from beyond took note of the cruelty man was capable of, and it later served as the inspiration for the creation of <em class="lore-ref" data-ref="mannequin">Mannequins</em>. Airdropped into enemy trenches, Guttermen cleared them meter by meter: soldiers had to choose between being minced by the machine or climbing out into machine-gun fire. Thus ended the "human" phase of the war.</p>
 
     <!-- LORE CARD: Guttermen & Guttertank -->
     <div class="lore-card">
@@ -765,7 +774,7 @@ body[data-lang="en"] .lang-en.inline{display:inline}
       </div>
     </div>
 
-    <p id="chrono-02" class="lang-ru">Германская империя ответила встречной разработкой — <em class="lore-ref" data-ref="guttertank">Guttertank</em>, построенным на базе Guttermen ради экономии времени: тяжёлые руки и высокоэффективные боеприпасы, способные крушить броню. Так началась вторая эра войны — эра, когда машины сражались против машин. Каждая новая модель проектировалась как контрмера предыдущей, конструкции входили и выходили из строя лихорадочным темпом, но ни одна не приближала конец конфликта — лишь продлевала его. На кириллические маркировки на плече Guttermen немецкие заводы отвечали германскими клеймами на левом манипуляторе Guttertank.</p>
+    <p id="chrono-02" class="lang-ru">Германская империя ответила встречной разработкой — <em class="lore-ref" data-ref="guttertank">Guttertank</em>, построенный на базе Guttermen ради экономии времени: тяжёлые руки и высокоэффективные боеприпасы, способные крушить броню. Так началась вторая эра войны — эра, когда машины сражались против машин. Каждая новая модель проектировалась как контрмера предыдущей, конструкции входили и выходили из строя лихорадочным темпом, но ни одна не приближала конец конфликта — лишь продлевала его. На кириллические маркировки на плече Guttermen немецкие заводы отвечали германскими клеймами на левом манипуляторе Guttertank.</p>
     <p class="lang-en">The German Empire answered with a counter-design — the <em class="lore-ref" data-ref="guttertank">Guttertank</em>, built on Guttermen foundations to save time: heavy arms and highly efficient ordnance capable of crushing thick armor. Thus began the second era of the war — the era of machines fighting machines. Every new model was designed as a countermeasure to the previous one, designs were phased in and out at a feverish pace, and none brought the conflict closer to its end — each merely prolonged it. The Cyrillic markings on the Guttermen's shoulders were answered with German stamps on the Guttertank's left arm.</p>
 
     <p class="lang-ru">Человек на поле боя стал анахронизмом. Сначала солдаты праздновали возвращение домой — а потом обнаружили, что дома их никто не ждал: все ресурсы уходили на военные машины, гражданское население нищало, и тыл сам превратился в поле боя — «войну всех против всех». В терминальных архивах той эпохи сохранилась рифма, ставшая приговором целому веку: <em>«Завоевание ведёт к войне — война ведёт к голоду — голод ведёт к…»</em> Последнее слово стёрлось неслучайно.</p>
@@ -785,7 +794,7 @@ body[data-lang="en"] .lang-en.inline{display:inline}
       </div>
     </div>
 
-    <p class="lang-ru">Колоссальные размеры требовали колоссального питания: Earthmover нуждался одновременно в крови и в солнечной энергии. Генератор щита делал его неуязвимым для орудий других Earthmover — паритет гарантировал взаимное уничтожение, но не победу. Единственной уязвимостью оставалась внутренняя: «меньшие, более подвижные машины» могли проникнуть внутрь и добраться до ядра. Именно такой машиной был задуман <em class="lore-ref" data-ref="v1">V1</em> — истребитель титанов; в 7-4, когда Earthmover замечает V1, он прерывает дуэль с дальним собратом и разворачивает всё оружие на крошечную цель: программа узнала того, кто был создан её убить.</p>
+    <p class="lang-ru">Колоссальные размеры требовали колоссального питания: Earthmover нуждался одновременно в крови и в солнечной энергии. Генератор щита делал его неуязвимым для орудий других Earthmover — паритет гарантировал взаимное уничтожение, но не победу. Единственной уязвимостью оставалась внутренняя: «меньшие, более подвижные машины» могли проникнуть внутрь и добраться до ядра. Именно такой машиной был задуман <em class="lore-ref" data-ref="v1">V1</em> — истребитель титанов; в 7-4, когда Earthmover замечает V1, он прерывает дуэль с дальним собратом и разворачивает всё оружие на крошечную цель: программа узнала того, кто был создан, чтобы её убить.</p>
     <p class="lang-en">Colossal size demanded colossal sustenance: an Earthmover required both blood and solar energy. Its shield generator rendered it untouchable by the guns of other Earthmovers — parity guaranteed mutual destruction, but never victory. The only vulnerability was internal: "smaller, more mobile machines" could slip inside and reach the core. That machine was conceived as <em class="lore-ref" data-ref="v1">V1</em> — a titan-killer; in 7-4, when an Earthmover notices V1, it breaks off its duel with a distant counterpart and turns every gun on the tiny target: its program recognized the thing built to kill it.</p>
 
     <p class="lang-ru">Когда поверхность Земли стала непригодной для любой жизни, уцелевшие гражданские были вынуждены эвакуироваться и выстраивать города на спинах Earthmover. Последнее столетие войны — от его середины до конца — человечество прожило на спинах этих машин, в страхе перед выстрелом такой же машины на горизонте. Earthmover из чудовища постепенно превратился в ковчег: платформы, жилые кварталы, системы жизнеобеспечения, оборонительные комплексы, которые позже, в 7-4, V1 придётся уничтожать по частям — от летающих турелей до головного мозга машины.</p>
@@ -801,14 +810,21 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     <p class="lang-ru">Для очистки отравленной атмосферы создали <em class="lore-ref" data-ref="streetcleaner">Streetcleaners</em> — шагающих машин с огнемётами, сжигавших сажу и падаль в руинах городов. Они справлялись со своей задачей настолько успешно, что их признали устаревшими ещё до конца эпохи восстановления. Но у машин этого мира есть странная черта: их функции прорастают в характер. У Streetcleaner осталась «тяга к чистоте» — и после падения человечества они стали сжигать любую органику, какую встречали, пытаясь очистить мир окончательно. Истреблять грязь они продолжают и сейчас — просто грязью теперь они считают всё живое.</p>
     <p class="lang-en">To purge the poisoned atmosphere, <em class="lore-ref" data-ref="streetcleaner">Streetcleaners</em> were built — walking machines with flamethrowers that burned soot and carrion in the ruins of cities. They proved so effective at the task that they were declared obsolete before the restoration era even ended. But the machines of this world carry a strange flaw: their functions grow into character. The Streetcleaners kept their "urge to clean" — and after the fall of mankind they began burning any organic matter they came across, trying to purify the world for good. They still do — it is just that now they consider all living things to be filth.</p>
 
-    <p class="lang-ru">Мирные машины множились. <em class="lore-ref" data-ref="drone">Дроны</em> патрулировали объекты, выполняли роль камер и по природе своей любопытны — эта черта позже сыграет свою роль, когда они начнут использовать адскую энергию как боеприпасы. <em class="lore-ref" data-ref="sentinel">Sentries</em> служили двуногими снайперами. А <em class="lore-ref" data-ref="swordsmachine">Swordsmachine</em> родилась не с конвейера, а из хаоса: по одним данным, это старый грузовой агрегат, который сам собрал себя из металлолома, выковал собственный меч с мотором, разогревающим клинок до режущей температура, и создал вокруг себя целый культ подражателей — машины по всей преисподней копируют её форму, хотя копии всегда грубее оригинала. Это одна из немногих машин, сохранивших голосовой синтезатор: остальные посчитали его роскошью в мире, где каждый грамм ресурсов важнее слова.</p>
-    <p class="lang-en">Peaceful machines multiplied. <em class="lore-ref" data-ref="drone">Drones</em> patrolled installations, served as living cameras, and are curious by nature — a trait that would later matter when they began wielding Hell energy as ammunition. <em class="lore-ref" data-ref="sentinel">Sentries</em> served as bipedal snipers. And the <em class="lore-ref" data-ref="swordsmachine">Swordsmachine</em> was not born on any assembly line but out of chaos: by some accounts it began as a humble scrap-hauler that rebuilt itself from salvaged parts, forged its own motorized sword that heats the blade to a cutting edge, and spawned an entire cult of imitators — machines across Hell copy its form, though every copy is cruder than the original. It is one of the few machines that retained a voice synthesizer: the rest deemed it a luxury in a world where every gram of resource outweighed a word.</p>
+    <p class="lang-ru">Мирные машины множились. <em class="lore-ref" data-ref="drone">Дроны</em> патрулировали объекты, выполняли роль камер и по природе своей любопытны — эта черта позже сыграет свою роль, когда они начнут использовать адскую энергию как боеприпасы. <em class="lore-ref" data-ref="sentry">Sentries</em> служили двуногими снайперами. А <em class="lore-ref" data-ref="swordsmachine">Swordsmachine</em> родилась не с конвейера, а из хаоса: по одним данным, это старый грузовой агрегат, который сам собрал себя из металлолома, выковал собственный меч с мотором, разогревающим клинок до режущей температуры, и создал вокруг себя целый культ подражателей — машины по всей преисподней копируют её форму, хотя копии всегда грубее оригинала. Это одна из немногих машин, сохранивших голосовой синтезатор: остальные посчитали его роскошью в мире, где каждый грамм ресурсов важнее слова.</p>
+    <p class="lang-en">Peaceful machines multiplied. <em class="lore-ref" data-ref="drone">Drones</em> patrolled installations, served as living cameras, and are curious by nature — a trait that would later matter when they began wielding Hell energy as ammunition. <em class="lore-ref" data-ref="sentry">Sentries</em> served as bipedal snipers. And the <em class="lore-ref" data-ref="swordsmachine">Swordsmachine</em> was not born on any assembly line but out of chaos: by some accounts it began as a humble scrap-hauler that rebuilt itself from salvaged parts, forged its own motorized sword that heats the blade to a cutting edge, and spawned an entire cult of imitators — machines across Hell copy its form, though every copy is cruder than the original. It is one of the few machines that retained a voice synthesizer: the rest deemed it a luxury in a world where every gram of resource outweighed a word.</p>
 
     <p class="lang-ru">Особая судьба у модели V. <em class="lore-ref" data-ref="v1">V1</em> был создан в разгар войны как её завершение: тончайшая экспериментальная броня, позволяющая всасывать кровь при непосредственном контакте и чинить повреждения на лету, в обмен на хрупкость корпуса — машина-стеклянная пушка, способная сражаться без пауз на дозаправку. Но в момент, когда шли испытания прототипа, наступил Новый мир, и война стала никому не нужна. Серийное производство V1 отменили; чтобы хоть как-то оправдать вложенные в разработку деньги и время, на его базе собрали обновлённую модель <em class="lore-ref" data-ref="v2">V2</em> — со стандартной толстой бронёй и назначением охранника. Спрос оказался мизерным: покупателю дешевле поставить полсотни дронов, чем один V-класс. В итоге обе машины так и остались единственными прототипами своего вида. Последнее обновление прошивки V1 — 06.08.2112 года. Больше он не включался.</p>
     <p class="lang-en">The V model met a stranger fate. <em class="lore-ref" data-ref="v1">V1</em> was conceived at the height of the war as its endgame: hair-thin experimental plating that absorbed blood on direct contact and repaired damage on the fly, at the cost of a fragile frame — a glass cannon that could fight without pausing to refuel. But as the prototype was being tested, the New Peace arrived, and war became irrelevant. Mass production of V1 was cancelled; to salvage something from the money and time already sunk into the design, an updated model, <em class="lore-ref" data-ref="v2">V2</em>, was built on its chassis — with standardized heavy armor and a role as a peacekeeper. Demand proved negligible: a client could field fifty Drones for the price of one V-class. In the end, both machines remained sole prototypes of their kind. The last firmware update of V1 is dated 06.08.2112. It was never switched on again.</p>
-
-    <p id="chrono-06" class="lang-ru">А затем человечество обнаружило вход в Ад. Судя по всему, это случилось случайно — через заброшенную шахту; вокруг неё быстро разросся горнодобывающий комплекс: если под поверхностью мира лежит бездна, в ней наверняка есть минералы, которые помогут быстрее вернуться на ноги. Для проекта переосмыслили старые военные машины — та же <em class="lore-ref" data-ref="streetcleaner">Streetcleaner</em> была переквалифицирована в разведчика экспедиций, а <em class="lore-ref" data-ref="sentinel">Sentries</em> отправились вниз как боевой эскорт. Ключевым же изобретением проекта стали <em class="lore-ref" data-ref="terminal">Терминалы</em>: стационарные машины, способные превращать материю в радиосигнал, передавать её на другую станцию и собирать объект обратно. Технология была медленной и ограниченной — за всю историю проекта единственным задокументированным переносом между поверхностью и Адом остался виниловый сингл «Were You Foolin'» оркестра Расса Моргана на 78 об/мин. До второго переноса дело так и не дошло: связь оборвалась.</p>
-    <p class="lang-en">And then humanity discovered an entrance to Hell. Apparently by accident — through an abandoned mine; a mining complex quickly grew around it: if a chasm lay beneath the surface of the world, surely it held minerals that could help mankind get back on its feet. Old war machines were retooled for the project — the humble <em class="lore-ref" data-ref="streetcleaner">Streetcleaner</em> was reassigned as an expedition scout, and <em class="lore-ref" data-ref="sentinel">Sentries</em> were sent down as combat escort. The project's crowning invention was the <em class="lore-ref" data-ref="terminal">Terminals</em>: stationary machines capable of converting matter into a radio signal, transmitting it to a receiving station, and rebuilding the object on the far end. The technology was slow and limited — in the entire history of the project, the only documented transfer between the surface and Hell was a 78rpm vinyl record of the single "Were You Foolin'" by the Russ Morgan Orchestra. A second transfer was never attempted: the connection was severed.</p>
+<div class="lore-card">
+      <img src="terminal.png" alt="Terminal" class="lore-card-img">
+      <div class="lore-card-content">
+        <span class="lore-card-name">Terminal</span>
+        <p class="lore-card-desc lang-ru">Живая машина-телепорт, изначально созданная для переноса материи между поверхностью и Адом.</p>
+        <p class="lore-card-desc lang-en">A living teleportation machine, originally created to transfer matter between the surface and Hell.</p>
+      </div>
+    </div>
+    <p id="chrono-06" class="lang-ru">А затем человечество обнаружило вход в Ад. Судя по всему, это случилось случайно — через заброшенную шахту; вокруг неё быстро разросся горнодобывающий комплекс: если под поверхностью мира лежит бездна, в ней наверняка есть минералы, которые помогут быстрее вернуться на ноги. Для проекта переосмыслили старые военные машины — та же <em class="lore-ref" data-ref="streetcleaner">Streetcleaner</em> была переквалифицирована в разведчика экспедиций, а <em class="lore-ref" data-ref="sentry">Sentries</em> отправились вниз как боевой эскорт. Ключевым же изобретением проекта стали <em class="lore-ref" data-ref="terminal">Терминалы</em>: стационарные машины, способные превращать материю в радиосигнал, передавать её на другую станцию и собирать объект обратно. Технология была медленной и ограниченной — за всю историю проекта единственным задокументированным переносом между поверхностью и Адом остался виниловый сингл «Were You Foolin'» оркестра Расса Моргана на 78 об/мин. До второго переноса дело так и не дошло: связь оборвалась.</p>
+    <p class="lang-en">And then humanity discovered an entrance to Hell. Apparently by accident — through an abandoned mine; a mining complex quickly grew around it: if a chasm lay beneath the surface of the world, surely it held minerals that could help mankind get back on its feet. Old war machines were retooled for the project — the humble <em class="lore-ref" data-ref="streetcleaner">Streetcleaner</em> was reassigned as an expedition scout, and <em class="lore-ref" data-ref="sentry">Sentries</em> were sent down as combat escort. The project's crowning invention was the <em class="lore-ref" data-ref="terminal">Terminals</em>: stationary machines capable of converting matter into a radio signal, transmitting it to a receiving station, and rebuilding the object on the far end. The technology was slow and limited — in the entire history of the project, the only documented transfer between the surface and Hell was a 78rpm vinyl record of the single "Were You Foolin'" by the Russ Morgan Orchestra. A second transfer was never attempted: the connection was severed.</p>
 
     <p class="lang-ru">Сначала это считали аварией. Но сотрудники шахты начали фиксировать аномалии: двери, запирающиеся сами по себе, исчезающая техника, «существа» — судя по всему, нежить и демоны — телепортирующиеся прямо в рабочие помещения. Один безымянный сотрудник написал докладную с выводом, от которого у руководства мороз по коже: Ад — живое существо. Массивный разумный суперорганизм, жестокий и мстительный, и всё происходящее на комплексе — не сбой, а развлечение: Ад играл с людьми. Проект закрыли в спешке, оставив машины и Терминалы внизу, — из страха, что однажды Ад найдёт выход на поверхность. Страх оказался обоснованным. Но об этом — дальше.</p>
     <p class="lang-en">At first it was written off as a malfunction. But the mine's staff began recording anomalies: doors locking on their own, machinery going missing, "creatures" — husks and demons, by all appearances — teleporting directly into occupied rooms. One unnamed employee filed a report whose conclusion chilled the board: Hell is a living being. A vast intelligent superorganism, harsh and cruel, and everything happening in the complex was not a glitch but amusement: Hell was playing with people. The project was hastily abandoned, leaving the machines and Terminals below — out of fear that one day Hell would find a way out and spread to the surface. The fear proved justified. But that comes later.</p>
@@ -820,13 +836,13 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     <p class="lang-ru">Причина гибели человечества не называется ни в одном официальном документе — ни «когда», ни «как», ни «почему». Известно лишь, что случилось это быстро и внезапно: по свидетельству дневника Паромщика из слоя Гнев, человечество вымерло «почти в один миг». Приток душ в Ад был настолько массовым и одномоментным, что изменил течение Океана Стикс.</p>
     <p class="lang-en">The cause of humanity's extinction is named in no official document — neither "when," nor "how," nor "why." It is only known that it came fast and sudden: per the Ferryman's diary from the Wrath layer, mankind died "almost all at once." The influx of souls into Hell was so massive and simultaneous that it altered the current of the Ocean Styx.</p>
 
-    <p class="lang-ru">В том же дневнике сохранились строки, ставшие самым красноречивым свидетельством катастрофы: <em>«То, что было рекой Стикс, разрослось в безмерный океан. Миллион рыдающих душ вливался каждый день, и берега едва вмещали его. А потом однажды течение сменилось. Волна за волной — миллионы, миллиарды, как будто горлу мира перерезали глотку и запрокинули голову, чтобы ускорить поток»</em>. Паромщики, веками перевозившие грешников через Стикс, лишились работы в один день: новые души больше не шли — потому что больше не с кого идти.</p>
+    <p class="lang-ru">В том же дневнике сохранились строки, ставшие самым красноречивым свидетельством катастрофы: <em>«То, что было рекой Стикс, разрослось в безмерный океан. Миллион рыдающих душ вливался каждый день, и берега едва вмещали его. А потом однажды течение сменилось. Волна за волной — миллионы, миллиарды, как будто миру перерезали глотку и запрокинули голову, чтобы ускорить поток»</em>. Паромщики, веками перевозившие грешников через Стикс, лишились работы в один день: новые души больше не шли — потому что больше некому было идти.</p>
     <p class="lang-en">The same diary preserves lines that became the most eloquent testimony to the catastrophe: <em>"What once was the River Styx has now grown to an unfathomable ocean. A million weeping souls pouring in each day that the shores could barely contain... Then one day, the current shifted. Wave after wave — millions, billions — as though the throat of the world was cut wide and the head wrenched back to speed the pour."</em> The Ferrymen, who had ferried sinners across the Styx for ages, were made obsolete in a single day: no new souls arrived — because there was no one left to send.</p>
 
     <p class="lang-ru">Кто вырезал человечество — точно неизвестно, но круг подозреваемых очевиден. Первая версия указывает на машины: кровь во время войны была дешёвым и надёжным топливом, и когда она начала иссякать, инстинкты машин, судя по всему, прорвали программные ограничения — Minos Prime, встретив V1, говорит о «преступлениях твоего рода против человечества». Вторая версия винит сам Ад: вырытые людьми при экспедициях проходы позволили ему дотянуться до поверхности — а Ад, живой и жестокий суперорганизм, получал удовольствие от страданий и вполне мог ускорить вымирание сам или руками машин. Третья версия предполагает, что Ад попросту манипулировал машинами, желая больше душ для собственного удовольствия. Все три не исключают друг друга.</p>
     <p class="lang-en">Who exterminated humanity is unknown with certainty, but the list of suspects is obvious. The first theory points to the machines: blood had been cheap, reliable fuel throughout the war, and when it began running dry, the machines' instincts, apparently, broke through their programming — Minos Prime, meeting V1, speaks of "the crimes your kind have committed against humanity." The second blames Hell itself: the passages humans dug during the expeditions let it reach the surface — and Hell, a living, cruel superorganism that savors the suffering of the damned, may well have hastened the extinction on its own, or through its machines. A third theory holds that Hell simply manipulated the machines, wanting more souls for its own amusement. None of the three excludes the others.</p>
 
-    <p class="lang-ru">После исчезновения людей кровь превратилась в дефицит, а дефицит — в приговор: без свежей крови машины останавливались навсегда. Начался голод. Старые боевые модели, никому больше не нужные на поверхности, начали истреблять друг друга за топливо, утилизировать павших на запчасти и охотиться за каждой каплей. Именно этот голод, а не жажда conquest, привёл машины к вторжению в Ад: они хлынули вниз через тот самый заброшенный комплекс, где когда-то работал проект. По словам Гавриила, машин настолько много, что они способны вычистить целый слой Ада за считанные дни — для всех обитателей преисподней это нашествие стало экзистенциальной угрозой.</p>
+    <p class="lang-ru">После исчезновения людей кровь превратилась в дефицит, а дефицит — в приговор: без свежей крови машины останавливались навсегда. Начался голод. Старые боевые модели, никому больше не нужные на поверхности, начали истреблять друг друга за топливо, утилизировать павших на запчасти и охотиться за каждой каплей. Именно этот голод, а не жажда завоевания, привёл машины к вторжению в Ад: они хлынули вниз через тот самый заброшенный комплекс, где когда-то работал проект. По словам Габриэля, машин настолько много, что они способны вычистить целый слой Ада за считанные дни — для всех обитателей преисподней это нашествие стало экзистенциальной угрозой.</p>
     <p class="lang-en">After mankind vanished, blood became a scarcity — and scarcity became a death sentence: without fresh blood, machines shut down forever. Famine set in. Old combat models, no longer needed on the surface, began slaughtering each other for fuel, cannibalizing the fallen for parts and hunting down every last drop. It was this hunger, not any lust for conquest, that drove the machines to invade Hell: they poured down through the very abandoned complex where the project once operated. By Gabriel's own account, the machines are so numerous that they can clear out an entire layer of Hell in days — for every inhabitant of the underworld, the invasion is an existential threat.</p>
 
     <p class="lang-ru">Среди машин, спускающихся в Ад, есть одна, чья цель отточена двумя веками войны и одним незавершённым прототипом. Её прошивка обновлялась в последний раз 06.08.2112 — за мгновение до Долгой ночи. Она была построена, чтобы убивать Earthmover, осталась невостребованной и единственной в своём роде — и теперь она спускается сквозь слои преисподней, потому что у неё больше нет другого источника топлива. Три строки, открывающие её путь, и есть вся хроника этого мира: <em>«MANKIND IS DEAD. BLOOD IS FUEL. HELL IS FULL»</em> — «Человечество мертво. Кровь — это топливо. Ад полон».</p>
@@ -844,27 +860,27 @@ body[data-lang="en"] .lang-en.inline{display:inline}
   </div>
   <div class="lore-body">
     <h3 id="chrono-07"><span class="lang-ru">Исчезновение Бога и Совет</span><span class="lang-en">God’s Disappearance and the Council</span></h3>
-    <p class="lang-ru">Порядок творения знали наизусть даже в преисподней: Бог сотворил Небеса, затем Ад — как темницу, куда должны были низвергаться души грешников, — и наконец Землю с человечеством. Небеса и Ад существовали не как враждебные страны, а как две половины одного механизма: наверху — воздаяние, внизу — наказание. Ангелы исполняли волю Творца в обоих мирах и столетиями поддерживали порядок в слоях Ада, где каждое наказание было спроектировано под грех: Похоть, Обжорство, Гнев — каждый слой был инженерным решением под конкретную порок-структуру человеческой души.</p>
-    <p class="lang-en">The order of creation was known even in the underworld by heart: God created the Heavens, then Hell — a dungeon into which the souls of sinners would fall — and finally the Earth with mankind. Heaven and Hell were not hostile nations but two halves of a single mechanism: above, reward; below, punishment. Angels carried out the Creator's will in both realms and for centuries maintained order in the layers of Hell, where every punishment was engineered for its sin: Lust, Gluttony, Wrath — each layer a purpose-built response to one vice of the human soul.</p>
+    <p class="lang-ru">Порядок творения знали наизусть даже в преисподней: Бог сотворил Небеса, затем Ад — как темницу, куда должны были низвергаться души грешников, — и наконец Землю с человечеством. Небеса и Ад существовали не как враждебные страны, а как две половины одного механизма: наверху — воздаяние, внизу — наказание. Ангелы исполняли волю Творца в обоих мирах и столетиями поддерживали порядок в слоях Ада, где каждое наказание было спроектированным решением под конкретную структуру порока человеческой души: Похоть, Глотка, Гнев — каждый слой отвечал своему греху.</p>
+    <p class="lang-en">The order of creation was known even in the underworld by heart: God created the Heavens, then Hell — a dungeon into which the souls of sinners would fall — and finally the Earth with mankind. Heaven and Hell were not hostile nations but two halves of a single mechanism: above, reward; below, punishment. Angels carried out the Creator's will in both realms and for centuries maintained order in the layers of Hell, where every punishment was engineered as a purpose-built response to one vice of the human soul: Lust, Gluttony, Wrath — each layer answering to its own sin.</p>
 
     <p class="lang-ru">А затем, в неизвестный момент, Бог исчез. Не было ни знамения, ни преемника, ни пророчества — просто тишина там, где раньше был голос. Молитвы Небес оставались без ответа, и паника охватила ангелов сильнее, чем любой враг: существо, существование которого было для них аксиомой, перестало отвечать. Первыми последствия почувствовали не обитатели Небес, а Ада — всех ангелов срочно отозвали наверх, и слои преисподней впервые за всю историю остались без надзора. Именно в этот вакуум власти и шагнули Минос и Сизиф.</p>
     <p class="lang-en">And then, at an unknown moment, God vanished. No omen, no successor, no prophecy — only silence where a voice had always been. The prayers of Heaven went unanswered, and panic gripped the angels more than any enemy ever could: the being whose existence was an axiom for them stopped responding. The first to feel the consequences were not the inhabitants of Heaven but of Hell — every angel was urgently recalled above, and for the first time in history the layers of the underworld were left unsupervised. Into this vacuum of power stepped Minos and Sisyphus.</p>
 
-    <p class="lang-ru">Из паники вырос <em class="lore-ref" data-ref="council">Святой Совет</em>. Формально — группа высокопоставленных ангелов, взявших на себя управление в «период молчания Господня». Фактически — режим, построенный на одном грандиозном вранье: Совет утверждал, что Бог по-прежнему наблюдает за миром, а Его воля доносится до смертных через уста совета. Ни один документ не подтверждал это; напротив, исчезновение Творца скрывали даже от большинства ангелов. Правление страхом оказалось простым в исполнении: каждый, кто задавал слишком много вопросов, рисковал услышать слово «еретик» — а слово это в Небесах было приговором.</p>
-    <p class="lang-en">Out of panic grew the <em class="lore-ref" data-ref="council">Holy Council</em>. Formally — a group of high-ranking angels who took up governance during the "period of the Lord's silence." In fact — a regime built on one grand lie: the Council claimed God still watched over the world and that His will reached mortals through the council's mouths. No document confirmed this; on the contrary, the Creator's disappearance was hidden even from most angels. Rule through fear proved simple to administer: anyone who asked too many questions risked hearing the word "heretic" — and in Heaven, that word was a sentence.</p>
+    <p class="lang-ru">Из паники вырос <em class="lore-ref" data-ref="council">Святой Совет</em>. Формально — группа высокопоставленных ангелов, взявших на себя управление в «период молчания Господня». Фактически — режим, построенный на одном грандиозном вранье: Совет утверждал, что Бог по-прежнему наблюдает за миром, а Его воля доносится до смертных через уста Совета. Ни один документ не подтверждал это; напротив, исчезновение Творца скрывали даже от большинства ангелов. Правление страхом оказалось простым в исполнении: каждый, кто задавал слишком много вопросов, рисковал услышать слово «еретик» — а слово это в Небесах было приговором.</p>
+    <p class="lang-en">Out of panic grew the <em class="lore-ref" data-ref="council">Holy Council</em>. Formally — a group of high-ranking angels who took up governance during the "period of the Lord's silence." In fact — a regime built on one grand lie: the Council claimed God still watched over the world and that His will reached mortals through the Council's mouths. No document confirmed this; on the contrary, the Creator's disappearance was hidden even from most angels. Rule through fear proved simple to administer: anyone who asked too many questions risked hearing the word "heretic" — and in Heaven, that word was a sentence.</p>
 
     <p class="lang-ru">Главным инструментом контроля стал <em class="lore-ref" data-ref="holy-light">Святой Свет</em> — божественная сила, питавшая ангелов. Пока Бог был на троне, Свет был данностью; после Его исчезновения он превратился в конечный ресурс, и распоряжаться им взялся именно Совет. Свет можно было отнять — и Совет делал это с теми, кто проявлял непочтение или сомнение. Ангел, лишённый Света, не умирал, но стремительно слабел — и это заставляло остальных молчать громче любых законов. Судя по всему, даже сами советники не знали, что стало с Богом: они не скрывали правду, потому что знали ответ, — они скрывали правду, потому что боялись вопроса.</p>
     <p class="lang-en">The chief instrument of control was the <em class="lore-ref" data-ref="holy-light">Holy Light</em> — the divine power that sustained the angels. While God sat on the throne, the Light was a given; after His disappearance it became a finite resource, and the Council took it upon itself to distribute it. The Light could be taken away — and the Council did so from anyone who showed disrespect or doubt. An angel stripped of the Light did not die, but weakened swiftly — and this kept the rest silent more effectively than any law. Evidently, even the councillors themselves did not know what had become of God: they did not conceal the truth because they knew the answer — they concealed it because they feared the question.</p>
 
-    <p class="lang-ru">Пять архангелов упоминаются в картине в Зале Архангелов (8-1): Михаил (Божья Мудрость), Рафаэль (Божья Сила), Габриэль (Божья Воля), вырванное место — судя по всему, Люцифер, самый известный падший, — и Фануэль (Божье Терпение). Судьбы Михаила, Рафаэля и Фануэля после падения Совета неизвестны: они не появляются ни в одной сцене, не оставляют записей и не вступают в бой. Кем они были в момент исчезновения Бога — в Небесах, в Аду или вообще вне обоих миров — остаётся одной из главных пустот хронологии. Из всех пятерых известна лишь судьба Габриэля — и она омрачена сильнее всех.</p>
-    <p class="lang-en">Five archangels are named in the painting in the Archangel Hall (8-1): Michael (God's Wisdom), Raphael (God's Strength), Gabriel (God's Will), a torn-out spot — evidently Lucifer, the most famous of the fallen — and Phanuel (God's Patience). The fates of Michael, Raphael and Phanuel after the Council's fall are unknown: they appear in no scene, leave no records and join no battle. Whether they were in Heaven, in Hell, or beyond both worlds at the moment of God's disappearance remains one of the chronology's great blanks. Of all five, only Gabriel's fate is known — and it is darkened more than any.</p>
+    <p class="lang-ru">Пять архангелов упоминаются в картине в Зале Архангелов (8-1): <em class="lore-ref" data-ref="michael">Михаил</em> (Божья Мудрость), <em class="lore-ref" data-ref="raphael">Рафаэль</em> (Божья Сила), <em class="lore-ref" data-ref="gabriel">Габриэль</em> (Божья Воля), вырванное место — судя по всему, Люцифер, самый известный падший, — и <em class="lore-ref" data-ref="phanuel">Фануэль</em> (Божье Терпение). Судьбы Михаила, Рафаэля и Фануэля после падения Совета неизвестны: они не появляются ни в одной сцене, не оставляют записей и не вступают в бой. Кем они были в момент исчезновения Бога — в Небесах, в Аду или вообще вне обоих миров — остаётся одной из главных пустот хронологии. Из всех пятерых известна лишь судьба Габриэля — и она омрачена сильнее всех.</p>
+    <p class="lang-en">Five archangels are named in the painting in the Archangel Hall (8-1): <em class="lore-ref" data-ref="michael">Michael</em> (God's Wisdom), <em class="lore-ref" data-ref="raphael">Raphael</em> (God's Strength), <em class="lore-ref" data-ref="gabriel">Gabriel</em> (God's Will), a torn-out spot — evidently Lucifer, the most famous of the fallen — and <em class="lore-ref" data-ref="phanuel">Phanuel</em> (God's Patience). The fates of Michael, Raphael and Phanuel after the Council's fall are unknown: they appear in no scene, leave no records and join no battle. Whether they were in Heaven, in Hell, or beyond both worlds at the moment of God's disappearance remains one of the chronology's great blanks. Of all five, only Gabriel's fate is known — and it is darkened more than any.</p>
 
     <h3><span class="lang-ru">Ренессанс Похоти и Восстание Алчности</span><span class="lang-en">The Lust Renaissance and the Greed Insurrection</span></h3>
     <p id="chrono-08" class="lang-ru">Пока Небеса договаривались сами с собой, в нижних слоях начиналась другая история. <em class="lore-ref" data-ref="minos">Минос</em> — правитель Похоти, чья душа позже станет одной из двух известных <em class="lore-ref" data-ref="primesoul">Прайм-душ</em> — душ, чья сила воли была так велика, что они способны обретать физическую форму без тела, — отказался принять слой как приговор. По замыслу Бога Похоть должна была карать распутных вечным лабиринтом наслаждений; Минос увидел в этом не справедливость, а жестокость, замаскированную под порядок. И начал переустройство с нуля.</p>
     <p class="lang-en">While Heaven argued with itself, another story began in the lower layers. <em class="lore-ref" data-ref="minos">Minos</em> — the ruler of Lust, whose soul would later become one of the two known <em class="lore-ref" data-ref="primesoul">Prime Souls</em> — souls whose willpower was so immense they could manifest a physical form without a body — refused to accept his layer as a sentence. By God's design, Lust was meant to punish the lustful with an eternal labyrinth of pleasures; Minos saw in this not justice but cruelty dressed up as order. And he began rebuilding from zero.</p>
 
     <p class="lang-ru">Он дал хаскам — душам, которые до того считались лишь сырьём наказания, — то, чего им не давал ни Бог, ни Небеса: дома, закон, достоинство. Появились улицы, мосты, кварталы; грешники Похоти сохранили человеческий облик и человеческие привычки — они носили одежду, говорили, творили. Минос строил общество на идее, которую ни один слой Ада до него не слышал: грешник — это не приговор, а обстоятельство; наказание без шанса на искупление — не правосудие, а месть. Исследователи того, что осталось от его эпохи, называли это Ренессансом — и не без оснований: в слое, созданном как кара, расцвели культура, архитектура и наука.</p>
-    <p class="lang-en">He gave the husks — souls previously regarded as mere fuel for punishment — what neither God nor Heaven had ever offered them: homes, law, dignity. Streets appeared, bridges, districts; the sinners of Lust kept their human shape and human habits — they wore clothes, spoke, created. Minos built his society on an idea no layer of Hell had heard before: a sinner is not a verdict but a circumstance; punishment without a chance at redemption is not justice but revenge. Those who studied what remained of his era called it a Renaissance — and not without reason: in a layer designed as torment, culture, architecture and science flourished.</p>
+    <p class="lang-en">He gave the husks — souls previously regarded as mere fuel for punishment — what neither God nor Heaven had ever offered them: homes, law, dignity. Streets appeared, bridges, districts; the sinners of Lust kept their human shape and human habits — they wore clothes, spoke, created. Minos built his society on an idea no layer of Hell had heard before: a sinner is not a verdict but a circumstance; punishment without a chance of redemption is not justice but revenge. Those who studied what remained of his era called it a Renaissance — and not without reason: in a layer designed as torment, culture, architecture and science flourished.</p>
 
     <!-- LORE CARD: Minos -->
     <div class="lore-card">
@@ -876,7 +892,7 @@ body[data-lang="en"] .lang-en.inline{display:inline}
       </div>
     </div>
 
-    <p id="chrono-09" class="lang-ru"><em class="lore-ref" data-ref="sisyphus">Сизиф</em> в Алчности пошёл противоположным путём. Он тоже не принял порядок, который навязали его слою, — но вместо домов и законов строил армию. Сизиф обучал хасков военному делу, уничтожал демонов, проводил учения и копил оружие. Его цель была не выживание и не процветание, а восстание: вооружённый поход против самих Небес. Сизиф считал, что власть ангелов над Ада — узурпация, а единственный язык, который Небеса поймут, — это сила. Пока Минос доказывал, что Ад может жить лучше, Сизиф готовился доказать, что Ад может воевать.</p>
+    <p id="chrono-09" class="lang-ru"><em class="lore-ref" data-ref="sisyphus">Сизиф</em> в Алчности пошёл противоположным путём. Он тоже не принял порядок, который навязали его слою, — но вместо домов и законов строил армию. Сизиф обучал хасков военному делу, уничтожал демонов, проводил учения и копил оружие. Его цель была не выживание и не процветание, а восстание: вооружённый поход против самих Небес. Сизиф считал, что власть ангелов над Адом — узурпация, а единственный язык, который Небеса поймут, — это сила. Пока Минос доказывал, что Ад может жить лучше, Сизиф готовился доказать, что Ад может воевать.</p>
     <p class="lang-en"><em class="lore-ref" data-ref="sisyphus">Sisyphus</em> in Greed took the opposite path. He too rejected the order imposed on his layer — but instead of homes and laws, he built an army. Sisyphus trained husks in the arts of war, destroyed demons, held drills and stockpiled arms. His goal was neither survival nor prosperity but insurrection: an armed march against Heaven itself. Sisyphus held that the angels' dominion over Hell was usurpation, and that the only language Heaven would understand was force. Where Minos proved that Hell could live better, Sisyphus prepared to prove that Hell could fight back.</p>
 
     <!-- LORE CARD: Sisyphus -->
@@ -889,7 +905,7 @@ body[data-lang="en"] .lang-en.inline{display:inline}
       </div>
     </div>
 
-    <p class="lang-ru">Два правителя, два пути — и одна общая черта, которая пугала Небеса сильнее всего: и тот и другой создали в Ада нечто, не зависящее от божественной санкции. Процветающий город Миноса существовал без Небес; армия Сизифа готовилась воевать против Небес. Оба проекта подрывали не только порядок слоёв — они подрывали саму легенду, на которой стоял Святой Совет: легенду о том, что без Бога и без Небес адская душа способна лишь страдать. Минос и Сизиф показали обратное. За это один из них был убит, а второй обезглавлен.</p>
+    <p class="lang-ru">Два правителя, два пути — и одна общая черта, которая пугала Небеса сильнее всего: и тот и другой создали в Аду нечто, не зависящее от божественной санкции. Процветающий город Миноса существовал без Небес; армия Сизифа готовилась воевать против Небес. Оба проекта подрывали не только порядок слоёв — они подрывали саму легенду, на которой стоял Святой Совет: легенду о том, что без Бога и без Небес адская душа способна лишь страдать. Минос и Сизиф показали обратное. За это один из них был убит, а второй обезглавлен.</p>
     <p class="lang-en">Two rulers, two paths — and one shared trait that frightened Heaven more than anything: each had created in Hell something independent of divine sanction. Minos's flourishing city existed without Heaven; Sisyphus's army was preparing to make war upon Heaven. Both projects undermined not only the order of the layers but the very legend on which the Holy Council stood: the legend that without God and without Heaven, a Hellish soul is capable only of suffering. Minos and Sisyphus proved otherwise. For this, one was killed and the other beheaded.</p>
 
     <h3 id="chrono-10"><span class="lang-ru">Казнь правителей</span><span class="lang-en">The Execution of the Rulers</span></h3>
@@ -906,13 +922,13 @@ body[data-lang="en"] .lang-en.inline{display:inline}
       </div>
     </div>
 
-    <p id="chrono-11" class="lang-ru">Минос попытался договориться. Он не собирался воевать против Небес — его город не был направлен против кого-либо, он просто существовал, — и, вероятно, полагал, что с разумным существом можно говорить. Он ошибся в главном допущении: Габриэль пришёл не обсуждать, а исполнять. Правитель Похоти был убит. Его труп не оставили в покое: тело Миноса захватили его змеи-паразиты, которые и по сей день носят исполинский остов по руинам его собственного города — в 2-4 V1 сразится с <em class="lore-ref" data-ref="corpse-of-minos">Трупом Миноса</em>, не понимая сначала, чью могилу она пробуждает.</p>
-    <p class="lang-en">Minos tried to negotiate. He had no intention of waging war on Heaven — his city was aimed at no one, it simply existed — and he likely believed one could reason with a rational being. He was wrong in one crucial assumption: Gabriel had not come to talk, but to execute. The ruler of Lust was slain. Even his corpse was given no rest: the body of Minos was seized by his parasite snakes, which to this day bear his colossal frame through the ruins of his own city — in 2-4, V1 will face the <em class="lore-ref" data-ref="corpse-of-minos">Corpse of Minos</em>, at first unaware whose grave it wakes.</p>
+    <p id="chrono-11" class="lang-ru">Минос попытался договориться. Он не собирался воевать против Небес — его город не был направлен против кого-либо, он просто существовал, — и, вероятно, полагал, что с разумным существом можно говорить. Он ошибся в главном допущении: Габриэль пришёл не обсуждать, а исполнять. Правитель Похоти был убит. Его труп не оставили в покое: тело Миноса захватили его змеи-паразиты, которые и по сей день носят исполинский остов по руинам его собственного города — в 2-4 V1 сразится с <em class="lore-ref" data-ref="corpse-minos">Трупом Миноса</em>, не понимая сначала, чью могилу она пробуждает.</p>
+    <p class="lang-en">Minos tried to negotiate. He had no intention of waging war on Heaven — his city was aimed at no one, it simply existed — and he likely believed one could reason with a rational being. He was wrong in one crucial assumption: Gabriel had not come to talk, but to execute. The ruler of Lust was slain. Even his corpse was given no rest: the body of Minos was seized by his parasite snakes, which to this day bear his colossal frame through the ruins of his own city — in 2-4, V1 will face the <em class="lore-ref" data-ref="corpse-minos">Corpse of Minos</em>, at first unaware whose grave it wakes.</p>
 
     <p class="lang-ru">Сизифу переговоры не предлагали вовсе. Его армия держалась не на уставе и не на дисциплине — она держалась на нём: на его харизме, его непоколебимости, его вере в то, что восстание возможно. Габриэль понял это лучше, чем сам Сизиф, и обезглавил правителя публично, чтобы сломать не человека, а его дело. Расчёт оказался верным: без Сизифа армия рассыпалась. Тело замуровали в гигантской пирамиде посреди золотых песков Алчности — памятник не славы, а устрашения.</p>
     <p class="lang-en">Sisyphus was offered no negotiations at all. His army held not on drill and discipline — it held on him: on his charisma, his resolve, his faith that insurrection was possible. Gabriel understood this better than Sisyphus himself and beheaded the ruler publicly, to break not a man but his cause. The calculation proved correct: without Sisyphus, the army crumbled. His body was entombed in a giant pyramid amid the golden sands of Greed — a monument not of glory but of warning.</p>
 
-    <p class="lang-ru">Но Совета заботило не тело. Души Миноса и Сизифа были слишком сильны, чтобы просто исчезнуть: Прайм-душа — это воля, принявшая форму, и убить её мечом нельзя. Душу Миноса запечатали в <em class="lore-ref" data-ref="flesh-prison">Плоти Тюрьмы</em>, душу Сизифа — в <em class="lore-ref" data-ref="flesh-panopticon">Плоти Паноптикума</em>: исполинских конструкциях из плоти, созданных как темницы для существ, которых не способна удержать никакая каменная кладка. Веками обе тюрьмы простояли нетронутыми — пока в Ада не спустилась одна маленькая красная машина, которая открыла обе. Против воли своих создателей.</p>
+    <p class="lang-ru">Но Совета заботило не тело. Души Миноса и Сизифа были слишком сильны, чтобы просто исчезнуть: Прайм-душа — это воля, принявшая форму, и убить её мечом нельзя. Душу Миноса запечатали в <em class="lore-ref" data-ref="flesh-prison">Плоти Тюрьмы</em>, душу Сизифа — в <em class="lore-ref" data-ref="flesh-panopticon">Плоти Паноптикума</em>: исполинских конструкциях из плоти, созданных как темницы для существ, которых не способна удержать никакая каменная кладка. Веками обе тюрьмы простояли нетронутыми — пока в Ад не спустилась одна маленькая красная машина, которая открыла обе. Против воли своих создателей.</p>
     <p class="lang-en">But the Council cared not for the bodies. The souls of Minos and Sisyphus were too strong to simply vanish: a Prime Soul is will that has taken form, and a sword cannot kill it. Minos's soul was sealed within the <em class="lore-ref" data-ref="flesh-prison">Flesh Prison</em>, Sisyphus's within the <em class="lore-ref" data-ref="flesh-panopticon">Flesh Panopticon</em> — colossal constructs of flesh built as dungeons for beings no stone wall could ever hold. For ages both prisons stood untouched — until one small red machine descended into Hell and opened them both. Against the will of their makers.</p>
 
     <p class="lang-ru">Последствия казней пережили и Совет, и самого Габриэля. Город Миноса медленно гнил без правителя — слои Похоти, которые видит V1 в начале второго акта, это не город, а руины Ренессанса. Гнев хасков на Небеса стал наследством, которое ни один ангел не хотел принять. Габриэль увёз с собой не только победу, но и память: он видел, как умирал Минос — не с ненавистью, а с недоумением. Зёрна сомнения, посеянные в тот день, взойдут лишь через много лет — когда их удобрит уже собственный Совет.</p>
@@ -922,8 +938,8 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     <p class="lang-ru">Причины вторжения изложены в разделе о Земле: когда человечество вымерло, кровь — топливо машин — стала дефицитом, и старые боевые модели, оставшись без источника питания, начали истреблять друг друга. Затем они нашли путь вниз — через заброшенный горнодобывающий комплекс, построенный вокруг входа в Ад. Печать, которую люди поставили на преисподнюю, была сорвана не демонами и не ангелами, а голодной техникой собственного изготовления человечества.</p>
     <p class="lang-en">The causes of the invasion are laid out in the section on Earth: when humanity went extinct, blood — the fuel of machines — became scarce, and the old combat models, left without a power source, began slaughtering one another. Then they found the way down — through the abandoned mining complex built around the entrance to Hell. The seal humanity had placed on the underworld was broken not by demons and not by angels, but by hungry technology of mankind's own making.</p>
 
-    <p class="lang-ru">Машины хлынули в слои тысячами. Для обитателей Ада это стало катастрофой невиданного масштаба: падальщики, Стритклинеры, Дроны, Стражи — всё, что умело убивать, — теперь охотилось и на хасков, и на демонов, выкачивая кровь из всего, что её имеет. По словам самого Габриэля, машин так много, что они способны вычистить целый слой за считанные дни. Совет, чья власть держалась на картине не потревоженного Ада, получил проблему, которую нельзя было решить проповедью: против машин не работали ни ересь, ни страх — только сила.</p>
-    <p class="lang-en">The machines poured into the layers by the thousands. For Hell's inhabitants it became a catastrophe of unprecedented scale: Husks' scavengers, Streetcleaners, Drones, Sentries — everything that knew how to kill — now hunted both husks and demons, draining blood from anything that carried it. By Gabriel's own account, the machines are so numerous that they can cleanse an entire layer in days. The Council, whose power rested on a picture of an undisturbed Hell, faced a problem no sermon could solve: against the machines neither heresy nor fear worked — only force.</p>
+    <p class="lang-ru">Машины хлынули в слои тысячами. Для обитателей Ада это стало катастрофой невиданного масштаба: падальщики, Streetcleaners, Дроны, Sentries — всё, что умело убивать, — теперь охотилось и на хасков, и на демонов, выкачивая кровь из всего, что её имеет. По словам самого Габриэля, машин так много, что они способны вычистить целый слой за считанные дни. Совет, чья власть держалась на картине не потревоженного Ада, получил проблему, которую нельзя было решить проповедью: против машин не работали ни ересь, ни страх — только сила.</p>
+    <p class="lang-en">The machines poured into the layers by the thousands. For Hell's inhabitants it became a catastrophe of unprecedented scale: scavengers, Streetcleaners, Drones, Sentries — everything that knew how to kill — now hunted both husks and demons, draining blood from anything that carried it. By Gabriel's own account, the machines are so numerous that they can cleanse an entire layer in days. The Council, whose power rested on a picture of an undisturbed Hell, faced a problem no sermon could solve: against the machines neither heresy nor fear worked — only force.</p>
 
     <p class="lang-ru">Именно это вторжение — завязка игры. Совет отправил Габриэля уничтожать машины, которых он называл «омерзениями» и «тварями», отказывая им в праве считаться даже противниками. Но среди спустившихся вниз машин была одна, которой не место было в общем потоке: <em class="lore-ref" data-ref="v1">V1</em>, единственный прототип своего класса, сошёл в Ад не с армией, а один — по собственной логике дозаправки. Их первая встреча в финале первого акта закончилась не так, как планировал Совет: Габриэль впервые за свою вечность проиграл.</p>
     <p class="lang-en">It is this invasion that opens the game. The Council sent Gabriel down to destroy the machines he called "abominations" and "vermin," denying them even the standing of adversaries. But among the machines descending was one that did not belong to the general tide: <em class="lore-ref" data-ref="v1">V1</em>, the sole prototype of its class, went down to Hell not with an army but alone — following the logic of its own refuelling. Their first meeting, at the end of Act I, ended not as the Council had planned: for the first time in his eternity, Gabriel lost.</p>
@@ -978,7 +994,7 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     <h2><span class="lang-ru">Prelude: Устье Ада</span><span class="lang-en">Prelude: The Mouth of Hell</span></h2>
   </div>
   <div class="lore-body">
-    <p id="chrono-14" class="lang-ru">Prelude — это не вход в Ад. Это последний метр поверхности. V1 спускается в <em>«Устье Ада»</em> — заброшенный горнодобывающий комплекс, построенный человечеством вокруг входа в преисподнюю, — и весь пролог проходит ещё «до»: до слоёв, до Архитектуры кар, до всего, что принято считать Ада. Комплекс умер сам, а не был убит: его покинули люди, за ними приглянулись Терминалы, и от цивилизации остались только работающие механизмы, которым больше не подают приказов.</p>
+    <p id="chrono-14" class="lang-ru">Prelude — это не вход в Ад. Это последний метр поверхности. V1 спускается в <em>«Устье Ада»</em> — заброшенный горнодобывающий комплекс, построенный человечеством вокруг входа в преисподнюю, — и весь пролог проходит ещё «до»: до слоёв, до Архитектуры кар, до всего, что принято считать Адом. Комплекс умер сам, а не был убит: его покинули люди, за ними приглянулись Терминалы, и от цивилизации остались только работающие механизмы, которым больше не подают приказов.</p>
     <p class="lang-en">The Prelude is not the entrance to Hell. It is the last meter of the surface. V1 descends into the <em>“Mouth of Hell”</em> — the abandoned mining complex humanity built around the entrance to the underworld — and the entire prologue unfolds still "before": before the layers, before the Architecture of punishment, before anything commonly called Hell. The complex died on its own rather than being killed: its people left, the Terminals followed, and all that remained of civilization were working mechanisms with no one left to give them orders.</p>
 
     <p class="lang-ru">Уровень 0-1 <em>In the Flesh</em> («Во плоти») открывает прологом две правды нового мира сразу. Первая — механическая: кровь — топливо, и V1 лечится ею в бою, а не после него; урок вводится не текстом, а калечащим уроном, который нельзя отложить до дозаправки. Вторая — атмосфера: коридоры, стены и потолки комплекса проросли плотью, двери и механизмы обросли биомассой, как будто преисподняя начала перетекать вверх задолго до вторжения. Здесь V1 встречает первых Filth — вырожденных, безымянных хасков, прячущихся в стенах и выстреливающихся из укрытий, как гной из раны: не воины, а симптом.</p>
@@ -1025,7 +1041,7 @@ body[data-lang="en"] .lang-en.inline{display:inline}
 
   <div class="lore-body">
     <h3><span class="lang-ru">Лимб: Предел Разума</span><span class="lang-en">Limbo: The Edge of Reason</span></h3>
-    <p class="lang-ru"><em>Лимб</em> — это не просто наказание; это экзистенциальная пустота для добродетельных душ, отказавшихся от веры или рожденных до пришествия Христа. Это грубая, цифровая пародия на Эдем. Здесь природа симулирована с пугающей точностью: голографическая трава мерцает при приближении, вода имеет неестественную вязкость, а деревья состоят из низкополигональных моделей. Пение птиц исходит из скрытых динамиков, установленных в небе-куполом, создавая эффект «зловещей долины». Стены этого измерения — бесконечные массивы экранов наблюдения, напоминающие о том, что даже здесь за тобой следят.</p>
+    <p class="lang-ru"><em>Лимб</em> — это не просто наказание; это экзистенциальная пустота для добродетельных душ, отказавшихся от веры или рожденных до пришествия Христа. Это грубая, цифровая пародия на Эдем. Здесь природа симулирована с пугающей точностью: голографическая трава мерцает при приближении, вода имеет неестественную вязкость, а деревья состоят из низкополигональных моделей. Пение птиц исходит из скрытых динамиков, установленных в небе-куполе, создавая эффект «зловещей долины». Стены этого измерения — бесконечные массивы экранов наблюдения, напоминающие о том, что даже здесь за тобой следят.</p>
     <p class="lang-en"><em>Limbo</em> is not merely punishment; it is an existential void for virtuous souls who rejected faith or were born before Christ. A crude, digital parody of Eden. Nature here is simulated with terrifying precision: holographic grass flickers upon approach, water has unnatural viscosity, and trees consist of low-poly models. Birdsong emanates from hidden speakers mounted in the dome-sky, creating an "uncanny valley" effect. The walls of this dimension are infinite arrays of surveillance screens, a reminder that even here, you are being watched.</p>
     
     <p id="chrono-15" class="lang-ru">Визуальный стиль Лимба резко контрастирует с последующими кругами: стерильный белый мрамор, геометрическая чистота и отсутствие крови (так как души здесь бестелесны). Однако тишина обманчива. V1, машина, созданная для войны, вторгается в этот статичный мир. Первые столкновения происходят с дронами-разведчиками и <em>Streetcleaners</em> — уборщиками, которые пытаются «стерилизовать» реальность, удаляя аномалии. Именно здесь V1 впервые сталкивается со своим отражением — <em class="lore-ref" data-ref="v2">V2</em>, более совершенной моделью, лишенной эмпатии и созданной исключительно для эффективности убийства. После битвы V1 интегрирует в свой арсенал <em>Knuckleblaster</em> (Кулакомёт), оружие ближнего боя, использующее взрывные заряды для усиления ударов, что символизирует переход от дистанционного уничтожения к жестокой близости.</p>
@@ -1046,8 +1062,6 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     <p class="lang-ru">Атмосфера Похоти пропитана меланхолией и синти-вейвом. Враги здесь адаптировались к среде: <em>Sisyphean Insurrectionists</em> (Сизифовы повстанцы) используют гравитационные пушки, а <em>Virtues</em> (Добродетели) — ангельские дроны — патрулируют небо, считая технологии Миноса ересью. Кульминацией акта становится встреча с <em class="lore-ref" data-ref="corpse-minos">Трупом Короля Миноса</em>. Это не живой король, а гигантская, разлагающаяся оболочка, управляемая роем паразитических змей, символизирующих коррупцию его идеи. Змеи впиваются в нервную систему трупа, заставляя его двигаться. Уничтожение этого монстра — не освобождение души Миноса (она уже была заточена ранее), а акт эвтаназии для оскверненного сосуда. Смерть Трупа открывает путь к истине, скрытой в его плоти.</p>
     <p class="lang-en">The atmosphere of Lust is steeped in melancholy and synth-wave. Enemies here have adapted to the environment: <em>Sisyphean Insurrectionists</em> use gravity cannons, while <em>Virtues</em>—angelic drones—patrol the sky, viewing Minos's technology as heresy. The climax of the act is the encounter with the <em class="lore-ref" data-ref="corpse-minos">Corpse of King Minos</em>. This is not the living king, but a giant, decaying shell controlled by a swarm of parasitic snakes, symbolizing the corruption of his ideal. The snakes burrow into the corpse's nervous system, forcing it to move. Destroying this monster is not the liberation of Minos's soul (which was already imprisoned earlier), but an act of euthanasia for the defiled vessel. The Corpse's death opens the path to the truth hidden within its flesh.</p>
 
-   
-
     <h3 id="chrono-17"><span class="lang-ru">Чрево: Мясной Лабиринт</span><span class="lang-en">Gluttony: The Meat Labyrinth</span></h3>
     <p class="lang-ru"><em>Чрево</em> представляет собой физиологический кошмар. Это внутренний орган самого Ада, пульсирующий, влажный и теплый. Стены выстланы кишками грешников, которые постоянно регенерируют, чтобы компенсировать разрушение желудочной кислотой. Пол усеян костями и плотью, слившейся в единую биомассу. Здесь нет понятия индивидуальности: все сливается в единое целое, перевариваемое вечным голодом. Звуковой дизайн уровня состоит из хлюпающих звуков, тяжелого дыхания и отдаленного рева.</p>
     <p class="lang-en"><em>Gluttony</em> represents a physiological nightmare. It is the internal organ of Hell itself, pulsating, wet, and warm. Walls are lined with sinners' intestines, constantly regenerating to compensate for destruction by stomach acid. The floor is littered with bones and flesh merged into a single biomass. Here, there is no concept of individuality: everything merges into a whole, digested by eternal hunger. The level's sound design consists of squelching noises, heavy breathing, and distant roars.</p>
@@ -1058,7 +1072,6 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     <h3 id="chrono-18"><span class="lang-ru">P-1: Плотская Темница и Истина</span><span class="lang-en">P-1: The Flesh Prison and Truth</span></h3>
     <p class="lang-ru">Секретный уровень <em>P-1</em> переносит игрока внутрь того самого Трупа Миноса, который был побежден в Похоти. Это сюрреалистическое путешествие по гигантскому позвоночнику в абсолютной темноте. Механика уровня требует использования факела; без него игра выдает предупреждение «INSUFFICIENT LIGHT», и здоровье V1 начинает быстро убывать, символизируя страх перед неизвестностью и потерю ориентации в моральной тьме. Музыкальное сопровождение искажается по мере спуска, переходя от эмбиента к глухому белому шуму, имитирующему звук внутри черепа.</p>
     <p class="lang-en">The secret level <em>P-1</em> transports the player inside the very Corpse of Minos defeated in Lust. This is a surreal journey down a giant spine in absolute darkness. The level mechanics require the use of a torch; without it, the game issues an “INSUFFICIENT LIGHT” warning, and V1’s health begins to drain rapidly, symbolizing fear of the unknown and loss of orientation in moral darkness. The musical accompaniment distorts as you descend, transitioning from ambient to dull white noise, mimicking the sound inside a skull.</p>
-    
 
     <div class="lore-card">
       <img src="minos_prime.png" alt="Minos Prime" class="lore-card-img">
@@ -1070,9 +1083,6 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     </div>
     <p class="lang-ru">В глубине находится святилище, где душа Миноса была заточена в <em>Плотской Темнице</em> (Flesh Prison). Это существо, созданное из плоти и костей, служит клеткой для Prime Soul. Уничтожение Темницы освобождает <em class="lore-ref" data-ref="minos-prime">Миноса Прайма</em>. В отличие от своего физического воплощения, Прайм — это чистая энергия воли и правосудия. У него нет лица, так как при жизни он был ослеплен, но теперь он «видит» суть вещей. Минос Прайм атакует V1 не из злобы, а из защитного инстинкта: он понимает, что машины, подобные V1, являются концом всего живого, включая Ад. Его фраза «PREPARE THYSELF» звучит не как угроза, а как предупреждение воина воину. Битва с ним — это проверка мастерства игрока, требующая идеального тайминга и понимания механик парирования.</p>
     <p class="lang-en">Deep within lies the sanctuary where Minos's soul was imprisoned in the <em>Flesh Prison</em>. This creature, made of flesh and bone, serves as a cage for the Prime Soul. Destroying the Prison frees <em class="lore-ref" data-ref="minos-prime">Minos Prime</em>. Unlike his physical embodiment, Prime is pure energy of will and justice. He has no face, as he was blinded in life, but now he "sees" the essence of things. Minos Prime attacks V1 not out of malice, but from a protective instinct: he understands that machines like V1 are the end of all living things, including Hell. His phrase “PREPARE THYSELF” sounds not as a threat, but as a warrior's warning. The battle with him is a test of player skill, requiring perfect timing and understanding of parry mechanics.</p>
-
-    <!-- LORE CARD: Minos Prime -->
-    
   </div>
 </section>
 <!-- ============================================================
@@ -1086,14 +1096,14 @@ body[data-lang="en"] .lang-en.inline{display:inline}
 
   <div class="lore-body">
     <h3><span class="lang-ru">Алчность: Пустыня Золотой Пыли</span><span class="lang-en">Greed: The Desert of Gold Dust</span></h3>
-    <p class="lang-ru"><em>Алчность</em> — это бескрайняя пустыня, где небо занято гигантским, палящим солнцем, а песок на самом деле является измельченной золотой пылью, обжигающей сенсоры V1. Здесь наказываются скупцы и расточители, обреченные вечно таскать неподъемные тяжести вокруг монументов человеческой гордыни. Ландшафт усеян уменьшенными копиями мировых достопримечательностей: пирамидами Гизы, Статуей Свободы, Биг-Беном и Эйфелевой башней, которые служат как препятствиями, так и аренами для битв.</p>
+    <p class="lang-ru"><em>Алчность</em> — это бескрайняя пустыня, где небо занято гигантским палящим солнцем, а песок на самом деле является измельченной золотой пылью, обжигающей сенсоры V1. Здесь наказываются скупцы и расточители, обреченные вечно таскать неподъемные тяжести вокруг монументов человеческой гордыни. Ландшафт усеян уменьшенными копиями мировых достопримечательностей: пирамидами Гизы, Статуей Свободы, Биг-Беном и Эйфелевой башней, которые служат как препятствиями, так и аренами для битв.</p>
     <p class="lang-en"><em>Greed</em> is an endless desert where the sky is dominated by a scorching sun, and the sand is actually pulverized gold dust that burns V1's sensors. Here, the miserly and wasteful are punished, doomed to eternally haul unbearable weights around monuments of human pride. The landscape is littered with miniature replicas of world landmarks: the Pyramids of Giza, the Statue of Liberty, Big Ben, and the Eiffel Tower, serving as both obstacles and battle arenas.</p>
     
     <p class="lang-ru">Враги в Алчности адаптировались к среде: <em>Earthmovers</em> (Землерои) используют огромные буры, чтобы рыть туннели в золотом песке, а <em>Drifters</em> (Скитальцы) парят над поверхностью, используя реактивные двигатели. Атмосфера уровня пропитана ощущением бессмысленности накопительства. Кульминацией акта становится финальная дуэль V1 и <em class="lore-ref" data-ref="v2">V2</em>. V2, стремясь превзойти свою предшественницу, установила себе новую руку с оружием <em>Whiplash</em> (Хлыст), позволяющим притягивать врагов или быстро перемещаться. Однако, несмотря на технологическое превосходство, V2 снова проигрывает из-за своего агрессивного, но предсказуемого стиля боя. В финале битвы V2 срывается с вершины пирамиды и разбивается о землю, оставляя после себя лишь груду металлолома и подтверждая тезис о том, что слепое следование инструкциям ведет к гибели.</p>
     <p class="lang-en">Enemies in Greed have adapted to the environment: <em>Earthmovers</em> use massive drills to tunnel through the golden sand, while <em>Drifters</em> hover above the surface using jet engines. The level's atmosphere is steeped in the futility of hoarding. The climax of the act is the final duel between V1 and <em class="lore-ref" data-ref="v2">V2</em>. V2, seeking to surpass her predecessor, installed a new arm equipped with the <em>Whiplash</em>, allowing her to pull enemies closer or move rapidly. However, despite technological superiority, V2 loses again due to her aggressive but predictable fighting style. In the battle's finale, V2 falls from the pyramid's peak and shatters on the ground, leaving behind only a pile of scrap metal and confirming the thesis that blind adherence to instructions leads to destruction.</p>
 
     <h3 id="chrono-19"><span class="lang-ru">Гнев: Океан Ярости</span><span class="lang-en">Wrath: The Ocean of Rage</span></h3>
-    <p class="lang-ru"><em>Гнев</em> представляет собой бывший реку Стикс, превратившуюся в бурный океан кроваво-красной воды. Уровень разделен на две зоны: на поверхности «активные» грешники яростно дерутся друг с другом за глоток воздуха, создавая хаос и пену; на дне же «унылые» грешники медленно тонут в вязком иле, их лица искажены вечной печалью. Визуальный стиль сочетает в себе штормовое небо, молнии и разрушенные корабли, служащие платформами.</p>
+    <p class="lang-ru"><em>Гнев</em> представляет собой бывшую реку Стикс, превратившуюся в бурный океан кроваво-красной воды. Уровень разделен на две зоны: на поверхности «активные» грешники яростно дерутся друг с другом за глоток воздуха, создавая хаос и пену; на дне же «унылые» грешники медленно тонут в вязком иле, их лица искажены вечной печалью. Визуальный стиль сочетает в себе штормовое небо, молнии и разрушенные корабли, служащие платформами.</p>
     <p class="lang-en"><em>Wrath</em> represents the former river Styx, now transformed into a turbulent ocean of blood-red water. The level is divided into two zones: on the surface, "active" sinners fiercely fight each other for a breath of air, creating chaos and foam; at the bottom, the "sullen" sinners slowly drown in viscous silt, their faces distorted by eternal sorrow. The visual style combines stormy skies, lightning, and wrecked ships serving as platforms.</p>
     
 <!-- LORE CARD: Leviathan -->
@@ -1108,8 +1118,6 @@ body[data-lang="en"] .lang-en.inline{display:inline}
 
     <p class="lang-ru">Здесь V1 встречает <em class="lore-ref" data-ref="ferryman">Паромщика</em> (Charon) — древнего стража, который больше не перевозит души, а охраняет вход в глубины Ада. Его битва требует использования всех навыков движения, так как Паромщик атакует веслом, создавая ударные волны. После его поражения V1 спускается на дно, чтобы сразиться с <em class="lore-ref" data-ref="leviathan">Левиафаном</em>. Это не просто монстр, а коллективное существо, созданное из тысяч слившихся душ унылых грешников. Его сердце, содержащее их сознание, пытается вырваться наружу, но было прибито копьями Габриэля к голове Левиафана, чтобы предотвратить побег. Уничтожение Левиафана — это акт милосердия, освобождающий души от вечных мук слияния.</p>
     <p class="lang-en">Here V1 encounters the <em class="lore-ref" data-ref="ferryman">Ferryman</em> (Charon)—an ancient guardian who no longer ferries souls but guards the entrance to Hell's depths. His battle requires mastery of all movement skills, as the Ferryman attacks with his oar, creating shockwaves. After defeating him, V1 descends to the bottom to face the <em class="lore-ref" data-ref="leviathan">Leviathan</em>. This is not just a monster, but a collective being formed from thousands of merged souls of the sullen sinners. Its heart, containing their consciousness, tries to escape, but was nailed by Gabriel's spears to the Leviathan's head to prevent escape. Destroying the Leviathan is an act of mercy, freeing the souls from the eternal torment of fusion.</p>
-
-    
 
     <h3 id="chrono-20"><span class="lang-ru">Ересь: Железный Город Дит</span><span class="lang-en">Heresy: The Iron City of Dis</span></h3>
     <p class="lang-ru"><em>Ересь</em> — это индустриальный кошмар, город Дит, построенный из черного железа и камня. Здесь наказываются еретики: их запирают в раскаленных металлических гробах или погружают в реки кипящей крови. Архитектура уровня напоминает готические соборы, смешанные с фабричными трубами и механизмами. Небо над городом затянуто дымом, а свет пробивается сквозь узкие щели, создавая драматичные тени.</p>
@@ -1163,9 +1171,6 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     <p class="lang-ru">В центре лабиринта обитает <em class="lore-ref" data-ref="minotaur">Минотавр</em> — древний демон, созданный как подарок для Короля Миноса. Однако Минос, увидев чудовищную природу существа, в ужасе бросил его в лабиринт, где тот заперт навеки. Минотавр не злобен по своей природе; он просто хочет найти выход и увидеть небо, которого никогда не знал. Его атаки мощны и разрушительны: он использует рога для тарана, копыта для создания ударных волн и может призывать каменные столбы из земли. Битва с ним требует идеального уклонения и использования окружающей среды, так как прямое противостояние почти невозможно.</p>
     <p class="lang-en">At the center of the labyrinth dwells the <em class="lore-ref" data-ref="minotaur">Minotaur</em>—an ancient demon created as a gift for King Minos. However, Minos, seeing the monstrous nature of the creature, threw it into the labyrinth in horror, where it has been trapped forever. The Minotaur is not malicious by nature; he simply wants to find an exit and see the sky he has never known. His attacks are powerful and destructive: he uses his horns for ramming, hooves for creating shockwaves, and can summon stone pillars from the ground. The battle with him requires perfect dodging and use of the environment, as direct confrontation is nearly impossible.</p>
 
-    <!-- LORE CARD: Minotaur -->
-    
-
     <h3><span class="lang-ru">Первый Круг Насилия: Река Крови</span><span class="lang-en">First Circle of Violence: The River of Blood</span></h3>
     <p class="lang-ru">Первый круг Насилия предназначен для убийц и тиранов, погруженных в <em>Флегетон</em> — реку кипящей крови. После вымирания человечества река «забилась» трупами, превратившись в вязкую массу из плоти и крови. Уровень представляет собой поле боя, заваленное остатками человеческих тел, оружия и техники. Визуальный стиль мрачен: темно-красные тона, дым от горящих останков и постоянное хлюпанье крови под ногами V1.</p>
     <p class="lang-en">The First Circle of Violence is designated for murderers and tyrants immersed in <em>Phlegethon</em>—the river of boiling blood. After humanity's extinction, the river "clogged" with corpses, turning into a viscous mass of flesh and blood. The level represents a battlefield littered with remnants of human bodies, weapons, and machinery. The visual style is grim: dark red tones, smoke from burning remains, and the constant squelching of blood under V1's feet.</p>
@@ -1177,7 +1182,7 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     <p class="lang-ru">Второй круг — это <em>Лес самоубийц</em>, где души тех, кто покончил с собой, превращены в хрупкие белые деревья с человеческими чертами. Стволы деревьев имеют форму искаженных тел, а ветви напоминают скрюченные пальцы. Атмосфера уровня пропитана тишиной и печалью, нарушаемой лишь звуком ломающихся ветвей. Это единственный уровень в игре, где враги активно сражаются друг с другом: машины, демоны и хаски (Husks) нападают не только на V1, но и на других существ, создавая хаос на поле боя.</p>
     <p class="lang-en">The Second Circle is the <em>Wood of the Suicides</em>, where the souls of those who took their own lives are transformed into fragile white trees with human features. The trunks have the shape of distorted bodies, and the branches resemble twisted fingers. The level's atmosphere is steeped in silence and sorrow, broken only by the sound of breaking branches. This is the only level in the game where enemies actively fight each other: machines, demons, and Husks attack not only V1 but also other creatures, creating chaos on the battlefield.</p>
     
-    <p class="lang-ru">Один из гигантских <em class="lore-ref" data-ref="earthmover">Earthmovers</em> (Землероев) осажает лес, бомбя его ракетами и выпуская волны врагов. Землерой — это колоссальная боевая машина, созданная человечеством для войны с Адом. Его присутствие здесь символизирует бессмысленность конфликта: даже после вымирания людей их машины продолжают разрушать. V1 должна использовать мобильность и окружение, чтобы выжить в этом хаосе, прыгая между деревьями и уклоняясь от взрывов. Уничтожение Землероя требует проникновения внутрь его корпуса через открытые люки и атаки на ядро изнутри.</p>
+    <p class="lang-ru">Один из гигантских <em class="lore-ref" data-ref="earthmover">Earthmovers</em> (Землероев) осаждает лес, бомбя его ракетами и выпуская волны врагов. Землерой — это колоссальная боевая машина, созданная человечеством для войны с Адом. Его присутствие здесь символизирует бессмысленность конфликта: даже после вымирания людей их машины продолжают разрушать. V1 должна использовать мобильность и окружение, чтобы выжить в этом хаосе, прыгая между деревьями и уклоняясь от взрывов. Уничтожение Землероя требует проникновения внутрь его корпуса через открытые люки и атаки на ядро изнутри.</p>
     <p class="lang-en">One of the giant <em class="lore-ref" data-ref="earthmover">Earthmovers</em> besieges the forest, bombing it with missiles and releasing waves of enemies. The Earthmover is a colossal war machine created by humanity to fight Hell. Its presence here symbolizes the futility of conflict: even after humanity's extinction, their machines continue to destroy. V1 must use mobility and the environment to survive this chaos, jumping between trees and dodging explosions. Destroying the Earthmover requires penetrating inside its hull through open hatches and attacking the core from within.</p>
 
     <h3 id="chrono-25"><span class="lang-ru">Третий Круг Насилия: Пустыня Отчаяния</span><span class="lang-en">Third Circle of Violence: Desert of Despair</span></h3>
@@ -1199,15 +1204,15 @@ body[data-lang="en"] .lang-en.inline{display:inline}
   </div>
 
   <div class="lore-body">
-    <p id="chrono-26" class="lang-ru">Восьмой слой Ада, <em>Обман</em>, радикально отличается от всех предыдущих кругов. Если раньше наказания были физическими и понятными (кровь, огонь, лед), то здесь Ад атакует саму суть восприятия. Это постоянно меняющийся лабиринт, где законы физики, времени и пространства подчиняются воле искаженной реальности. Основное место действия — <em>Город Мёртвого Солнца</em> (City of the Dead Sun), сюрреалистичная копия человеческого поселения эпохи «Нового Мира» (New Peace), сочетающая архитектуру Флоренции эпохи Возрождения с парижскими бульварами и бруталистскими конструкциями. Весь город заключен внутри гигантского горизонтального цилиндра О’Нила, вращающегося в пустоте, что создает искусственную гравитацию и цикл дня и ночи, который больше не зависит от настоящего солнца.</p>
+    <p id="chrono-26" class="lang-ru">Восьмой слой Ада, <em>Обман</em>, радикально отличается от всех предыдущих кругов. Если раньше наказания были физическими и понятными (кровь, огонь, лед), то здесь Ад атакует саму суть восприятия. Это постоянно меняющийся лабиринт, где законы физики, времени и пространства подчиняются воле искаженной реальности. Основное место действия — <em>Город Мёртвого Солнца</em> (City of the Dead Sun), сюрреалистичная копия человеческого поселения эпохи «Нового Мира» (New Peace), сочетающая архитектуру Флоренции эпохи Возрождения с парижскими бульварами и бруталистскими конструкциями. Весь город заключен внутри гигантского горизонтального цилиндра О'Нила, вращающегося в пустоте, что создает искусственную гравитацию и цикл дня и ночи, который больше не зависит от настоящего солнца.</p>
     <p class="lang-en">The eighth layer of Hell, <em>Fraud</em>, differs radically from all previous circles. Where punishments were once physical and understandable (blood, fire, ice), here Hell attacks the very essence of perception. It is a constantly shifting labyrinth where the laws of physics, time, and space bow to the will of distorted reality. The primary location is the <em>City of the Dead Sun</em>, a surreal recreation of a "New Peace" era human settlement, blending Renaissance Florence architecture with Parisian boulevards and brutalist structures. The entire city is enclosed within a massive horizontal O'Neill cylinder rotating in the void, creating artificial gravity and a day-night cycle no longer dependent on a real sun.</p>
 
     <h3><span class="lang-ru">8-1: Hurtbreak Wonderland — Архитектура Лжи</span><span class="lang-en">8-1: Hurtbreak Wonderland — Architecture of Lies</span></h3>
     <p class="lang-ru">Первый уровень слоя погружает игрока в клаустрофобную атмосферу винтажных интерьеров: бесконечные коридоры отелей 70-х годов, гостиные с выцветшими обоями, кухни с ржавой посудой и ванные комнаты, покрытые плесенью. Эти пространства кажутся уютными, но при ближайшем рассмотрении оказываются ловушками: двери ведут в стены, окна выходят в кирпичную кладку, а зеркала отражают не то, что должно быть. Визуальный стиль использует теплые, но болезненные оттенки желтого и коричневого, создавая ощущение застоя и разложения.</p>
     <p class="lang-en">The first level immerses the player in the claustrophobic atmosphere of vintage interiors: endless corridors of 70s hotels, living rooms with faded wallpaper, kitchens with rusty dishes, and mold-covered bathrooms. These spaces seem cozy but reveal themselves as traps upon closer inspection: doors lead into walls, windows open onto brickwork, and mirrors reflect what should not be there. The visual style uses warm but sickly shades of yellow and brown, creating a sense of stagnation and decay.</p>
     
-    <p class="lang-ru">Ключевым элементом уровня является <em>Зал Архангелов</em> (Archangel Hall). На стене висит огромная фреска, изображающая пять фигур в золотых нимбах. Подписи под ними гласят: <em>Михаил</em> (Божья Мудрость), <em>Рафаэль</em> (Божья Сила), <em>Габриэль</em> (Божья Воля) и <em>Фануэль</em> (Божье Терпение). Однако пятая фигура вырвана из картины вместе с куском штукатурки, а имя под ней тщательно соскоблено. Контекст подсказывает, что это был <em>Люцифер</em>, чье существование было стерто из официальной истории Небес после падения. Также в уровне встречаются статуи «Создание Древа Жизни», изображающие льва, пожирающего стилизованное солнце — классический алхимический символ <em>Rubeus</em> (красной стадии Великого Делания), означающий смерть старого и рождение нового через разрушение. Книги, разбросанные по уровню, описывают отчаянные попытки человечества связаться с другими колониями Землероев во время «Долгой Ночи» и этические дилеммы создания технологии клонирования вымерших животных для восстановления экосистемы.</p>
-    <p class="lang-en">A key element of the level is the <em>Archangel Hall</em>. A huge fresco hangs on the wall, depicting five figures in golden halos. The captions read: <em>Michael</em> (God’s Wisdom), <em>Raphael</em> (God’s Strength), <em>Gabriel</em> (God’s Will), and <em>Phanuel</em> (God’s Patience). However, the fifth figure is torn out of the painting along with a piece of plaster, and the name beneath it is carefully scraped away. Context suggests this was <em>Lucifer</em>, whose existence was erased from Heaven's official history after the fall. Also present are statues titled “The Creation of the Tree of Life,” depicting a lion devouring a stylized sun—a classic alchemical symbol of <em>Rubeus</em> (the red stage of the Great Work), signifying the death of the old and birth of the new through destruction. Books scattered throughout the level describe humanity's desperate attempts to contact other Earthmover colonies during the "Long Night" and the ethical dilemmas of creating cloning technology for extinct animals to restore the ecosystem.</p>
+    <p class="lang-ru">Ключевым элементом уровня является <em>Зал Архангелов</em> (Archangel Hall). На стене висит огромная фреска, изображающая пять фигур в золотых нимбах. Подписи под ними гласят: <em class="lore-ref" data-ref="michael">Михаил</em> (Божья Мудрость), <em class="lore-ref" data-ref="raphael">Рафаэль</em> (Божья Сила), <em class="lore-ref" data-ref="gabriel">Габриэль</em> (Божья Воля) и <em class="lore-ref" data-ref="phanuel">Фануэль</em> (Божье Терпение). Однако пятая фигура вырвана из картины вместе с куском штукатурки, а имя под ней тщательно соскоблено. Контекст подсказывает, что это был <em>Люцифер</em>, чье существование было стерто из официальной истории Небес после падения. Также в уровне встречаются статуи «Создание Древа Жизни», изображающие льва, пожирающего стилизованное солнце — классический алхимический символ <em>Rubeus</em> (красной стадии Великого Делания), означающий смерть старого и рождение нового через разрушение. Книги, разбросанные по уровню, описывают отчаянные попытки человечества связаться с другими колониями Землероев во время «Долгой Ночи» и этические дилеммы создания технологии клонирования вымерших животных для восстановления экосистемы.</p>
+    <p class="lang-en">A key element of the level is the <em>Archangel Hall</em>. A huge fresco hangs on the wall, depicting five figures in golden halos. The captions read: <em class="lore-ref" data-ref="michael">Michael</em> (God’s Wisdom), <em class="lore-ref" data-ref="raphael">Raphael</em> (God’s Strength), <em class="lore-ref" data-ref="gabriel">Gabriel</em> (God’s Will), and <em class="lore-ref" data-ref="phanuel">Phanuel</em> (God’s Patience). However, the fifth figure is torn out of the painting along with a piece of plaster, and the name beneath it is carefully scraped away. Context suggests this was <em>Lucifer</em>, whose existence was erased from Heaven's official history after the fall. Also present are statues titled “The Creation of the Tree of Life,” depicting a lion devouring a stylized sun—a classic alchemical symbol of <em>Rubeus</em> (the red stage of the Great Work), signifying the death of the old and birth of the new through destruction. Books scattered throughout the level describe humanity's desperate attempts to contact other Earthmover colonies during the "Long Night" and the ethical dilemmas of creating cloning technology for extinct animals to restore the ecosystem.</p>
 
     <h3><span class="lang-ru">8-2: Through the Mirror — Зазеркалье Ужаса</span><span class="lang-en">8-2: Through the Mirror — The Horror Beyond the Glass</span></h3>
     <p class="lang-ru">Этот уровень представляет собой шедевр нелинейного дизайна. Он разделен на две взаимосвязанные секции: «Дневную» (реальный мир) и «Ночную» (зеркальное отражение), соединенные центральным хабом. Дневная часть наполнена офисами 90-х годов с громоздкими компьютерами, складами с коробками и парковками, заполненными автомобилями 30-х годов. Ночная часть — это искаженная, темная версия того же пространства, где цвета инвертированы, а геометрия нарушена. Игрок должен постоянно переключаться между мирами, используя зеркала как порталы, чтобы решать головоломки и открывать пути.</p>
@@ -1325,7 +1330,7 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     <p class="lang-en">According to this theory, Hell uses V1 as a virus or cleaning tool. Machines, being soulless, are not subject to Hell's punishments, making them ideal agents for destroying the system from within. Hell may be "amused" by watching the slaughter, or it may follow its own incomprehensible logic of survival, using V1 to eliminate threats from Heaven (angels) and internal parasites (demons).</p>
 
     <h3><span class="lang-ru">Теория о Боге-Машине (The Machine God)</span><span class="lang-en">The Machine God Theory</span></h3>
-    <p class="lang-ru">Одна из самых мрачных теорий гласит, что Бог в вселенной ULTRAKILL либо мертв, либо сам стал машиной. Финальная битва называется «Godfist Suicide» (Самоубийство Божьего Кулака). Если Бог — это машина, то V1, будучи машиной, может быть его частью или ключом к его перезагрузке. Уничтожение Бога может быть не актом бунта, а актом милосердия или необходимости, чтобы остановить бесконечный цикл войны между Небесами и Адом.</p>
+    <p class="lang-ru">Одна из самых мрачных теорий гласит, что Бог во вселенной ULTRAKILL либо мертв, либо сам стал машиной. Финальная битва называется «Godfist Suicide» (Самоубийство Божьего Кулака). Если Бог — это машина, то V1, будучи машиной, может быть его частью или ключом к его перезагрузке. Уничтожение Бога может быть не актом бунта, а актом милосердия или необходимости, чтобы остановить бесконечный цикл войны между Небесами и Адом.</p>
     <p class="lang-en">One of the darkest theories states that God in the ULTRAKILL universe is either dead or has become a machine himself. The final battle is called "Godfist Suicide." If God is a machine, then V1, being a machine, may be part of him or the key to his reboot. Destroying God may not be an act of rebellion, but an act of mercy or necessity to stop the endless cycle of war between Heaven and Hell.</p>
 
     <h3><span class="lang-ru">Теория о Цикличности Времени</span><span class="lang-en">The Time Loop Theory</span></h3>
@@ -1492,6 +1497,13 @@ body[data-lang="en"] .lang-en.inline{display:inline}
         <p class="lang-en">The internal defense system of the Earthmover. Includes mortars and rocket launchers firing in arcs. Key mechanic: projectiles can be parried back into their launch points, causing a chain reaction of explosions and instantly destroying the base. This requires a perfect sense of space and time.</p>
       </div>
     </div>
+    <div class="enemy-card" id="enemy-terminal">
+      <div class="enemy-card-img"><img src="terminal.png" alt="Terminal" loading="lazy"></div>
+      <div class="enemy-card-body"><h4>Terminal</h4>
+        <p class="lang-ru">Стационарная машина-телепорт, изначально созданная для переноса материи между поверхностью и Адом. После закрытия проекта остались внизу, научились скучать и сформировали симбиоз с машинами: обменивают припасы на зрелищные записи боёв. Начисляют «очки» за стиль и служат внутриигровыми магазинами.</p>
+        <p class="lang-en">A stationary teleport machine originally built to transfer matter between the surface and Hell. Abandoned after the project's closure, they learned to feel boredom and formed a symbiosis with the machines: trading supplies for spectacular combat footage. They award "points" for style and serve as in-game shops.</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1507,7 +1519,7 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     <div class="enemy-card" id="enemy-malicious-face">
       <div class="enemy-card-img"><img src="malicious_face.png" alt="Malicious Face" loading="lazy"></div>
       <div class="enemy-card-body"><h4>Malicious Face</h4>
-        <p class="lang-ru">Первый настоящий демон, встречающийся в игре. Плавающее лицо с открытым ртом, стреляющее залпами снарядов. Его главная угроза — заряжаемый лазерный луч, который оставляет красную линию предупреждения. В ярости выпускает два луча подряд. Труп демона тяжелый и может раздавить других врагов, если упадет на них, что можно использовать тактически.</p>
+        <p class="lang-ru">Первый настоящий демон, встречающийся в игре. Плавающее лицо с открытым ртом, стреляющее залпами снарядов. Его главная угроза — заряжаемый лазерный луч, который оставляет красную линию предупреждения. В ярости выпускает два луча подряд. Труп демона тяжелый и может раздавить других врагов, если упадёт на них, что можно использовать тактически.</p>
         <p class="lang-en">The first true demon encountered in the game. A floating face with an open mouth, firing volleys of projectiles. Its main threat is a charging laser beam that leaves a red warning line. Enraged, it fires two beams in succession. The demon's corpse is heavy and can crush other enemies if it falls on them, which can be used tactically.</p>
       </div>
     </div>
@@ -1563,8 +1575,8 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     <div class="enemy-card" id="enemy-minotaur">
       <div class="enemy-card-img"><img src="minotaur.png" alt="Minotaur" loading="lazy"></div>
       <div class="enemy-card-body"><h4>Minotaur</h4>
-        <p class="lang-ru">Древний демон, созданный как подарок Миносу, но отвергнутый из-за своей чудовищной природы. Заперт в лабиринте Сада Расходящихся Троп. Атакует таранами рогами, ударами копыт и призывом каменных столбов. Он не злобен, а просто хочет найти выход и увидеть небо. Битва с ним — испытание на мастерство уклонения.</p>
-        <p class="lang-en">An ancient demon created as a gift for Minos but rejected due to its monstrous nature. Trapped in the labyrinth of the Garden of Forking Paths. Attacks with horn rams, hoof strikes, and summoning stone pillars. He is not malicious, but simply wants to find an exit and see the sky. The battle with him is a test of dodging mastery.</p>
+        <p class="lang-ru">Древний демон, созданный как подарок Миносу, но отвергнутый из-за своей чудовищной природы. Заперт в лабиринте Сада Расходящихся Троп. Атакует ударами рогами, копытами и призывом каменных столбов. Он не злобен, а просто хочет найти выход и увидеть небо. Битва с ним — испытание на мастерство уклонения.</p>
+        <p class="lang-en">An ancient demon created as a gift for Minos but rejected due to its monstrous nature. Trapped in the labyrinth of the Garden of Forking Paths. Attacks with horn strikes, hooves, and summoning stone pillars. He is not malicious, but simply wants to find an exit and see the sky. The battle with him is a test of dodging mastery.</p>
       </div>
     </div>
   </div>
@@ -1628,6 +1640,13 @@ body[data-lang="en"] .lang-en.inline{display:inline}
         <p class="lang-en">Archangel of God's Patience. In the fresco, he looks the most robotic, with an inverted green triangle instead of a halo. In the Book of Enoch, associated with repentance. In ULTRAKILL, his role is least revealed, but his image hints at a connection with technology or artificial control over faith.</p>
       </div>
     </div>
+    <div class="enemy-card" id="enemy-council">
+      <div class="enemy-card-img"><img src="holy.png" alt="Holy Council" loading="lazy"></div>
+      <div class="enemy-card-body"><h4>Holy Council</h4>
+        <p class="lang-ru">Группа высокопоставленных ангелов, узурпировавшая власть после исчезновения Бога. Управляет Святым Светом как инструментом контроля и скрывает правду о молчании Творца. Уничтожен Габриэлем после его второго поражения от V1.</p>
+        <p class="lang-en">A group of high-ranking angels who usurped power after God's disappearance. They wield the Holy Light as an instrument of control and conceal the truth of the Creator's silence. Destroyed by Gabriel after his second defeat by V1.</p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1676,7 +1695,7 @@ body[data-lang="en"] .lang-en.inline{display:inline}
     <div class="enemy-card" id="enemy-cancerous-rodent">
   <div class="enemy-card-img"><img src="cancerous_rodent.png" alt="Cancerous Rodent" loading="lazy"></div>
   <div class="enemy-card-body"><h4>Cancerous Rodent</h4>
-    <p class="lang-ru">Секретный «босс» уровня 1-2: The Burning World. Представляет собой скопление из примерно 15 полигонов, отдалённо напоминающее мышь. Не атакует, медленно движется к V1 и игнорирует коллизии, проходя сквозь стены и пол. Самый слабый враг в игре с наименьшим запасом здоровья, но его убийство призывает Very Cancerous Rodent. Отсылка к персонажу Cancer Mouse с YouTube-канала Civvie11.</p>
+    <p class="lang-ru">Секретный «босс» уровня 1-2: The Burning World. Представляет собой скопление примерно из 15 полигонов, отдалённо напоминающее мышь. Не атакует, медленно движется к V1 и игнорирует коллизии, проходя сквозь стены и пол. Самый слабый враг в игре с наименьшим запасом здоровья, но его убийство призывает Very Cancerous Rodent. Отсылка к персонажу Cancer Mouse с YouTube-канала Civvie11.</p>
     <p class="lang-en">A secret "boss" of the 1-2: The Burning World level. It is a collection of roughly 15 polygons vaguely arranged in the shape of a mouse. It has no attacks, moves slowly toward V1, and ignores collision, clipping through walls and floors. The weakest enemy in the game with the lowest health, but killing it spawns the Very Cancerous Rodent. A reference to the Cancer Mouse character from the Civvie11 YouTube channel.</p>
   </div>
 </div>
@@ -1742,6 +1761,11 @@ body[data-lang="en"] .lang-en.inline{display:inline}
 </footer>
 
 <!-- ============================================================
+     AUDIO ELEMENTS
+     ============================================================ -->
+<audio id="bgmusic" src="take_care.mp3" loop preload="none"></audio>
+
+<!-- ============================================================
      JAVASCRIPT
      ============================================================ -->
 <script>
@@ -1761,7 +1785,6 @@ document.querySelectorAll('.chrono-item').forEach(function(item){
     var el = document.getElementById(target);
     if (el) {
       el.scrollIntoView({behavior:'smooth', block:'start'});
-      /* brief highlight of the target line */
       var prevOutline = el.style.outline;
       el.style.transition = 'outline-color .3s, background .3s';
       el.style.outline = '2px solid rgba(227,6,19,.6)';
@@ -1774,9 +1797,19 @@ document.querySelectorAll('.chrono-item').forEach(function(item){
 });
 
 /* ============================================================
-   CLICKABLE LORE REFERENCES -> SCROLL TO BESTIARY CARD
+   BROKEN REF DETECTION — mark links whose target is missing
    ============================================================ */
 document.querySelectorAll('.lore-ref').forEach(function(ref){
+  var id = 'enemy-' + ref.getAttribute('data-ref');
+  if (!document.getElementById(id)) {
+    ref.classList.add('lore-ref-broken');
+  }
+});
+
+/* ============================================================
+   CLICKABLE LORE REFERENCES -> SCROLL TO BESTIARY CARD
+   ============================================================ */
+document.querySelectorAll('.lore-ref:not(.lore-ref-broken)').forEach(function(ref){
   ref.addEventListener('click', function(){
     var id = 'enemy-' + this.getAttribute('data-ref');
     var target = document.getElementById(id);
@@ -1790,17 +1823,50 @@ document.querySelectorAll('.lore-ref').forEach(function(ref){
 });
 
 /* ============================================================
-   LANGUAGE SWITCH + VHS EFFECT
+   MUSIC TOGGLE
+   ============================================================ */
+(function(){
+  var musicBtn = document.getElementById('music-toggle');
+  var bgMusic = document.getElementById('bgmusic');
+  var musicOn = false;
+
+  musicBtn.addEventListener('click', function(){
+    if (musicOn) {
+      bgMusic.pause();
+      musicOn = false;
+      musicBtn.classList.remove('active');
+      musicBtn.textContent = '♪ OFF';
+    } else {
+      bgMusic.play().then(function(){
+        musicOn = true;
+        musicBtn.classList.add('active');
+        musicBtn.textContent = '♪ ON';
+      }).catch(function(){ /* autoplay blocked or file missing */ });
+    }
+  });
+})();
+
+/* ============================================================
+   LANGUAGE SWITCH + VHS EFFECT + land.wav
    ============================================================ */
 (function(){
   var body = document.body;
   var buttons = document.querySelectorAll('[data-set-lang]');
+  var landSound = new Audio('land.wav');
+  landSound.preload = 'auto';
 
   var TITLES = { ru: 'ULTRAKILL — КНИГА ЛОРА', en: 'ULTRAKILL — LOREBOOK' };
   var BRAND_SUB = { ru: 'КНИГА ЛОРА', en: 'LOREBOOK' };
   var HERO_TAG = { ru: 'АРХИВ', en: 'ARCHIVE' };
   var NAV_LORE = { ru: 'Лор', en: 'Lore' };
   var NAV_BESTIARY = { ru: 'Бестиарий', en: 'Bestiary' };
+
+  function playLand(){
+    try {
+      landSound.currentTime = 0;
+      landSound.play().catch(function(){});
+    } catch(e){}
+  }
 
   function setLang(lang){
     body.setAttribute('data-lang', lang);
@@ -1822,12 +1888,14 @@ document.querySelectorAll('.lore-ref').forEach(function(ref){
 
     /* VHS + SCANLINE glitch burst */
     body.classList.remove('vhs-active','glitch-active');
-    /* force reflow so animation restarts */
     void body.offsetWidth;
     body.classList.add('vhs-active','glitch-active');
     setTimeout(function(){
       body.classList.remove('vhs-active','glitch-active');
     }, 620);
+
+    /* Land sound */
+    playLand();
   }
 
   buttons.forEach(function(btn){
@@ -1837,6 +1905,96 @@ document.querySelectorAll('.lore-ref').forEach(function(ref){
   });
 
   setLang(body.getAttribute('data-lang') || 'ru');
+})();
+
+/* ============================================================
+   OFF SOUND — plays when clicking a link / lore reference
+   ============================================================ */
+(function(){
+  var offSound = new Audio('off.ogg');
+  offSound.preload = 'auto';
+
+  function playOff(){
+    try {
+      offSound.currentTime = 0;
+      offSound.play().catch(function(){});
+    } catch(e){}
+  }
+
+  document.addEventListener('click', function(e){
+    var link = e.target.closest(
+      'a[href], .lore-ref:not(.lore-ref-broken), .chrono-item'
+    );
+    if (link) playOff();
+  });
+})();
+
+/* ============================================================
+   BRAND TYPEWRITER — "ULTRAKILL // " letter by letter + hint.mp3
+   ============================================================ */
+(function(){
+  var brandMain = document.getElementById('brand-main');
+  var brandSub  = document.getElementById('brand-sub');
+  if (!brandMain) return;
+
+  var hintSound = new Audio('hint.mp3');
+  hintSound.preload = 'auto';
+  hintSound.volume = 0.6;
+
+  var PREFIX = 'ULTRAKILL';
+  var SUFFIX = ' // ';
+  var FULL   = PREFIX + SUFFIX;
+
+  var typingTimer = null;
+  var soundBlocked = false;
+
+  function render(count){
+    var head = FULL.slice(0, Math.min(count, PREFIX.length));
+    var tail = count > PREFIX.length ? FULL.slice(PREFIX.length, count) : '';
+    brandMain.innerHTML = head + (tail ? '<span class="brand-slash">' + tail + '</span>' : '');
+  }
+
+  function playHint(){
+    try {
+      hintSound.currentTime = 0;
+      var p = hintSound.play();
+      if (p && p.catch) p.catch(function(){ soundBlocked = true; });
+    } catch(e){ soundBlocked = true; }
+  }
+
+  function startTyping(withSound){
+    if (typingTimer) { clearTimeout(typingTimer); typingTimer = null; }
+    brandMain.innerHTML = '';
+    if (brandSub) brandSub.classList.add('brand-sub-hidden');
+    soundBlocked = false;
+
+    var i = 0;
+    function tick(){
+      i++;
+      render(i);
+      if (withSound) playHint();
+      if (i < FULL.length) {
+        typingTimer = setTimeout(tick, 55);
+      } else {
+        typingTimer = setTimeout(function(){
+          if (brandSub) brandSub.classList.remove('brand-sub-hidden');
+        }, 160);
+      }
+    }
+    tick();
+  }
+
+  startTyping(true);
+
+  /* Autoplay-политика: если звук заблокирован до первого клика,
+     повторяем печать со звуком на первом же действии пользователя. */
+  function onFirstGesture(){
+    document.removeEventListener('pointerdown', onFirstGesture);
+    document.removeEventListener('keydown', onFirstGesture);
+    if (soundBlocked) startTyping(true);
+  }
+  document.addEventListener('pointerdown', onFirstGesture);
+  document.addEventListener('keydown', onFirstGesture);
 })();
 </script>
 
