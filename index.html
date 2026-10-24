@@ -227,13 +227,13 @@ body[data-lang="en"] .lang-en.inline{display:inline}
 .lore-body h3.layer{
   text-align:right;
   font-size:1.5em;
-  border-left:none;         /* убрать красную полоску слева */
-  padding-left:0;           /* убрать отступ, который был под полоску */
+  border-left:none;
+  padding-left:0;
   padding-right:.9rem;
   letter-spacing:.14em;
   margin-top:3rem;
   margin-bottom:1.2rem;
-  color:var(--red-bright);  /* опционально — сделать чуть заметнее */
+  color:var(--red-bright);
   text-shadow:0 0 14px rgba(227,6,19,.35);
   clear:right;
 }
@@ -273,7 +273,7 @@ em.lore-ref.lore-ref-broken{
 }
 .lore-card{
   position:absolute;
-  top:-30px;
+  top: -140px;
   right:-320px;
   width:300px;
   min-height:250px;
@@ -318,23 +318,31 @@ em.lore-ref.lore-ref-broken{
   z-index:20;
 }
 .lore-card-img{
+  position:absolute;
+  inset:0;
   width:100%;
-  height:110px;
+  height:100%;
   object-fit:cover;
-  flex:0 0 110px;
-  background:#000;
-  filter:brightness(.95) contrast(1.05);
+  z-index:0;
+  border:none;
+  flex:none;
+  filter:brightness(.9) contrast(1.05);
+  pointer-events:none;
   transition:filter .3s;
-  border-bottom:1px solid var(--border);
+  object-position: center 15%;
 }
-.lore-card:hover .lore-card-img{filter:brightness(1.05) contrast(1.1)}
+.lore-card:hover .lore-card-img{
+  filter:brightness(.9) contrast(1.1);
+}
 .lore-card-content{
-  display:flex;
-  flex-direction:column;
+  position:relative;
+  z-index:1;
+  padding:.7rem .85rem;
   min-width:0;
   flex:1 1 auto;
-  padding:.7rem .85rem;
-  overflow:hidden;
+  background:rgba(10, 6, 6, .72);
+  backdrop-filter:blur(1px);
+  -webkit-backdrop-filter:blur(1px);
 }
 .lore-card-name{
   font-family:'Oswald',sans-serif;font-size:.88rem;font-weight:700;
@@ -395,7 +403,8 @@ em.lore-ref.lore-ref-broken{
   align-items:center;gap:.8rem;user-select:none;
 }
 .chrono-title{
-  font-family:'Oswald',sans-serif;font-size:clamp(1.5rem,3.4vw,2.3rem);
+  font-family:'Oswald',sans-serif;font-size:clamp(2.5rem,5.4vw,4.3rem);
+  padding-bottom: 20px;
   text-transform:uppercase;letter-spacing:.14em;color:#fff;
   text-shadow:0 0 24px var(--red-glow);line-height:1.1;
 }
@@ -421,11 +430,11 @@ em.lore-ref.lore-ref-broken{
   opacity:.9;
 }
 .chrono-arrow::before{
-  left:calc(50% - 15px);
+  left:calc(50% - 12px);
   transform:translateY(-50%) rotate(35deg);
 }
 .chrono-arrow::after{
-  left:calc(50% + 1px);
+  left:calc(50%);
   transform:translateY(-50%) rotate(-35deg);
 }
 .chronology.open .chrono-arrow::before{transform:translateY(-50%) rotate(-35deg)}
@@ -671,6 +680,70 @@ em.lore-ref.lore-ref-broken{
 #parry-flash.active{opacity:1;transition:opacity .02s ease;}
 
 /* ============================================================
+   NEW: CARD TEXT SELECTION & COPY
+   ============================================================ */
+/* Описания — это текст, его можно выделять */
+.enemy-card-body p,
+.lore-card-desc,
+.vs-card li{
+  cursor:text;
+  -webkit-user-select:text;
+  -moz-user-select:text;
+  user-select:text;
+}
+/* Заголовки и картинки по-прежнему «кликабельные» */
+.enemy-card-body h4,
+.lore-card-name,
+.vs-card h3{
+  cursor:pointer;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  user-select:none;
+}
+
+.card-copy-btn{
+  position:absolute;
+  top:.5rem;
+  right:.5rem;
+  z-index:6;
+  width:30px;
+  height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  background:rgba(10,6,6,.85);
+  border:1px solid var(--border);
+  color:var(--text-dim);
+  font-size:.9rem;
+  font-family:'Share Tech Mono',monospace;
+  border-radius:2px;
+  cursor:pointer;
+  opacity:0;
+  transition:opacity .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+.enemy-card:hover .card-copy-btn,
+.lore-card:hover .card-copy-btn,
+.vs-card:hover .card-copy-btn,
+.card-copy-btn:focus-visible{
+  opacity:1;
+}
+.card-copy-btn:hover{
+  background:rgba(227,6,19,.25);
+  border-color:var(--red);
+  color:#fff;
+}
+.card-copy-btn.copied{
+  background:rgba(0,255,0,.18);
+  border-color:#0f0;
+  color:#0f0;
+  opacity:1;
+}
+@media (max-width:768px){
+  .card-copy-btn{opacity:1;}
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 
@@ -682,37 +755,69 @@ em.lore-ref.lore-ref-broken{
 @media (max-width: 1500px){
   .lore-card{right:-280px;width:280px;min-height:240px;}
   .note-anchor.left .lore-card{left:-280px;}
-  .lore-card-img{height:100px;flex:0 0 100px;}
   .lore-card-name{font-size:.85rem;}
   .lore-card-desc{font-size:.72rem;}
 }
 
 @media (max-width: 1300px){
-  /* Disable absolute positioning — cards go into normal flow */
-  .note-anchor{height:auto;pointer-events:auto;}
+  .note-anchor{
+    height:auto;
+    overflow:visible;
+    pointer-events:auto;
+    display:flex;
+    justify-content:center;
+    margin:1.8rem 0 1rem;
+  }
+
   .lore-card{
     position:static;
-    width:100%;
-    max-width:400px;
+    width:min(340px, 100%);
     min-height:auto;
-    margin:1.2rem 0;
-    transform:none;
-    box-shadow:0 6px 20px rgba(0,0,0,.5);
-    flex-direction:row;
-    gap:.9rem;
-    padding:.8rem .95rem;
+    margin:0;
+    padding:0;
+    flex-direction:column;
+    gap:0;
+    border:1px dashed rgba(227,6,19,.35);
+    border-radius:2px;
+    overflow:visible;
+    box-shadow:4px 6px 18px rgba(0,0,0,.55);
+    transform:rotate(1.6deg);
+    transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease;
   }
-  .note-anchor.left .lore-card{transform:none;}
-  .lore-card::before{display:none;}
-  .lore-card:hover{transform:none;box-shadow:0 6px 22px rgba(0,0,0,.7);}
+  .note-anchor.left .lore-card{
+    transform:rotate(-1.6deg);
+  }
+  .lore-card:hover,
+  .note-anchor.left .lore-card:hover{
+    transform:rotate(0deg) scale(1.01);
+    box-shadow:6px 8px 22px rgba(0,0,0,.7);
+    border-color:var(--red-bright);
+  }
+
+  .lore-card::before{
+    display:block;
+    top:-6px;
+  }
+
   .lore-card-img{
-    width:90px;height:90px;flex:0 0 90px;
-    border-bottom:none;
-    border-right:1px solid var(--border);
+    position:static;
+    width:100%;
+    height:110px;
+    flex:0 0 110px;
+    border-right:none;
+    border-bottom:1px solid var(--border);
+    object-position:center;
   }
-  .lore-card-content{padding:0;overflow:visible;}
-  .lore-card-name{font-size:.9rem;}
-  .lore-card-desc{font-size:.76rem;line-height:1.5;}
+
+  .lore-card-content{
+    padding:.65rem .85rem .8rem;
+    overflow:visible;
+    background:var(--bg-2);
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+  }
+  .lore-card-name{font-size:.88rem;}
+  .lore-card-desc{font-size:.74rem;line-height:1.5;}
 }
 
 @media (max-width: 900px){
@@ -781,10 +886,11 @@ em.lore-ref.lore-ref-broken{
   .lore-body h3{font-size:.9rem;padding-left:.65rem;margin:1.6rem 0 .7rem}
   .lore-body h4{font-size:.85rem;padding-left:.65rem;margin:1.4rem 0 .6rem}
 
-  .lore-card{padding:.7rem .8rem;gap:.7rem;max-width:100%;}
-  .lore-card-img{width:76px;height:76px;flex:0 0 76px}
-  .lore-card-name{font-size:.85rem;letter-spacing:.05em}
-  .lore-card-desc{font-size:.74rem;line-height:1.45}
+  .lore-card{transform:rotate(1.2deg);}
+  .note-anchor.left .lore-card{transform:rotate(-1.2deg);}
+  .lore-card-img{height:90px;flex:0 0 90px;}
+  .lore-card-name{font-size:.85rem;}
+  .lore-card-desc{font-size:.72rem;}
 
   .vs-card{padding:1.2rem}
   .vs-card h3{font-size:1.6rem;margin-bottom:.7rem}
@@ -821,6 +927,11 @@ em.lore-ref.lore-ref-broken{
   .term-text{font-size:.86rem;line-height:1.45}
   .term-arrow{font-size:1.8rem;padding:.4rem}
   .terminal-note{padding:.7rem .8rem;font-size:.76rem;margin-top:1.2rem}
+  .lore-body h3.layer{
+    font-size:1.3em;
+    padding-right:.65rem;
+    margin-top:2.2rem;
+  }
 }
 
 @media (max-width: 480px){
@@ -1075,29 +1186,38 @@ document.addEventListener('click', function(e){
 });
 
 /* ============================================================
-   CARD TYPEWRITER — fixed size, animation preserved, click cooldown
+   CARD TYPEWRITER — с поддержкой кликов по тексту
    ============================================================ */
 (function(){
-  var typingTimers = new WeakMap();
 
+  /* Печатаем текст символ за символом */
   function typewriteElement(el, speed, done){
     if (!el) return;
-    if (typingTimers.has(el)) return;
-    var fullText = el.textContent;
+    if (el._typingTimer) return;
+    var fullText = el._fullText || el.textContent;
     if (!fullText.trim()) { if (done) done(); return; }
 
+    el._fullText = fullText;
     el.textContent = '';
     var i = 0;
-    var timer = setInterval(function(){
+    el._typingTimer = setInterval(function(){
       el.textContent += fullText.charAt(i);
       i++;
       if (i >= fullText.length) {
-        clearInterval(timer);
-        typingTimers.delete(el);
+        clearInterval(el._typingTimer);
+        el._typingTimer = null;
         if (done) done();
       }
     }, speed || 10);
-    typingTimers.set(el, timer);
+  }
+
+  function cancelTyping(el){
+    if (!el) return;
+    if (el._typingTimer) {
+      clearInterval(el._typingTimer);
+      el._typingTimer = null;
+    }
+    if (el._fullText) el.textContent = el._fullText;
   }
 
   function handleCardClick(card){
@@ -1119,31 +1239,178 @@ document.addEventListener('click', function(e){
              card.querySelector('.lore-card-desc');
     }
 
-    if (desc) {
-      var h = desc.offsetHeight;
-      if (h > 0 && !desc.dataset.lockedHeight) {
-        desc.style.minHeight = h + 'px';
-        desc.dataset.lockedHeight = '1';
-      }
-      card.dataset.animating = 'true';
-      typewriteElement(desc, 10, function(){
-        delete card.dataset.animating;
-      });
+    if (!desc) return;
+
+    /* На всякий случай: если на этом элементе застрял таймер — отменяем */
+    if (desc._typingTimer) cancelTyping(desc);
+
+    var h = desc.offsetHeight;
+    if (h > 0 && !desc.dataset.lockedHeight) {
+      desc.style.minHeight = h + 'px';
+      desc.dataset.lockedHeight = '1';
     }
+
+    card.dataset.animating = 'true';
+    card._typingEl = desc;
+    typewriteElement(desc, 10, function(){
+      card._typingEl = null;
+      delete card.dataset.animating;
+    });
+
     playSound('hint');
   }
 
+  /* === Отслеживание drag / long-press === */
+  var pointerStart = null;
+  var pointerStartTime = 0;
+  var DRAG_THRESHOLD = 36;     /* ~6px в квадрате */
+  var LONG_PRESS_MS = 250;
+  window._dragMoved = false;
+  window._wasLongPress = false;
+
+  document.addEventListener('pointerdown', function(e){
+    pointerStart = { x: e.clientX, y: e.clientY };
+    pointerStartTime = Date.now();
+    window._dragMoved = false;
+    window._wasLongPress = false;
+
+    /* Если на этой карточке идёт анимация — отменяем и восстанавливаем текст.
+       Это нужно, чтобы можно было нормально выделять текст, пока он печатается. */
+    var card = e.target.closest('.enemy-card, .lore-card, .vs-card');
+    if (card && card._typingEl) {
+      cancelTyping(card._typingEl);
+      card._typingEl = null;
+      delete card.dataset.animating;
+    }
+  });
+
+  document.addEventListener('pointerup', function(e){
+    if (!pointerStart) return;
+    var dx = e.clientX - pointerStart.x;
+    var dy = e.clientY - pointerStart.y;
+    window._dragMoved = (dx*dx + dy*dy) > DRAG_THRESHOLD;
+    window._wasLongPress = (Date.now() - pointerStartTime) > LONG_PRESS_MS;
+    pointerStart = null;
+  });
+
+  /* === Клик по карточке (включая клик по тексту) === */
   document.querySelectorAll('.enemy-card, .lore-card, .vs-card').forEach(function(card){
     card.addEventListener('click', function(e){
-      if (e.target.closest('.lore-ref')) return;
+      /* клики по ссылкам и по кнопке копирования — не запускают анимацию */
+      if (e.target.closest('.lore-ref, .card-copy-btn')) return;
       if (this.getAttribute('data-no-hint') === 'true') return;
+
+      /* 1) был drag → пользователь выделял текст, не анимируем */
+      if (window._dragMoved) { window._dragMoved = false; return; }
+
+      /* 2) было долгое нажатие → пользователь выделял текст, не анимируем */
+      if (window._wasLongPress) { window._wasLongPress = false; return; }
+
+      /* 3) второй клик двойного клика → выделение слова, не анимируем */
+      if (e.detail > 1) return;
+
+      /* Проверка window.getSelection() УБРАНА — клик по тексту теперь
+         всегда запускает анимацию. Выделение при этом сохраняется:
+         чтобы выделить текст, пользователь тянет мышью (drag)
+         или дважды кликает (double-click), а это уже отсекается выше. */
+
       handleCardClick(this);
     });
   });
 })();
+/* ============================================================
+   NEW: CARD COPY BUTTON
+   ============================================================ */
+(function(){
+  /* Достаёт текст карточки на текущем языке (без скрытых .lang-*) */
+  function getCardText(card, lang){
+    var parts = [];
+
+    var clone = card.cloneNode(true);
+
+    /* убираем скрытый язык */
+    var hidden = clone.querySelectorAll('.lang-' + (lang === 'ru' ? 'en' : 'ru'));
+    hidden.forEach(function(n){ n.remove(); });
+    /* убираем кнопку копирования */
+    clone.querySelectorAll('.card-copy-btn').forEach(function(n){ n.remove(); });
+
+    if (card.classList.contains('enemy-card')) {
+      var h4 = clone.querySelector('.enemy-card-body h4');
+      if (h4) parts.push(h4.textContent.trim());
+      clone.querySelectorAll('.enemy-card-body p').forEach(function(p){
+        var t = p.textContent.trim();
+        if (t) parts.push(t);
+      });
+    } else if (card.classList.contains('lore-card')) {
+      var nm = clone.querySelector('.lore-card-name');
+      if (nm) parts.push(nm.textContent.trim());
+      clone.querySelectorAll('.lore-card-desc').forEach(function(p){
+        var t = p.textContent.trim();
+        if (t) parts.push(t);
+      });
+    } else if (card.classList.contains('vs-card')) {
+      var h3 = clone.querySelector('h3');
+      if (h3) parts.push(h3.textContent.trim());
+      clone.querySelectorAll('li').forEach(function(li){
+        var t = li.textContent.replace(/\s+/g, ' ').trim();
+        if (t) parts.push(t);
+      });
+    }
+
+    return parts.join('\n\n');
+  }
+
+  function fallbackCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.top = '-9999px';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  function copyToClipboard(text){
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).catch(function(){ fallbackCopy(text); });
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  document.querySelectorAll('.enemy-card, .lore-card, .vs-card').forEach(function(card){
+    if (card.querySelector('.card-copy-btn')) return;
+    if (!card.querySelector('p, .lore-card-desc, li')) return;
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'card-copy-btn';
+    btn.title = 'Копировать текст';
+    btn.setAttribute('aria-label', 'Copy card text');
+    btn.textContent = '⧉';
+
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var lang = document.body.getAttribute('data-lang') || 'ru';
+      var text = getCardText(card, lang);
+      copyToClipboard(text);
+
+      btn.classList.add('copied');
+      btn.textContent = '✓';
+      setTimeout(function(){
+        btn.classList.remove('copied');
+        btn.textContent = '⧉';
+      }, 1200);
+    });
+
+    card.appendChild(btn);
+  });
+})();
 
 /* ============================================================
-   TERMINAL DATA — two separate language variants
+   TERMINAL DATA
    ============================================================ */
 const terminalData = [
   {
@@ -1723,7 +1990,11 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
     <h3 id="chrono-01"><span class="lang-ru">Последняя война (1914–2114)</span><span class="lang-en">The Final War (1914–2114)</span></h3>
     <p class="lang-ru">Точной даты начала не сохранилось ни в одном документе: последний журнал событий — прошивка прототипа V1, датированная 06.08.2112 года. Если война шла два столетия, её первый выстрел прозвучал в начале 1910-х, почти одновременно с той войной, что реальный мир называл Первой мировой. Поэтому её и назвали <em>Последней</em>: не потому, что она была последней по счёту, а потому, что после неё войны в прежнем понимании просто не стало.</p>
     <p class="lang-en">No document preserved the exact date: the last chronological record is the firmware of prototype V1, stamped 06.08.2112. If the war lasted two centuries, its first shot was fired in the early 1910s — almost alongside the conflict the real world called World War I. That is why it was named the <em>Final</em> War: not because it was last in sequence, but because after it, war as a concept simply ceased to exist.</p>
-<div class="note-anchor">
+
+    <p class="lang-ru">Первые десятилетия повторяли окопную войну прошлого: линии обороны, пулемёты, газ, атаки волнами. Прорыв измерялся метрами, человеческая жизнь — килограммами металла. Ни одна из держав не могла сломать фронт, и обе стороны, отчаявшись, начали искать выход в инженерии. Ответ нашла Российская империя: она первой вывела на фронт <em class="lore-ref" data-ref="gutterman">Gutterman</em> — одну из первых удачных машин, работающих на человеческой крови.</p>
+    <p class="lang-en">The first decades mirrored the trench wars of the past: defensive lines, machine guns, gas, attacks in waves. Advances were measured in meters, human lives in kilograms of steel. Neither power could break the front, and both, in desperation, turned to engineering. The Russian Empire found the answer: it was the first to field <em class="lore-ref" data-ref="gutterman">Gutterman</em> — among the first successful machines to run on human blood.</p>
+
+    <div class="note-anchor">
       <div class="lore-card">
         <img src="gutterman.png" alt="Gutterman" class="lore-card-img">
         <div class="lore-card-content">
@@ -1733,10 +2004,6 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
         </div>
       </div>
     </div>
-    <p class="lang-ru">Первые десятилетия повторяли окопную войну прошлого: линии обороны, пулемёты, газ, атаки волнами. Прорыв измерялся метрами, человеческая жизнь — килограммами металла. Ни одна из держав не могла сломать фронт, и обе стороны, отчаявшись, начали искать выход в инженерии. Ответ нашла Российская империя: она первой вывела на фронт <em class="lore-ref" data-ref="gutterman">Gutterman</em> — одну из первых удачных машин, работающих на человеческой крови.</p>
-    <p class="lang-en">The first decades mirrored the trench wars of the past: defensive lines, machine guns, gas, attacks in waves. Advances were measured in meters, human lives in kilograms of steel. Neither power could break the front, and both, in desperation, turned to engineering. The Russian Empire found the answer: it was the first to field <em class="lore-ref" data-ref="gutterman">Gutterman</em> — among the first successful machines to run on human blood.</p>
-
-    
 
     <p class="lang-ru">Получившие имя в честь сточных жёлобов Guttermen были не танками, а живыми могилами: исследователи ещё не умели консервировать кровь внутри машины, поэтому внутрь корпуса ставили живой источник топлива — человека на минимальном жизнеобеспечении — и заваривали броню наглухо. Официально это называли «добровольцами-патриотами»; на деле внутрь отправляли дезертиров, измотанных солдат и пленных. Их страдания не остались незамеченными: силы из-за пределов этого мира приметили жестокость людей и позже использовали её как образец при создании <em class="lore-ref" data-ref="mannequin">Mannequins</em>. Сброшенные с воздуха на вражеские окопы, Guttermen методично зачищали их метр за метром: солдаты выбирали между тем, чтобы быть перемолотыми машиной, или выскочить из траншеи под пулемёты. Так была закончена «человеческая» фаза войны.</p>
     <p class="lang-en">Named for the gutters, Guttermen were not tanks but walking tombs: researchers had not yet learned to keep blood fresh inside a machine, so a living fuel source — a human kept alive by minimal life support — was strapped inside, and the armor was welded shut. Publicly they were called "volunteer patriots"; in truth, most were deserters, battle-fatigued returnees or prisoners of war. Their suffering did not go unnoticed: forces from beyond took note of the cruelty man was capable of, and it later served as the inspiration for the creation of <em class="lore-ref" data-ref="mannequin">Mannequins</em>. Airdropped into enemy trenches, Guttermen cleared them meter by meter: soldiers had to choose between being minced by the machine or climbing out into machine-gun fire. Thus ended the "human" phase of the war.</p>
@@ -1746,9 +2013,14 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
 
     <p class="lang-ru">Человек на поле боя стал анахронизмом. Сначала солдаты праздновали возвращение домой — а потом обнаружили, что дома их никто не ждал: все ресурсы уходили на военные машины, гражданское население нищало, и тыл сам превратился в поле боя — «войну всех против всех». В терминальных архивах той эпохи сохранилась рифма, ставшая приговором целому веку: <em>«Завоевание ведёт к войне — война ведёт к голоду — голод ведёт к…»</em> Последнее слово стёрлось неслучайно.</p>
     <p class="lang-en">The human soldier became an anachronism. At first the soldiers celebrated coming home — then they found no home was waiting: every resource went into war machines, civilian populations fell into poverty, and the home front became a battlefield of its own — a war of all against all. A rhyme preserved in the terminal archives of that era became the verdict on an entire century: <em>"Conquest leads to war — War leads to famine — Famine leads to..."</em> The final word was erased — and not by accident.</p>
-<div class="note-anchor left">
+
+    <h3 id="chrono-03"><span class="lang-ru">Земледвигатели и Долгая ночь</span><span class="lang-en">Earthmovers and the Long Night</span></h3>
+    <p class="lang-ru">Вершина гонки вооружений. <em class="lore-ref" data-ref="earthmover">Earthmovers</em>, модельная линейка 1000-THR, были настолько велики, что их соотносили со всадниками Апокалипсиса: одного экземпляра хватало, чтобы сровнять город с землёй и оставить за собой только огонь. Название серии — игра слов, пережившая своих создателей: «1000» по-японски читается как «сэн», THR отсылает к Тору — вместе получается Sen-thor, почти «кентавр». И кентаврами эти машины были по конструкции: под головной пушкой, способной выжигать города одним выстрелом, они несли на себе сотни тонн обвеса, а их спины становились новым полем боя для машин поменьше. Японские предупреждающие таблички на корпусе сохранились до сих пор — их родина и есть родина Earthmovers.</p>
+    <p class="lang-en">The pinnacle of the arms race. The <em class="lore-ref" data-ref="earthmover">Earthmovers</em>, of the 1000-THR line, were so vast they were likened to the horsemen of the apocalypse: a single unit was enough to level an entire city and leave nothing but fire in its wake. The designation is a wordplay that outlived its makers: "1000" reads as "sen" in Japanese, THR nods to Thor — together they form Sen-thor, a near-homophone of "centaur." And centaur these machines were in design: beneath the head-mounted gun that could burn a city in one shot they carried hundreds of tons of superstructure, their backs becoming the new battlegrounds for smaller machines. The Japanese warning signs still preserved on their hulls betray their birthplace — Japan built the Earthmovers.</p>
+
+    <div class="note-anchor left">
       <div class="lore-card">
-        <img src="1000_thr_earthmover.png" alt="1000-THR Earthmover" class="lore-card-img">
+        <img src="1000_thr_earthmover.png" alt="1000-THR Earthmover" style="filter: brightness(1.5);" class="lore-card-img">
         <div class="lore-card-content">
           <span class="lore-card-name">1000-THR «Earthmover»</span>
           <p class="lore-card-desc lang-ru">Гигантская машина-кентавр, способная уничтожать города. Внутри — огромный мозг, защищённый бронёй; при уничтожении вызывает самоуничтожение всей машины.</p>
@@ -1756,11 +2028,6 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
         </div>
       </div>
     </div>
-    <h3 id="chrono-03"><span class="lang-ru">Земледвигатели и Долгая ночь</span><span class="lang-en">Earthmovers and the Long Night</span></h3>
-    <p class="lang-ru">Вершина гонки вооружений. <em class="lore-ref" data-ref="earthmover">Earthmovers</em>, модельная линейка 1000-THR, были настолько велики, что их соотносили со всадниками Апокалипсиса: одного экземпляра хватало, чтобы сровнять город с землёй и оставить за собой только огонь. Название серии — игра слов, пережившая своих создателей: «1000» по-японски читается как «сэн», THR отсылает к Тору — вместе получается Sen-thor, почти «кентавр». И кентаврами эти машины были по конструкции: под головной пушкой, способной выжигать города одним выстрелом, они несли на себе сотни тонн обвеса, а их спины становились новым полем боя для машин поменьше. Японские предупреждающие таблички на корпусе сохранились до сих пор — их родина и есть родина Earthmovers.</p>
-    <p class="lang-en">The pinnacle of the arms race. The <em class="lore-ref" data-ref="earthmover">Earthmovers</em>, of the 1000-THR line, were so vast they were likened to the horsemen of the apocalypse: a single unit was enough to level an entire city and leave nothing but fire in its wake. The designation is a wordplay that outlived its makers: "1000" reads as "sen" in Japanese, THR nods to Thor — together they form Sen-thor, a near-homophone of "centaur." And centaur these machines were in design: beneath the head-mounted gun that could burn a city in one shot they carried hundreds of tons of superstructure, their backs becoming the new battlegrounds for smaller machines. The Japanese warning signs still preserved on their hulls betray their birthplace — Japan built the Earthmovers.</p>
-
-    
 
     <p class="lang-ru">Колоссальные размеры требовали колоссального питания: Earthmover нуждался одновременно в крови и в солнечной энергии. Генератор щита делал его неуязвимым для орудий других Earthmover — паритет гарантировал взаимное уничтожение, но не победу. Единственной уязвимостью оставалась внутренняя: «меньшие, более подвижные машины» могли проникнуть внутрь и добраться до ядра. Именно такой машиной был задуман <em class="lore-ref" data-ref="v1">V1</em> — истребитель титанов; в 7-4, когда Earthmover замечает V1, он прерывает дуэль с дальним собратом и разворачивает всё оружие на крошечную цель: программа узнала того, кто был создан, чтобы её убить.</p>
     <p class="lang-en">Colossal size demanded colossal sustenance: an Earthmover required both blood and solar energy. Its shield generator rendered it untouchable by the guns of other Earthmovers — parity guaranteed mutual destruction, but never victory. The only vulnerability was internal: "smaller, more mobile machines" could slip inside and reach the core. That machine was conceived as <em class="lore-ref" data-ref="v1">V1</em> — a titan-killer; in 7-4, when an Earthmover notices V1, it breaks off its duel with a distant counterpart and turns every gun on the tiny target: its program recognized the thing built to kill it.</p>
@@ -1784,6 +2051,9 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
     <p class="lang-ru">Особая судьба у модели V. <em class="lore-ref" data-ref="v1">V1</em> был создан в разгар войны как её завершение: тончайшая экспериментальная броня, позволяющая всасывать кровь при непосредственном контакте и чинить повреждения на лету, в обмен на хрупкость корпуса — машина-стеклянная пушка, способная сражаться без пауз на дозаправку. Но в момент, когда шли испытания прототипа, наступил Новый мир, и война стала никому не нужна. Серийное производство V1 отменили; чтобы хоть как-то оправдать вложенные в разработку деньги и время, на его базе собрали обновлённую модель <em class="lore-ref" data-ref="v2">V2</em> — со стандартной толстой бронёй и назначением охранника. Спрос оказался мизерным: покупателю дешевле поставить полсотни дронов, чем один V-класс. В итоге обе машины так и остались единственными прототипами своего вида. Последнее обновление прошивки V1 — 06.08.2112 года. Больше он не включался.</p>
     <p class="lang-en">The V model met a stranger fate. <em class="lore-ref" data-ref="v1">V1</em> was conceived at the height of the war as its endgame: hair-thin experimental plating that absorbed blood on direct contact and repaired damage on the fly, at the cost of a fragile frame — a glass cannon that could fight without pausing to refuel. But as the prototype was being tested, the New Peace arrived, and war became irrelevant. Mass production of V1 was cancelled; to salvage something from the money and time already sunk into the design, an updated model, <em class="lore-ref" data-ref="v2">V2</em>, was built on its chassis — with standardized heavy armor and a role as a peacekeeper. Demand proved negligible: a client could field fifty Drones for the price of one V-class. In the end, both machines remained sole prototypes of their kind. The last firmware update of V1 is dated 06.08.2112. It was never switched on again.</p>
 
+    <p id="chrono-06" class="lang-ru">А затем человечество обнаружило вход в Ад. Судя по всему, это случилось случайно — через заброшенную шахту; вокруг неё быстро разросся горнодобывающий комплекс: если под поверхностью мира лежит бездна, в ней наверняка есть минералы, которые помогут быстрее вернуться на ноги. Для проекта переосмыслили старые военные машины — та же <em class="lore-ref" data-ref="streetcleaner">Streetcleaner</em> была переквалифицирована в разведчика экспедиций, а <em class="lore-ref" data-ref="sentry">Sentries</em> отправились вниз как боевой эскорт. Ключевым же изобретением проекта стали <em class="lore-ref" data-ref="terminal">Терминалы</em>: стационарные машины, способные превращать материю в радиосигнал, передавать её на другую станцию и собирать объект обратно. Технология была медленной и ограниченной — за всю историю проекта единственным задокументированным переносом между поверхностью и Адом остался виниловый сингл «Were You Foolin'» оркестра Расса Моргана на 78 об/мин. До второго переноса дело так и не дошло: связь оборвалась.</p>
+    <p class="lang-en">And then humanity discovered an entrance to Hell. Apparently by accident — through an abandoned mine; a mining complex quickly grew around it: if a chasm lay beneath the surface of the world, surely it held minerals that could help mankind get back on its feet. Old war machines were retooled for the project — the humble <em class="lore-ref" data-ref="streetcleaner">Streetcleaner</em> was reassigned as an expedition scout, and <em class="lore-ref" data-ref="sentry">Sentries</em> were sent down as combat escort. The project's crowning invention was the <em class="lore-ref" data-ref="terminal">Terminals</em>: stationary machines capable of converting matter into a radio signal, transmitting it to a receiving station, and rebuilding the object on the far end. The technology was slow and limited — in the entire history of the project, the only documented transfer between the surface and Hell was a 78rpm vinyl record of the single "Were You Foolin'" by the Russ Morgan Orchestra. A second transfer was never attempted: the connection was severed.</p>
+
     <div class="note-anchor left">
       <div class="lore-card">
         <img src="terminal.png" alt="Terminal" class="lore-card-img">
@@ -1794,9 +2064,6 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
         </div>
       </div>
     </div>
-
-    <p id="chrono-06" class="lang-ru">А затем человечество обнаружило вход в Ад. Судя по всему, это случилось случайно — через заброшенную шахту; вокруг неё быстро разросся горнодобывающий комплекс: если под поверхностью мира лежит бездна, в ней наверняка есть минералы, которые помогут быстрее вернуться на ноги. Для проекта переосмыслили старые военные машины — та же <em class="lore-ref" data-ref="streetcleaner">Streetcleaner</em> была переквалифицирована в разведчика экспедиций, а <em class="lore-ref" data-ref="sentry">Sentries</em> отправились вниз как боевой эскорт. Ключевым же изобретением проекта стали <em class="lore-ref" data-ref="terminal">Терминалы</em>: стационарные машины, способные превращать материю в радиосигнал, передавать её на другую станцию и собирать объект обратно. Технология была медленной и ограниченной — за всю историю проекта единственным задокументированным переносом между поверхностью и Адом остался виниловый сингл «Were You Foolin'» оркестра Расса Моргана на 78 об/мин. До второго переноса дело так и не дошло: связь оборвалась.</p>
-    <p class="lang-en">And then humanity discovered an entrance to Hell. Apparently by accident — through an abandoned mine; a mining complex quickly grew around it: if a chasm lay beneath the surface of the world, surely it held minerals that could help mankind get back on its feet. Old war machines were retooled for the project — the humble <em class="lore-ref" data-ref="streetcleaner">Streetcleaner</em> was reassigned as an expedition scout, and <em class="lore-ref" data-ref="sentry">Sentries</em> were sent down as combat escort. The project's crowning invention was the <em class="lore-ref" data-ref="terminal">Terminals</em>: stationary machines capable of converting matter into a radio signal, transmitting it to a receiving station, and rebuilding the object on the far end. The technology was slow and limited — in the entire history of the project, the only documented transfer between the surface and Hell was a 78rpm vinyl record of the single "Were You Foolin'" by the Russ Morgan Orchestra. A second transfer was never attempted: the connection was severed.</p>
 
     <p class="lang-ru">Сначала это считали аварией. Но сотрудники шахты начали фиксировать аномалии: двери, запирающиеся сами по себе, исчезающая техника, «существа» — судя по всему, нежить и демоны — телепортировались прямо в рабочие помещения. Один безымянный сотрудник написал докладную с выводом, от которого у руководства мороз по коже: Ад — живое существо. Массивный разумный суперорганизм, жестокий и мстительный, и всё происходящее на комплексе — не сбой, а развлечение: Ад играл с людьми. Проект закрыли в спешке, оставив машины и Терминалы внизу, — из страха, что однажды Ад найдёт выход на поверхность. Страх оказался обоснованным. Но об этом — дальше.</p>
     <p class="lang-en">At first it was written off as a malfunction. But the mine's staff began recording anomalies: doors locking on their own, machinery going missing, "creatures" — husks and demons, by all appearances — teleporting directly into occupied rooms. One unnamed employee filed a report whose conclusion chilled the board: Hell is a living being. A vast intelligent superorganism, harsh and cruel, and everything happening in the complex was not a glitch but amusement: Hell was playing with people. The project was hastily abandoned, leaving the machines and Terminals below — out of fear that one day Hell would find a way out and spread to the surface. The fear proved justified. But that comes later.</p>
@@ -1836,6 +2103,9 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
     <p class="lang-ru">А затем, в неизвестный момент, Бог исчез. Не было ни знамения, ни преемника, ни пророчества — просто тишина там, где раньше был голос. Молитвы Небес оставались без ответа, и паника охватила ангелов сильнее, чем любой враг: существо, существование которого было для них аксиомой, перестало отвечать. Первыми последствия почувствовали не обитатели Небес, а Ада — всех ангелов срочно отозвали наверх, и слои преисподней впервые за всю историю остались без надзора. Именно в этот вакуум власти и шагнули Минос и Сизиф.</p>
     <p class="lang-en">And then, at an unknown moment, God vanished. No omen, no successor, no prophecy — only silence where a voice had always been. The prayers of Heaven went unanswered, and panic gripped the angels more than any enemy ever could: the being whose existence was an axiom for them stopped responding. The first to feel the consequences were not the inhabitants of Heaven but of Hell — every angel was urgently recalled above, and for the first time in history the layers of the underworld were left unsupervised. Into this vacuum of power stepped Minos and Sisyphus.</p>
 
+    <p class="lang-ru">Из паники вырос <em class="lore-ref" data-ref="council">Святой Совет</em>. Формально — группа высокопоставленных ангелов, взявших на себя управление в «период молчания Господня». Фактически — режим, построенный на одном грандиозном вранье: Совет утверждал, что Бог по-прежнему наблюдает за миром, а Его воля доносится до смертных через уста Совета. Ни один документ не подтверждал это; напротив, исчезновение Творца скрывали даже от большинства ангелов. Правление страхом оказалось простым в исполнении: каждый, кто задавал слишком много вопросов, рисковал услышать слово «еретик» — а слово это в Небесах было приговором.</p>
+    <p class="lang-en">Out of panic grew the <em class="lore-ref" data-ref="council">Holy Council</em>. Formally — a group of high-ranking angels who took up governance during the "period of the Lord's silence." In fact — a regime built on one grand lie: the Council claimed God still watched over the world and that His will reached mortals through the Council's mouths. No document confirmed this; on the contrary, the Creator's disappearance was hidden even from most angels. Rule through fear proved simple to administer: anyone who asked too many questions risked hearing the word "heretic" — and in Heaven, that word was a sentence.</p>
+
     <div class="note-anchor left">
       <div class="lore-card">
         <img src="holy.png" alt="Holy Council" class="lore-card-img">
@@ -1846,9 +2116,6 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
         </div>
       </div>
     </div>
-
-    <p class="lang-ru">Из паники вырос <em class="lore-ref" data-ref="council">Святой Совет</em>. Формально — группа высокопоставленных ангелов, взявших на себя управление в «период молчания Господня». Фактически — режим, построенный на одном грандиозном вранье: Совет утверждал, что Бог по-прежнему наблюдает за миром, а Его воля доносится до смертных через уста Совета. Ни один документ не подтверждал это; напротив, исчезновение Творца скрывали даже от большинства ангелов. Правление страхом оказалось простым в исполнении: каждый, кто задавал слишком много вопросов, рисковал услышать слово «еретик» — а слово это в Небесах было приговором.</p>
-    <p class="lang-en">Out of panic grew the <em class="lore-ref" data-ref="council">Holy Council</em>. Formally — a group of high-ranking angels who took up governance during the "period of the Lord's silence." In fact — a regime built on one grand lie: the Council claimed God still watched over the world and that His will reached mortals through the Council's mouths. No document confirmed this; on the contrary, the Creator's disappearance was hidden even from most angels. Rule through fear proved simple to administer: anyone who asked too many questions risked hearing the word "heretic" — and in Heaven, that word was a sentence.</p>
 
     <p class="lang-ru">Главным инструментом контроля стал <em>Святой Свет</em> — божественная сила, питавшая ангелов. Пока Бог был на троне, Свет был данностью; после Его исчезновения он превратился в конечный ресурс, и распоряжаться им взялся именно Совет. Свет можно было отнять — и Совет делал это с теми, кто проявлял непочтение или сомнение. Ангел, лишённый Света, не умирал, но стремительно слабел — и это заставляло остальных молчать громче любых законов. Судя по всему, даже сами советники не знали, что стало с Богом: они не скрывали правду, потому что знали ответ, — они скрывали правду, потому что боялись вопроса.</p>
     <p class="lang-en">The chief instrument of control was the <em>Holy Light</em> — the divine power that sustained the angels. While God sat on the throne, the Light was a given; after His disappearance it became a finite resource, and the Council took it upon itself to distribute it. The Light could be taken away — and the Council did so from anyone who showed disrespect or doubt. An angel stripped of the Light did not die, but weakened swiftly — and this kept the rest silent more effectively than any law. Evidently, even the councillors themselves did not know what had become of God: they did not conceal the truth because they knew the answer — they concealed it because they feared the question.</p>
@@ -1870,6 +2137,10 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
     <p class="lang-en">Two rulers, two paths — and one shared trait that frightened Heaven more than anything: each had created in Hell something independent of divine sanction. Minos's flourishing city existed without Heaven; Sisyphus's army was preparing to make war upon Heaven. Both projects undermined not only the order of the layers but the very legend on which the Holy Council stood: the legend that without God and without Heaven, a Hellish soul is capable only of suffering. Minos and Sisyphus proved otherwise. For this, one was killed and the other beheaded.</p>
 
     <h3 id="chrono-10"><span class="lang-ru">Казнь правителей</span><span class="lang-en">The Execution of the Rulers</span></h3>
+    
+    <p class="lang-ru">У Совета были и прагматичные причины опасаться самостоятельного Ада. Режим, правящий страхом, держится на монополии не только на силу, но и на истину: если хаски узнают, что в их слое можно жить иначе, — страх перестаёт работать. Кроме того, процветающий Ад означал, что души внизу больше не «исправляются», — а значит, исчезал смысл всей божественной конструкции. Наконец, объединённый нижний мир был реальной военной угрозой: армия Сизифа не была мечтой, она была готова к походу. Совет послал <em class="lore-ref" data-ref="gabriel">Габриэля</em> вниз с мандатом восстановить порядок — любой ценой.</p>
+    <p class="lang-en">The Council had pragmatic reasons to fear a self-governing Hell. A regime that rules through fear depends on a monopoly not only on force but on truth: if the husks learn that life in their layer can be different, fear stops working. Moreover, a flourishing Hell meant the souls below were no longer being "corrected" — and the entire divine construction lost its meaning. Finally, a united underworld was a genuine military threat: Sisyphus's army was no dream, it was ready to march. The Council sent <em class="lore-ref" data-ref="gabriel">Gabriel</em> down with a mandate to restore order — at any cost.</p>
+
     <div class="note-anchor">
       <div class="lore-card">
         <img src="gabriel.png" alt="Gabriel" class="lore-card-img">
@@ -1880,10 +2151,6 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
         </div>
       </div>
     </div>
-    <p class="lang-ru">У Совета были и прагматичные причины опасаться самостоятельного Ада. Режим, правящий страхом, держится на монополии не только на силу, но и на истину: если хаски узнают, что в их слое можно жить иначе, — страх перестаёт работать. Кроме того, процветающий Ад означал, что души внизу больше не «исправляются», — а значит, исчезал смысл всей божественной конструкции. Наконец, объединённый нижний мир был реальной военной угрозой: армия Сизифа не была мечтой, она была готова к походу. Совет послал <em class="lore-ref" data-ref="gabriel">Габриэля</em> вниз с мандатом восстановить порядок — любой ценой.</p>
-    <p class="lang-en">The Council had pragmatic reasons to fear a self-governing Hell. A regime that rules through fear depends on a monopoly not only on force but on truth: if the husks learn that life in their layer can be different, fear stops working. Moreover, a flourishing Hell meant the souls below were no longer being "corrected" — and the entire divine construction lost its meaning. Finally, a united underworld was a genuine military threat: Sisyphus's army was no dream, it was ready to march. The Council sent <em class="lore-ref" data-ref="gabriel">Gabriel</em> down with a mandate to restore order — at any cost.</p>
-
-    
 
     <p id="chrono-11" class="lang-ru">Минос попытался договориться. Он не собирался воевать против Небес — его город не был направлен против кого-либо, он просто существовал, — и, вероятно, полагал, что с разумным существом можно говорить. Он ошибся в главном допущении: Габриэль пришёл не обсуждать, а исполнять. Правитель Похоти был убит. Его труп не оставили в покое: тело Миноса захватили его змеи-паразиты, которые и по сей день носят исполинский остов по руинам его собственного города — в 2-4 V1 сразится с <em class="lore-ref" data-ref="corpse-minos">Трупом Миноса</em>, не понимая сначала, чью могилу она пробуждает.</p>
     <p class="lang-en">Minos tried to negotiate. He had no intention of waging war on Heaven — his city was aimed at no one, it simply existed — and he likely believed one could reason with a rational being. He was wrong in one crucial assumption: Gabriel had not come to talk, but to execute. The ruler of Lust was slain. Even his corpse was given no rest: the body of Minos was seized by his parasite snakes, which to this day bear his colossal frame through the ruins of his own city — in 2-4, V1 will face the <em class="lore-ref" data-ref="corpse-minos">Corpse of Minos</em>, at first unaware whose grave it wakes.</p>
@@ -1992,9 +2259,14 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
     <h4><span class="lang-ru">2-3: Sheer Heart Attack — Чистый сердечный приступ</span><span class="lang-en">2-3: Sheer Heart Attack</span></h4>
     <p class="lang-ru">«Сердце» города, где ритм боя задаёт пульс самой архитектуры. Минос построил эту зону как насос, который качает жизнь через весь слой: каждая стена здесь — вена, каждый пол — артерия, и весь уровень пульсирует в такт с ритмом боя. Здесь V1 впервые сталкивается с <em class="lore-ref" data-ref="malicious-face">Malicious Face</em> в плотных боевых формациях и с <em class="lore-ref" data-ref="virtue">Virtues</em>, которые патрулируют воздух, считая систему Миноса ересью. В конце уровня — первая встреча с Миносом не как с легендой, а как с присутствием: гигантский силуэт в глубине зала, слишком большой, чтобы быть телом.</p>
     <p class="lang-en">The city's "heart," where the rhythm of combat is set by the pulse of the architecture itself. Minos built this zone as a pump that moves life through the whole layer: every wall here is a vein, every floor an artery, and the entire level pulses to the rhythm of battle. Here V1 first encounters the <em class="lore-ref" data-ref="malicious-face">Malicious Face</em> in dense combat formations and the <em class="lore-ref" data-ref="virtue">Virtues</em> patrolling the air, considering Minos's system heresy. At the level's end, the first encounter with Minos not as a legend but as a presence: a giant silhouette deep in the hall, too large to be a body.</p>
-<div class="note-anchor left">
+
+    <h4><span class="lang-ru">2-4: Court of the Corpse King — Двор Трупа Короля</span><span class="lang-en">2-4: Court of the Corpse King</span></h4>
+    <p class="lang-ru">Финал: зал, где на троне восседает <em class="lore-ref" data-ref="corpse-minos">Труп Короля Миноса</em>, марионетка змей. Уничтожение этого тела — не победа над Миносом, а эвтаназия для его плоти. Смерть Трупа открывает путь к истине, скрытой в его костях. Змеи, захватившие тело, — те же змеи, что были его советниками; они повторяют жесты Миноса, но в искажённом виде, как дурная пародия на его правление. Труп атакует V1 не потому, что хочет убить, а потому, что не может иначе — тело не слушается разложения, а змеи ищут только одно: сохранить свой дом.</p>
+    <p class="lang-en">The finale: a hall where the <em class="lore-ref" data-ref="corpse-minos">Corpse of King Minos</em>, a puppet of snakes, sits on the throne. Destroying this body is not a victory over Minos but euthanasia for his flesh. The Corpse's death opens the path to the truth hidden in its bones. The snakes that seized the body are the same snakes that were his advisors; they repeat Minos's gestures, but distorted, like a bad parody of his rule. The Corpse attacks V1 not because it wants to kill, but because it cannot do otherwise — the body does not obey decay, and the snakes seek only one thing: to preserve their home.</p>
+
+    <div class="note-anchor left">
       <div class="lore-card">
-        <img src="corpse_of_king_minos.png" alt="Corpse of King Minos" class="lore-card-img">
+        <img src="corpse_of_king_minos.png" alt="Corpse of King Minos" class="lore-card-img" style=" filter: blur(0) brightness(1.5);">
         <div class="lore-card-content">
           <span class="lore-card-name">Corpse of King Minos</span>
           <p class="lore-card-desc lang-ru">Осквернённое тело короля, управляемое змеями-паразитами. Уничтожение — акт милосердия для души Миноса.</p>
@@ -2002,11 +2274,6 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
         </div>
       </div>
     </div>
-    <h4><span class="lang-ru">2-4: Court of the Corpse King — Двор Трупа Короля</span><span class="lang-en">2-4: Court of the Corpse King</span></h4>
-    <p class="lang-ru">Финал: зал, где на троне восседает <em class="lore-ref" data-ref="corpse-minos">Труп Короля Миноса</em>, марионетка змей. Уничтожение этого тела — не победа над Миносом, а эвтаназия для его плоти. Смерть Трупа открывает путь к истине, скрытой в его костях. Змеи, захватившие тело, — те же змеи, что были его советниками; они повторяют жесты Миноса, но в искажённом виде, как дурная пародия на его правление. Труп атакует V1 не потому, что хочет убить, а потому, что не может иначе — тело не слушается разложения, а змеи ищут только одно: сохранить свой дом.</p>
-    <p class="lang-en">The finale: a hall where the <em class="lore-ref" data-ref="corpse-minos">Corpse of King Minos</em>, a puppet of snakes, sits on the throne. Destroying this body is not a victory over Minos but euthanasia for his flesh. The Corpse's death opens the path to the truth hidden in its bones. The snakes that seized the body are the same snakes that were his advisors; they repeat Minos's gestures, but distorted, like a bad parody of his rule. The Corpse attacks V1 not because it wants to kill, but because it cannot do otherwise — the body does not obey decay, and the snakes seek only one thing: to preserve their home.</p>
-
-    
 
     <p id="chrono-16" class="lang-ru">Атмосфера Похоти пропитана меланхолией и синти-вейвом. Враги здесь адаптировались к среде: <em class="lore-ref" data-ref="sisyphean-insurrectionist">Sisyphean Insurrectionists</em> используют гравитационные пушки, а <em class="lore-ref" data-ref="virtue">Virtues</em> — ангельские дроны — патрулируют небо, считая технологии Миноса ересью. Кульминацией акта становится встреча с Трупом Короля Миноса. Это не живой король, а гигантская, разлагающаяся оболочка, управляемая роем паразитических змей, символизирующих коррупцию его идеи. Змеи впиваются в нервную систему трупа, заставляя его двигаться. Уничтожение этого монстра — не освобождение души Миноса, а акт эвтаназии для осквернённого сосуда.</p>
     <p class="lang-en">The atmosphere of Lust is steeped in melancholy and synth-wave. Enemies here have adapted to the environment: <em class="lore-ref" data-ref="sisyphean-insurrectionist">Sisyphean Insurrectionists</em> use gravity cannons, while <em class="lore-ref" data-ref="virtue">Virtues</em>—angelic drones—patrol the sky, viewing Minos's technology as heresy. The climax of the act is the encounter with the Corpse of King Minos. This is not the living king, but a giant, decaying shell controlled by a swarm of parasitic snakes, symbolizing the corruption of his ideal. The snakes burrow into the corpse's nervous system, forcing it to move. Destroying this monster is not the liberation of Minos's soul, but an act of euthanasia for the defiled vessel.</p>
@@ -2027,6 +2294,8 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
     <p class="lang-ru">Секретный уровень <em>P-1</em> переносит игрока внутрь того самого Трупа Миноса, который был побеждён в Похоти. Это сюрреалистическое путешествие по гигантскому позвоночнику в абсолютной темноте. Механика уровня требует использования факела; без него игра выдаёт предупреждение «INSUFFICIENT LIGHT», и здоровье V1 начинает быстро убывать, символизируя страх перед неизвестностью и потерю ориентации в моральной тьме. Музыкальное сопровождение искажается по мере спуска, переходя от эмбиента к глухому белому шуму, имитирующему звук внутри черепа.</p>
     <p class="lang-en">The secret level <em>P-1</em> transports the player inside the very Corpse of Minos defeated in Lust. This is a surreal journey down a giant spine in absolute darkness. The level mechanics require the use of a torch; without it, the game issues an “INSUFFICIENT LIGHT” warning, and V1’s health begins to drain rapidly, symbolizing fear of the unknown and loss of orientation in moral darkness. The musical accompaniment distorts as you descend, transitioning from ambient to dull white noise, mimicking the sound inside a skull.</p>
 
+    <p class="lang-ru">В глубине находится святилище, где душа Миноса была заточена в <em>Плотской Тюрьме</em> (Flesh Prison). Это существо, созданное из плоти и костей, служит клеткой для Prime Soul. Уничтожение Тюрьмы освобождает <em class="lore-ref" data-ref="minos-prime">Миноса Прайма</em>. В отличие от своего физического воплощения, Прайм — это чистая энергия воли и правосудия. У него нет лица, так как при жизни он был ослеплён, но теперь он «видит» суть вещей. Минос Прайм атакует V1 не из злобы, а из защитного инстинкта: он понимает, что машины, подобные V1, являются концом всего живого, включая Ад. Его фраза «PREPARE THYSELF» звучит не как угроза, а как предупреждение воина воину. Битва с ним — это проверка мастерства игрока, требующая идеального тайминга и понимания механик парирования.</p>
+    <p class="lang-en">Deep within lies the sanctuary where Minos's soul was imprisoned in the <em>Flesh Prison</em>. This creature, made of flesh and bone, serves as a cage for the Prime Soul. Destroying the Prison frees <em class="lore-ref" data-ref="minos-prime">Minos Prime</em>. Unlike his physical embodiment, Prime is pure energy of will and justice. He has no face, as he was blinded in life, but now he "sees" the essence of things. Minos Prime attacks V1 not out of malice, but from a protective instinct: he understands that machines like V1 are the end of all living things, including Hell. His phrase “PREPARE THYSELF” sounds not as a threat, but as a warrior's warning. The battle with him is a test of player skill, requiring perfect timing and understanding of parry mechanics.</p>
     <div class="note-anchor">
       <div class="lore-card">
         <img src="minos_prime.png" alt="Minos Prime" class="lore-card-img">
@@ -2037,9 +2306,6 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
         </div>
       </div>
     </div>
-
-    <p class="lang-ru">В глубине находится святилище, где душа Миноса была заточена в <em>Плотской Тюрьме</em> (Flesh Prison). Это существо, созданное из плоти и костей, служит клеткой для Prime Soul. Уничтожение Тюрьмы освобождает <em class="lore-ref" data-ref="minos-prime">Миноса Прайма</em>. В отличие от своего физического воплощения, Прайм — это чистая энергия воли и правосудия. У него нет лица, так как при жизни он был ослеплён, но теперь он «видит» суть вещей. Минос Прайм атакует V1 не из злобы, а из защитного инстинкта: он понимает, что машины, подобные V1, являются концом всего живого, включая Ад. Его фраза «PREPARE THYSELF» звучит не как угроза, а как предупреждение воина воину. Битва с ним — это проверка мастерства игрока, требующая идеального тайминга и понимания механик парирования.</p>
-    <p class="lang-en">Deep within lies the sanctuary where Minos's soul was imprisoned in the <em>Flesh Prison</em>. This creature, made of flesh and bone, serves as a cage for the Prime Soul. Destroying the Prison frees <em class="lore-ref" data-ref="minos-prime">Minos Prime</em>. Unlike his physical embodiment, Prime is pure energy of will and justice. He has no face, as he was blinded in life, but now he "sees" the essence of things. Minos Prime attacks V1 not out of malice, but from a protective instinct: he understands that machines like V1 are the end of all living things, including Hell. His phrase “PREPARE THYSELF” sounds not as a threat, but as a warrior's warning. The battle with him is a test of player skill, requiring perfect timing and understanding of parry mechanics.</p>
   </div>
 </section>
 
@@ -2063,11 +2329,11 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
     <p class="lang-en">A desert under a scorching sun, where the <em class="lore-ref" data-ref="sisyphean-insurrectionist">Sisyphean Insurrectionist</em> becomes the boss. Golden dust, blazing air, and eternal heat — a physical metaphor for greed. The sun here is not a star but a giant golden disk suspended over the desert: the closer to it, the more the sand burns. The level introduces a new mechanic — "burnout": if V1 stands too long in the open sun, her armor begins to melt, and only the shade of monuments offers respite. In the finale, the battle with the Insurrectionist, whose chain strike can tear V1's armor to shreds.</p>
 
     <h4><span class="lang-ru">4-3: A Shot in the Dark — Выстрел в темноте</span><span class="lang-en">4-3: A Shot in the Dark</span></h4>
-    <p class="lang-ru">Секретная зона с <em class="lore-ref" data-ref="big-johninator">Big Johninator</em> и первый намёк на то, что Алчность хранит больше, чем золото. Уровень начинается как обычный спуск в пирамиду, но постепенно превращается в лабиринт с чёрными коридорами, где единственный источник света — выстрелы V1. Здесь прячутся <em class="lore-ref" data-ref="stalker">Stalkers</em>, и их песок в темноте почти невидим — единственный способ заметить их — по хлюпанью и по тому, как гаснет подсветка оружия. В глубине уровня — заброшенная сокровищница, заваленная не золотом, а человеческими костями: Минос, даже будучи правителем Алчности, не смог бы накопить больше, чем уже было здесь.</p>
-    <p class="lang-en">A secret zone with <em class="lore-ref" data-ref="big-johninator">Big Johninator</em> and the first hint that Greed holds more than gold. The level begins as an ordinary descent into a pyramid but gradually becomes a labyrinth of black corridors, where the only light source is V1's shots. Here hide the <em class="lore-ref" data-ref="stalker">Stalkers</em>, their sand nearly invisible in the dark — the only way to spot them is by squelching and by the dimming of weapon lights. Deep in the level lies an abandoned treasury, piled not with gold but with human bones: Minos, even as ruler of Greed, could not have accumulated more than was already here.</p>
+<p class="lang-ru">Ночной спуск в недра пирамиды, где единственный источник света — выстрелы V1. Это не просто атмосферная деталь, а игровая механика: тёмные коридоры постепенно раскрывают секреты Алчности. Здесь прячутся <em class="lore-ref" data-ref="stalker">Stalkers</em>, и их песок в темноте почти невидим — единственный способ заметить их по хлюпанью и по тому, как гаснет подсветка оружия. В глубине уровня — заброшенная сокровищница, заваленная не золотом, а человеческими костями: Минос, даже будучи правителем Алчности, не смог бы накопить больше, чем уже было здесь.</p>
+<p class="lang-en">A night-time descent into the depths of the pyramid, where the only light source is V1's gunfire. This is not just an atmospheric detail but a gameplay mechanic: the dark corridors gradually reveal the secrets of Greed. Here hide the <em class="lore-ref" data-ref="stalker">Stalkers</em>, their sand nearly invisible in the dark — the only way to spot them is by squelching and by the dimming of weapon lights. Deep in the level lies an abandoned treasury, piled not with gold but with human bones: Minos, even as ruler of Greed, could not have accumulated more than was already here.</p>
 
     <h4><span class="lang-ru">4-4: Clair de Soleil — Солнечный свет</span><span class="lang-en">4-4: Clair de Soleil</span></h4>
-    <p class="lang-ru">Финал: V2, последняя попытка доказать превосходство, заканчивается падением с пирамиды. Кульминация акта — финальная дуэль V1 и <em class="lore-ref" data-ref="v2">V2</em>. V2, стремясь превзойти свою предшественницу, установила себе новую руку с оружием <em>Whiplash</em>, позволяющим притягивать врагов или быстро перемещаться. Однако, несмотря на технологическое превосходство, V2 снова проигрывает из-за своего агрессивного, но предсказуемого стиля боя. Название уровня — игра слов: «Clair de Lune» из Лимба превращается в «Clair de Soleil» (солнечный свет), подчёркивая, что и здесь V2 видит только свет, но не тень.</p>
+    <p class="lang-ru">Финал: <em class="lore-ref" data-ref="v2">V2</em>, последняя попытка доказать превосходство, заканчивается падением с пирамиды. Кульминация акта — финальная дуэль V1 и V2. V2, стремясь превзойти свою предшественницу, установила себе новую руку с оружием <em>Whiplash</em>, позволяющим притягивать врагов или быстро перемещаться. Однако, несмотря на технологическое превосходство, V2 снова проигрывает из-за своего агрессивного, но предсказуемого стиля боя. Название уровня — игра слов: «Clair de Lune» из Лимба превращается в «Clair de Soleil» (солнечный свет), подчёркивая, что и здесь V2 видит только свет, но не тень.</p>
     <p class="lang-en">The finale: V2's last attempt to prove superiority ends with a fall from the pyramid. The climax of the act is the final duel between V1 and <em class="lore-ref" data-ref="v2">V2</em>. V2, seeking to surpass her predecessor, installed a new arm equipped with the <em>Whiplash</em>, allowing her to pull enemies closer or move rapidly. However, despite technological superiority, V2 loses again due to her aggressive but predictable fighting style. The level's title is a pun: "Clair de Lune" from Limbo becomes "Clair de Soleil" (sunlight), emphasizing that here too V2 sees only the light, not the shadow.</p>
 
     <p id="chrono-19" class="lang-ru">В финале битвы V2 срывается с вершины пирамиды и разбивается о землю, оставляя после себя лишь груду металлолома и подтверждая тезис о том, что слепое следование инструкциям ведёт к гибели. V1 не торжествует: она забирает Whiplash, но оставляет тело V2 на песке. Это первый раз, когда V1 не движется дальше сразу, — и первая трещина в её «программе».</p>
@@ -2088,7 +2354,12 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
     <h4><span class="lang-ru">5-3: Ship of Fools — Корабль дураков</span><span class="lang-en">5-3: Ship of Fools</span></h4>
     <p class="lang-ru">Плавучие платформы, на которых <em class="lore-ref" data-ref="ferryman">Паромщик</em> даёт бой. Его битва требует использования всех навыков движения, так как Паромщик атакует веслом, создавая ударные волны. Корабли здесь — это остатки тех самых судов, что когда-то перевозили души через Стикс: они давно сгнили, но всё ещё держатся на воде, потому что Ад не отпускает даже их. Паромщик здесь не один — их несколько, и каждый командует своим кораблём, но только один вступает в бой, а остальные молча наблюдают.</p>
     <p class="lang-en">Floating platforms where the <em class="lore-ref" data-ref="ferryman">Ferryman</em> gives battle. His battle requires mastery of all movement skills, as the Ferryman attacks with his oar, creating shockwaves. The ships here are the remains of the very vessels that once carried souls across the Styx: they have long rotted, but still float, because Hell does not release even them. The Ferrymen here are not alone — there are several, each commanding his ship, but only one engages in battle while the others silently watch.</p>
-<div class="note-anchor left">
+
+    <h4><span class="lang-ru">5-4: Leviathan — Левиафан</span><span class="lang-en">5-4: Leviathan</span></h4>
+    <p class="lang-ru">Дно: <em class="lore-ref" data-ref="leviathan">Левиафан</em>, коллективное существо из слившихся душ, чьё сердце прибито копьями Габриэля. Это не просто монстр, а коллективное существо, созданное из тысяч слившихся душ унылых грешников. Его сердце, содержащее их сознание, пытается вырваться наружу, но было прибито копьями Габриэля к голове Левиафана, чтобы предотвратить побег. Уничтожение Левиафана — это акт милосердия, освобождающий души от вечных мук слияния. Габриэль, прибивший сердце, — единственный, кто когда-либо проявлял к Левиафану милосердие; после победы V1 он не мстит, а уходит — потому что знает, что его собственный поступок теперь завершён.</p>
+    <p class="lang-en">The bottom: the <em class="lore-ref" data-ref="leviathan">Leviathan</em>, a collective being of merged souls, its heart nailed by Gabriel's spears. This is not just a monster, but a collective being formed from thousands of merged souls of the sullen sinners. Its heart, containing their consciousness, tries to escape, but was nailed by Gabriel's spears to the Leviathan's head to prevent escape. Destroying the Leviathan is an act of mercy, freeing the souls from the eternal torment of fusion. Gabriel, who nailed the heart, is the only one who ever showed the Leviathan mercy; after V1's victory, he does not take revenge but leaves — because he knows that his own deed is now complete.</p>
+
+    <div class="note-anchor left">
       <div class="lore-card">
         <img src="leviathan.png" alt="Leviathan" class="lore-card-img">
         <div class="lore-card-content">
@@ -2098,11 +2369,6 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
         </div>
       </div>
     </div>
-    <h4><span class="lang-ru">5-4: Leviathan — Левиафан</span><span class="lang-en">5-4: Leviathan</span></h4>
-    <p class="lang-ru">Дно: <em class="lore-ref" data-ref="leviathan">Левиафан</em>, коллективное существо из слившихся душ, чьё сердце прибито копьями Габриэля. Это не просто монстр, а коллективное существо, созданное из тысяч слившихся душ унылых грешников. Его сердце, содержащее их сознание, пытается вырваться наружу, но было прибито копьями Габриэля к голове Левиафана, чтобы предотвратить побег. Уничтожение Левиафана — это акт милосердия, освобождающий души от вечных мук слияния. Габриэль, прибивший сердце, — единственный, кто когда-либо проявлял к Левиафану милосердие; после победы V1 он не мстит, а уходит — потому что знает, что его собственный поступок теперь завершён.</p>
-    <p class="lang-en">The bottom: the <em class="lore-ref" data-ref="leviathan">Leviathan</em>, a collective being of merged souls, its heart nailed by Gabriel's spears. This is not just a monster, but a collective being formed from thousands of merged souls of the sullen sinners. Its heart, containing their consciousness, tries to escape, but was nailed by Gabriel's spears to the Leviathan's head to prevent escape. Destroying the Leviathan is an act of mercy, freeing the souls from the eternal torment of fusion. Gabriel, who nailed the heart, is the only one who ever showed the Leviathan mercy; after V1's victory, he does not take revenge but leaves — because he knows that his own deed is now complete.</p>
-
-    
 
     <h3 class="layer" id="chrono-21"><span class="lang-ru">Ересь: Железный Город Дит</span><span class="lang-en">Heresy: The Iron City of Dis</span></h3>
     <p class="lang-ru"><em>Ересь</em> — это индустриальный кошмар, город Дит, построенный из чёрного железа и камня. Здесь наказываются еретики: их запирают в раскалённых металлических гробах или погружают в реки кипящей крови. Архитектура уровня напоминает готические соборы, смешанные с фабричными трубами и механизмами. Небо над городом затянуто дымом, а свет пробивается сквозь узкие щели, создавая драматичные тени.</p>
@@ -2120,6 +2386,10 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
     <p class="lang-en">After his second defeat, Gabriel realizes that his entire life he was merely a tool in the hands of the Council of Angels, blindly following their orders without the right to doubt. Returning to Heaven, he does not ask for forgiveness but begins a massacre, destroying every member of the Council one by one. This act of rebellion shifts the balance of power in the universe, paving the way for the final confrontation.</p>
 
     <h3 class="layer" id="chrono-23"><span class="lang-ru">P-2: Wait of the World — Бремя мира</span><span class="lang-en">P-2: Wait of the World</span></h3>
+    
+    <p class="lang-ru">Секретный уровень <em>P-2</em> начинается с прохождения длинного коридора-испытания, заполненного ловушками и врагами, ведущего к <em>Паноптикуму</em> — тюрьме строгого режима для самых опасных душ. Здесь заключена душа <em>Сизифа</em>, царя, наказанного богами за хитрость и обман. В отличие от Миноса, Сизиф никогда не принимал свою судьбу. Его душа, освобождённая из оков, превращается в <em class="lore-ref" data-ref="sisyphus-prime">Сизифа Прайма</em>.</p>
+    <p class="lang-en">The secret level <em>P-2</em> begins with traversing a long trial corridor filled with traps and enemies, leading to the <em>Panopticon</em>—a maximum-security prison for the most dangerous souls. Here lies the soul of <em>Sisyphus</em>, the king punished by the gods for his cunning and deceit. Unlike Minos, Sisyphus never accepted his fate. His soul, freed from its chains, transforms into <em class="lore-ref" data-ref="sisyphus-prime">Sisyphus Prime</em>.</p>
+
     <div class="note-anchor left">
       <div class="lore-card">
         <img src="sisyphus_prime.png" alt="Sisyphus Prime" class="lore-card-img">
@@ -2130,10 +2400,6 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
         </div>
       </div>
     </div>
-    <p class="lang-ru">Секретный уровень <em>P-2</em> начинается с прохождения длинного коридора-испытания, заполненного ловушками и врагами, ведущего к <em>Паноптикуму</em> — тюрьме строгого режима для самых опасных душ. Здесь заключена душа <em>Сизифа</em>, царя, наказанного богами за хитрость и обман. В отличие от Миноса, Сизиф никогда не принимал свою судьбу. Его душа, освобождённая из оков, превращается в <em class="lore-ref" data-ref="sisyphus-prime">Сизифа Прайма</em>.</p>
-    <p class="lang-en">The secret level <em>P-2</em> begins with traversing a long trial corridor filled with traps and enemies, leading to the <em>Panopticon</em>—a maximum-security prison for the most dangerous souls. Here lies the soul of <em>Sisyphus</em>, the king punished by the gods for his cunning and deceit. Unlike Minos, Sisyphus never accepted his fate. His soul, freed from its chains, transforms into <em class="lore-ref" data-ref="sisyphus-prime">Sisyphus Prime</em>.</p>
-
-    
 
     <p class="lang-ru">Сизиф Прайм — это воплощение несгибаемой воли и бунта против тирании. Его голова заменена на миниатюрное солнце, символизирующее как его наказание (быть источником света), так и его просветление. Он сражается с V1 не ради защиты Ада, а ради самого акта сопротивления. Его атаки включают метание валунов, создание взрывных волн и призыв метеоритов. Даже если игрок побеждает его, Сизиф умирает с улыбкой, зная, что сам факт его восстания уже имеет смысл. Его фраза «PREPARE THYSELF» звучит с той же интонацией, что и у Миноса, но с добавлением гордости за свой выбор.</p>
     <p class="lang-en">Sisyphus Prime is the embodiment of unyielding will and rebellion against tyranny. His head is replaced by a miniature sun, symbolizing both his punishment (to be a source of light) and his enlightenment. He fights V1 not to defend Hell, but for the very act of resistance. His attacks include hurling boulders, creating explosive waves, and summoning meteors. Even if the player defeats him, Sisyphus dies with a smile, knowing that the very fact of his rebellion has meaning. His phrase “PREPARE THYSELF” sounds with the same intonation as Minos's, but with added pride in his choice.</p>
@@ -2151,6 +2417,10 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
     <p class="lang-ru"><em>Сад расходящихся троп</em> — это не просто лабиринт, а живая, дышащая структура Ада, которая постоянно перестраивается, чтобы сбить с толку любого, кто пытается найти выход. Стены состоят из чёрного камня и костей, а коридоры меняют свою конфигурацию каждые несколько минут. Беглецы, попавшие сюда, блуждают до полного истощения, после чего их тела трансформируются в <em class="lore-ref" data-ref="mannequin">Манекенов</em> (Mannequins) — безликих существ, лишённых воли, но обладающих невероятной скоростью и силой. Их лица скрыты под масками, а движения напоминают танец марионеток.</p>
     <p class="lang-en"><em>The Garden of Forking Paths</em> is not just a labyrinth but a living, breathing structure of Hell that constantly rearranges itself to confuse anyone trying to find an exit. The walls are made of black stone and bones, and the corridors change their configuration every few minutes. Fugitives trapped here wander until complete exhaustion, after which their bodies transform into <em class="lore-ref" data-ref="mannequin">Mannequins</em>—faceless beings devoid of will but possessing incredible speed and strength. Their faces are hidden under masks, and their movements resemble a puppet's dance.</p>
 
+    <h4 id="chrono-24"><span class="lang-ru">7-1: Garden of Forking Paths — Сад расходящихся троп</span><span class="lang-en">7-1: Garden of Forking Paths</span></h4>
+    <p class="lang-ru">Лабиринт, где <em class="lore-ref" data-ref="mannequin">Mannequins</em> впервые показывают, во что превращаются души, потерявшие волю. В центре лабиринта обитает <em class="lore-ref" data-ref="minotaur">Минотавр</em> — древний демон, созданный как подарок для Короля Миноса. Однако Минос, увидев чудовищную природу существа, в ужасе бросил его в лабиринт, где тот заперт навеки. Минотавр не злобен по своей природе; он просто хочет найти выход и увидеть небо, которого никогда не знал. Его атаки мощны и разрушительны: он использует рога для тарана, копыта для создания ударных волн и может призывать каменные столбы из земли. Битва с ним требует идеального уклонения и использования окружающей среды, так как прямое противостояние почти невозможно.</p>
+    <p class="lang-en">The labyrinth where <em class="lore-ref" data-ref="mannequin">Mannequins</em> first show what souls bereft of will become. At the center of the labyrinth dwells the <em class="lore-ref" data-ref="minotaur">Minotaur</em>—an ancient demon created as a gift for King Minos. However, Minos, seeing the monstrous nature of the creature, threw it into the labyrinth in horror, where it has been trapped forever. The Minotaur is not malicious by nature; he simply wants to find an exit and see the sky he has never known. His attacks are powerful and destructive: he uses his horns for ramming, hooves for creating shockwaves, and can summon stone pillars from the ground. The battle with him requires perfect dodging and use of the environment, as direct confrontation is nearly impossible.</p>
+
     <div class="note-anchor">
       <div class="lore-card">
         <img src="minotaur.png" alt="Minotaur" class="lore-card-img">
@@ -2161,10 +2431,6 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
         </div>
       </div>
     </div>
-
-    <h4 id="chrono-24"><span class="lang-ru">7-1: Garden of Forking Paths — Сад расходящихся троп</span><span class="lang-en">7-1: Garden of Forking Paths</span></h4>
-    <p class="lang-ru">Лабиринт, где <em class="lore-ref" data-ref="mannequin">Mannequins</em> впервые показывают, во что превращаются души, потерявшие волю. В центре лабиринта обитает <em class="lore-ref" data-ref="minotaur">Минотавр</em> — древний демон, созданный как подарок для Короля Миноса. Однако Минос, увидев чудовищную природу существа, в ужасе бросил его в лабиринт, где тот заперт навеки. Минотавр не злобен по своей природе; он просто хочет найти выход и увидеть небо, которого никогда не знал. Его атаки мощны и разрушительны: он использует рога для тарана, копыта для создания ударных волн и может призывать каменные столбы из земли. Битва с ним требует идеального уклонения и использования окружающей среды, так как прямое противостояние почти невозможно.</p>
-    <p class="lang-en">The labyrinth where <em class="lore-ref" data-ref="mannequin">Mannequins</em> first show what souls bereft of will become. At the center of the labyrinth dwells the <em class="lore-ref" data-ref="minotaur">Minotaur</em>—an ancient demon created as a gift for King Minos. However, Minos, seeing the monstrous nature of the creature, threw it into the labyrinth in horror, where it has been trapped forever. The Minotaur is not malicious by nature; he simply wants to find an exit and see the sky he has never known. His attacks are powerful and destructive: he uses his horns for ramming, hooves for creating shockwaves, and can summon stone pillars from the ground. The battle with him requires perfect dodging and use of the environment, as direct confrontation is nearly impossible.</p>
 
     <h4><span class="lang-ru">7-2: Light Up the Night — Освети ночь</span><span class="lang-en">7-2: Light Up the Night</span></h4>
     <p class="lang-ru">Первый круг Насилия, насилие над другими: река крови, <em class="lore-ref" data-ref="gutterman">Guttermen</em> и <em class="lore-ref" data-ref="guttertank">Guttertanks</em>, переделанные Адом в бессмысленных убийц. Первый круг Насилия предназначен для убийц и тиранов, погружённых в <em>Флегетон</em> — реку кипящей крови. После вымирания человечества река «забилась» трупами, превратившись в вязкую массу из плоти и крови. Уровень представляет собой поле боя, заваленное остатками человеческих тел, оружия и техники. Визуальный стиль мрачен: тёмно-красные тона, дым от горящих останков и постоянное хлюпанье крови под ногами V1.</p>
@@ -2210,6 +2476,9 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
     <p class="lang-ru">Этот уровень представляет собой шедевр нелинейного дизайна. Он разделён на две взаимосвязанные секции: «Дневную» (реальный мир) и «Ночную» (зеркальное отражение), соединённые центральным хабом. Дневная часть наполнена офисами 90-х годов с громоздкими компьютерами, складами с коробками и парковками, заполненными автомобилями 30-х годов. Ночная часть — это искажённая, тёмная версия того же пространства, где цвета инвертированы, а геометрия нарушена. Игрок должен постоянно переключаться между мирами, используя зеркала как порталы, чтобы решать головоломки и открывать пути.</p>
     <p class="lang-en">This level is a masterpiece of non-linear design. It is divided into two interconnected sections: the "Daytime" (real world) and "Nighttime" (mirror reflection), connected by a central hub. The daytime part is filled with 90s offices featuring bulky computers, warehouses with boxes, and parking lots filled with 30s cars. The nighttime part is a distorted, dark version of the same space, where colors are inverted and geometry is broken. The player must constantly switch between worlds, using mirrors as portals to solve puzzles and open paths.</p>
 
+    <p class="lang-ru">Главная угроза уровня — <em class="lore-ref" data-ref="mirror-reaper">Mirror Reaper</em> (Жнец из Зеркала). Это не просто враг, а проявление самого Обмана. В зеркалах можно увидеть его силуэт, управляющий отражением V1 как марионеткой, дёргая за невидимые нити. Если игрок слишком долго смотрит в зеркало или приближается к определённым точкам, из стены рядом с отражением выламывается <em class="lore-ref" data-ref="guttertank">Guttertank</em>, атакуя врасплох. Этот механизм создаёт постоянное напряжение: игрок никогда не знает, безопасно ли смотреть в отражение. Музыка уровня сочетает в себе искажённые звуки радиопередач 90-х и низкочастотный гул, вызывающий тревогу.</p>
+    <p class="lang-en">The main threat of the level is the <em class="lore-ref" data-ref="mirror-reaper">Mirror Reaper</em>. This is not just an enemy but a manifestation of Fraud itself. In mirrors, his silhouette can be seen puppeteering V1’s reflection, pulling invisible strings. If the player stares into the mirror too long or approaches certain points, a <em class="lore-ref" data-ref="guttertank">Guttertank</em> bursts through the wall next to the reflection, attacking by surprise. This mechanic creates constant tension: the player never knows if it is safe to look into the reflection. The level's music combines distorted 90s radio broadcast sounds with low-frequency hums that induce anxiety.</p>
+
     <div class="note-anchor left">
       <div class="lore-card">
         <img src="mirror_reaper.png" alt="Mirror Reaper" class="lore-card-img">
@@ -2221,9 +2490,6 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
       </div>
     </div>
 
-    <p class="lang-ru">Главная угроза уровня — <em class="lore-ref" data-ref="mirror-reaper">Mirror Reaper</em> (Жнец из Зеркала). Это не просто враг, а проявление самого Обмана. В зеркалах можно увидеть его силуэт, управляющий отражением V1 как марионеткой, дёргая за невидимые нити. Если игрок слишком долго смотрит в зеркало или приближается к определённым точкам, из стены рядом с отражением выламывается <em class="lore-ref" data-ref="guttertank">Guttertank</em>, атакуя врасплох. Этот механизм создаёт постоянное напряжение: игрок никогда не знает, безопасно ли смотреть в отражение. Музыка уровня сочетает в себе искажённые звуки радиопередач 90-х и низкочастотный гул, вызывающий тревогу.</p>
-    <p class="lang-en">The main threat of the level is the <em class="lore-ref" data-ref="mirror-reaper">Mirror Reaper</em>. This is not just an enemy but a manifestation of Fraud itself. In mirrors, his silhouette can be seen puppeteering V1’s reflection, pulling invisible strings. If the player stares into the mirror too long or approaches certain points, a <em class="lore-ref" data-ref="guttertank">Guttertank</em> bursts through the wall next to the reflection, attacking by surprise. This mechanic creates constant tension: the player never knows if it is safe to look into the reflection. The level's music combines distorted 90s radio broadcast sounds with low-frequency hums that induce anxiety.</p>
-
     <h3><span class="lang-ru">8-3: Disintegration Loop — Распад Материи</span><span class="lang-en">8-3: Disintegration Loop — The Decay of Matter</span></h3>
     <p class="lang-ru">На этом этапе реальность начинает распадаться на части. Пространство разбивается на изолированные острова, парящие в фиолетовой пустоте. Каждый остров содержит фрагменты предыдущих слоёв Ада: кусок реки крови из Гнева, обломок пирамиды из Алчности, ветку белого дерева из Леса Самоубийц. Это визуальная метафора того, что Обман поглощает и искажает все остальные грехи. Гравитация становится нестабильной: игрок может ходить по стенам и потолку, а в финальной зоне она полностью инвертируется, отправляя V1 в открытое космическое пространство.</p>
     <p class="lang-en">At this stage, reality begins to disintegrate. Space breaks into isolated islands floating in a purple void. Each island contains fragments of previous layers of Hell: a piece of the blood river from Wrath, a pyramid fragment from Greed, a branch of the white tree from Wood of Suicides. This is a visual metaphor for Fraud absorbing and distorting all other sins. Gravity becomes unstable: the player can walk on walls and ceilings, and in the final zone, it completely inverts, sending V1 into open outer space.</p>
@@ -2232,7 +2498,11 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
     <p class="lang-en">In the space section, the player fights against a backdrop of replicas of Earth, the Moon, and other planets slowly rotating around. The floor of the final arena is decorated with a complex symbol of the <em>Squaring of the Circle</em> featuring the <em>Tria Prima</em> (the three prime elements of alchemy: Sulfur, Mercury, and Salt). This symbolizes the search for the Philosopher’s Stone—attempts to achieve perfection and immortality, which in the context of ULTRAKILL is the highest form of Fraud, as immortality belongs only to God. The battle here requires perfect control of movement in zero-gravity conditions.</p>
 
     <h3><span class="lang-ru">8-4: Final Flight — Театр Абсурда</span><span class="lang-en">8-4: Final Flight — Theatre of the Absurd</span></h3>
-   <div class="note-anchor">
+   
+    <p class="lang-ru">Финальный уровень слоя проходит в гигантском, пустом театре, напоминающем оперный дом. Сцена освещена прожекторами, а зрительские места утопают во тьме. Битва с <em class="lore-ref" data-ref="geryon">Герионом</em> (Geryon, Watcher of the Skies) представлена как театральная пьеса. Перед боем занавес поднимается, а терминалы выводят текст, похожий на сценарий, где V1 названа «Главной Звездой» (The Star). Герион — это древний трёхголовый демон, но в этой интерпретации он выглядит как трагический актёр, исполняющий роль монстра.</p>
+    <p class="lang-en">The final level of the layer takes place in a giant, empty theatre resembling an opera house. The stage is lit by spotlights, while the audience seats are shrouded in darkness. The battle with <em class="lore-ref" data-ref="geryon">Geryon</em> (Watcher of the Skies) is framed as a stage play. Before the fight, the curtain rises, and terminals display text resembling a script, where V1 is called "The Star." Geryon is an ancient three-headed demon, but in this interpretation, he looks like a tragic actor playing the role of a monster.</p>
+
+    <div class="note-anchor">
       <div class="lore-card">
         <img src="geryon.png" alt="Geryon" class="lore-card-img">
         <div class="lore-card-content">
@@ -2242,10 +2512,6 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
         </div>
       </div>
     </div>
-    <p class="lang-ru">Финальный уровень слоя проходит в гигантском, пустом театре, напоминающем оперный дом. Сцена освещена прожекторами, а зрительские места утопают во тьме. Битва с <em class="lore-ref" data-ref="geryon">Герионом</em> (Geryon, Watcher of the Skies) представлена как театральная пьеса. Перед боем занавес поднимается, а терминалы выводят текст, похожий на сценарий, где V1 названа «Главной Звездой» (The Star). Герион — это древний трёхголовый демон, но в этой интерпретации он выглядит как трагический актёр, исполняющий роль монстра.</p>
-    <p class="lang-en">The final level of the layer takes place in a giant, empty theatre resembling an opera house. The stage is lit by spotlights, while the audience seats are shrouded in darkness. The battle with <em class="lore-ref" data-ref="geryon">Geryon</em> (Watcher of the Skies) is framed as a stage play. Before the fight, the curtain rises, and terminals display text resembling a script, where V1 is called "The Star." Geryon is an ancient three-headed demon, but in this interpretation, he looks like a tragic actor playing the role of a monster.</p>
-
-    
 
     <p class="lang-ru">Терминалы предполагают, что Герион не просто охраняет слой, а охотится на грешников Обмана, чтобы даровать им «милосердную смерть» до того, как Ад окончательно исказит их души до неузнаваемости. Его атаки включают полёты по арене, стрельбу энергетическими снарядами из всех трёх голов и призыв театральных декораций, которые падают на игрока. Победа над ним — это не триумф, а завершение спектакля. После боя занавес опускается, оставляя игрока в тишине, что подчёркивает одиночество пути V1.</p>
     <p class="lang-en">Terminals suggest that Geryon does not merely guard the layer but hunts Fraud’s sinners to grant them a "merciful death" before Hell completely distorts their souls beyond recognition. His attacks include flying around the arena, shooting energy projectiles from all three heads, and summoning theatrical props that fall on the player. Defeating him is not a triumph but the end of the play. After the battle, the curtain falls, leaving the player in silence, emphasizing the loneliness of V1’s journey.</p>
@@ -2256,100 +2522,10 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
   </div>
 </section>
 
-<!-- 09 -->
-<section class="section" id="section-09">
-  <div class="section-head">
-    <span class="sec-num">09</span>
-    <h2><span class="lang-ru">V1 и V2: технические характеристики</span><span class="lang-en">V1 and V2: Technical Specifications</span></h2>
-  </div>
-
-  <div class="lore-body">
-    <p class="lang-ru">V1 и V2 — не просто два прототипа одной серии, а два инженерных подхода к одной задаче. Ниже — их характеристики, системы и данные, считанные с интерфейсов, а не пересказ сюжета.</p>
-    <p class="lang-en">V1 and V2 are not merely two prototypes of the same series, but two engineering approaches to a single problem. Below are their specifications, systems and data read from interfaces — not a retelling of the plot.</p>
-
-    <h3><span class="lang-ru">V1: общие характеристики</span><span class="lang-en">V1: General Specifications</span></h3>
-    <p class="lang-ru"><strong>Класс:</strong> Верховная машина (Supreme Machine).<br><strong>Серия:</strong> V, первый прототип.<br><strong>Назначение:</strong> боевая машина Последней войны; предположительно — контрмера против Earthmovers.<br><strong>Статус:</strong> единственный завершённый экземпляр; серийное производство отменено.</p>
-    <p class="lang-en"><strong>Class:</strong> Supreme Machine.<br><strong>Series:</strong> V, first prototype.<br><strong>Role:</strong> Final War combat machine; implied countermeasure against Earthmovers.<br><strong>Status:</strong> sole completed unit; mass production cancelled.</p>
-
-    <h3><span class="lang-ru">Броня и система питания</span><span class="lang-en">Armour and Power System</span></h3>
-    <p class="lang-ru">Ключевая особенность V1 — <strong>экспериментальная внешняя броня</strong>, впитывающая кровь при непосредственном контакте. В отличие от всех прочих машин, V1 не нуждается в отдельной процедуре дозаправки: каждое попадание по врагу, каждое убийство и каждый контакт с кровью конвертируются в ремонт корпуса и восполнение энергии. Плата за это — <strong>тонкость и хрупкость брони</strong>: любой пропущенный удар может стать фатальным. Инженерный компромисс очевиден: машина, способная чинить себя на лету, не нуждается в тыловой инфраструктуре, но не может позволить себе ни одной ошибки.</p>
-    <p class="lang-en">V1’s defining feature is its <strong>experimental exterior plating</strong> that absorbs blood on direct contact. Unlike every other machine, V1 requires no separate refuelling procedure: every hit on an enemy, every kill and every blood contact is converted into hull repair and energy replenishment. The price is <strong>thin, brittle armour</strong>: any missed hit can prove fatal. The engineering trade-off is obvious: a machine that repairs itself on the fly needs no rear infrastructure, but can afford no mistakes.</p>
-
-    <h3><span class="lang-ru">Мобильность и системы</span><span class="lang-en">Mobility and Systems</span></h3>
-    <p class="lang-ru">V1 обладает полным набором систем движения: <strong>рывок</strong> (dash) с кратковременной неуязвимостью, <strong>скольжение</strong> (slide), <strong>прыжок от стен</strong>, <strong>слэм</strong> с высоты и комбинации вроде dash-jump и slam storage. Запас выносливости — три полосы, восстанавливающиеся с разной скоростью на разных сложностях. Восемь жёлтых светящихся выступов на спине — не декор, а <strong>крылья</strong>, обеспечивающие воздушную манёвренность, рывки и хранение оружия.</p>
-    <p class="lang-en">V1 possesses a full movement kit: <strong>dash</strong> with brief intangibility, <strong>slide</strong>, <strong>wall-jump</strong>, <strong>ground slam</strong> and combinations such as dash-jump and slam storage. Stamina pool is three bars, regenerating at different rates across difficulties. The eight glowing yellow protrusions on its back are not decoration but <strong>wings</strong>, enabling aerial manoeuvrability, dashing and weapon storage.</p>
-
-    <h3><span class="lang-ru">Данные главного меню</span><span class="lang-en">Main Menu Data</span></h3>
-    <p class="lang-ru">Главное меню ULTRAKILL циклически отображает состояние частей тела V1, и эти строки — не случайный текст, а прямые отсылки к механикам:</p>
-    <p class="lang-en">The ULTRAKILL main menu cycles through text displaying the state of V1’s body parts, and these lines are not random flavour but direct references to mechanics:</p>
-
-    <p class="lang-ru"><strong>VISUAL CORTEX:</strong> минимальная визуальная обработка и «расширение времени» (time dilation). Это объясняет как графический стиль игры (V1 жертвует чёткостью ради скорости обработки), так и замедление времени при появлении некоторых персонажей, например V2.</p>
-    <p class="lang-en"><strong>VISUAL CORTEX:</strong> minimal visual processing and “time dilation.” This explains both the game’s art style (V1 trades clarity for processing speed) and the slowdown when certain characters appear, such as V2.</p>
-
-    <p class="lang-ru"><strong>WINGS:</strong> рывок, сохранение импульса и способность удерживать равновесие. Крылья — не только средство передвижения, но и гироскопическая система.</p>
-    <p class="lang-en"><strong>WINGS:</strong> dash, momentum conservation and the ability to stay upright. The wings are not only propulsion but also a gyroscopic system.</p>
-
-    <p class="lang-ru"><strong>LEGS:</strong> отсутствие урона от падения, сохранение энергии от слэма и прыжков, удержание баланса даже при тяжёлом оружии в одной руке. Ноги V1 — это система стабилизации, а не просто опора.</p>
-    <p class="lang-en"><strong>LEGS:</strong> no fall damage, energy conservation from slams and jumps, balance retention even with heavy weapons in one arm. V1’s legs are a stabilisation system, not merely support.</p>
-
-    <h3><span class="lang-ru">Интересные факты</span><span class="lang-en">Trivia</span></h3>
-    <p class="lang-ru"><strong>V1 никогда не истекает кровью.</strong> Несмотря на хрупкость корпуса, на самой машине кровь появляется только как чужая — брызги врагов. Собственных повреждений с кровотечением у V1 не зафиксировано.</p>
-    <p class="lang-en"><strong>V1 never bleeds.</strong> Despite its fragile frame, blood appears on the machine only as enemy splatter. No self-inflicted bleeding wounds have ever been recorded.</p>
-
-    <p class="lang-ru"><strong>Скрытый телекинез.</strong> Если снять все руки, включая Feedbacker, V1 может взаимодействовать с Терминалом, не касаясь его. При попытке удара без рук выдаётся сообщение об ошибке.</p>
-    <p class="lang-en"><strong>Latent telekinesis.</strong> If all arms, including the Feedbacker, are unequipped, V1 can interact with a Terminal without touching it. Attempting to punch without arms returns an error message.</p>
-
-    <p class="lang-ru"><strong>Идеальная осанка.</strong> При включении вида от третьего лица в уровне 4-S видно, что V1 держится идеально прямо — вероятно, следствие гироскопической системы крыльев и ног.</p>
-    <p class="lang-en"><strong>Excellent posture.</strong> Entering third-person mode in 4-S reveals that V1 stands perfectly upright — likely a consequence of the gyroscopic wing-and-leg system.</p>
-
-    <p class="lang-ru"><strong>Модель всегда с Feedbacker.</strong> Вне зависимости от того, какая рука экипирована в игре, модель V1 в главном меню и некоторых сценах всегда выглядит так, будто у неё установлен Feedbacker. Собственных черепов V1 не носит.</p>
-    <p class="lang-en"><strong>Model always shows the Feedbacker.</strong> Regardless of which arm is equipped in gameplay, V1’s model in the main menu and certain scenes always appears to have the Feedbacker installed. V1 carries no skulls of its own.</p>
-
-    <p class="lang-ru"><strong>Зашифрованный текст.</strong> За заголовком главного меню печатается программный псевдокод, содержащий Base64-строки: <em>trismegistus</em>, <em>principle</em>, <em>womb</em>. Смысл не подтверждён разработчиками и остаётся предметом интерпретаций.</p>
-    <p class="lang-en"><strong>Encrypted text.</strong> Behind the main menu title, pseudo-code is printed containing Base64 strings: <em>trismegistus</em>, <em>principle</em>, <em>womb</em>. The meaning is unconfirmed by the developers and remains open to interpretation.</p>
-
-    <p class="lang-ru"><strong>Теория о «Womb».</strong> Среди фанатов распространена интерпретация, что <em>womb</em> в коде главного меню — не анатомическая отсылка, а обозначение внутреннего устройства переработки крови. Согласно этой теории, V1 не просто впитывает кровь бронёй, а прогоняет её через некий «резервуар» или «камеру», где сырая кровь очищается и преобразуется в пригодное топливо. Именно этим объясняют, почему мёртвая кровь не лечит V1: она должна быть «переработана» внутри машины. Теория не подтверждена, но хорошо согласуется с механикой самопочинки и с тем, как V1 «выплёвывает» отработанную кровь при получении урона.</p>
-    <p class="lang-en"><strong>The “Womb” theory.</strong> A popular fan interpretation holds that <em>womb</em> in the main menu code is not an anatomical reference but a designation for an internal blood-processing unit. According to this theory, V1 does not merely absorb blood through its plating; it runs it through a “reservoir” or “chamber” where raw blood is refined and converted into usable fuel. This would explain why dead blood does not heal V1: it must be “processed” inside the machine. The theory is unconfirmed but fits the self-repair mechanic and the way V1 “expels” spent blood when taking damage.</p>
-
-    <h3><span class="lang-ru">V2: общие характеристики</span><span class="lang-en">V2: General Specifications</span></h3>
-    <p class="lang-ru"><strong>Класс:</strong> предположительно Верховная машина.<br><strong>Серия:</strong> V, второй прототип.<br><strong>Назначение:</strong> охранная машина Нового мира.<br><strong>Броня:</strong> стандартная толстая плита, повышенная прочность.<br><strong>Питание:</strong> требует внешней дозаправки; способности V1 к прямому впитыванию крови лишён.<br><strong>Вооружение:</strong> копирует арсенал V1, дополнен <em>Whiplash</em> (крюк-хлыст) и <em>Knuckleblaster</em> после первой встречи.</p>
-    <p class="lang-en"><strong>Class:</strong> presumed Supreme Machine.<br><strong>Series:</strong> V, second prototype.<br><strong>Role:</strong> New Peace security machine.<br><strong>Armour:</strong> standard heavy plating, increased durability.<br><strong>Power:</strong> requires external refuelling; lacks V1’s direct blood absorption.<br><strong>Armament:</strong> copies V1’s arsenal, supplemented with the <em>Whiplash</em> grappling hook and <em>Knuckleblaster</em> after the first encounter.</p>
-
-    <h3><span class="lang-ru">Ключевое различие</span><span class="lang-en">The Key Difference</span></h3>
-    <p class="lang-ru">V1 — машина, оптимизированная под <strong>непрерывный бой без тыла</strong>: тонкая броня, самопочинка, агрессивная мобильность. V2 — машина, оптимизированная под <strong>стабильность и охрану</strong>: толстая броня, надёжность, но зависимость от внешних источников топлива. В Аду, где стабильности не существует, преимущество получает не тот, у кого больше брони, а тот, кто может адаптироваться быстрее.</p>
-    <p class="lang-en">V1 is a machine optimised for <strong>continuous combat without a rear echelon</strong>: thin armour, self-repair, aggressive mobility. V2 is a machine optimised for <strong>stability and security</strong>: thick armour, reliability, but dependence on external fuel sources. In Hell, where stability does not exist, the advantage goes not to the one with more armour, but to the one who can adapt faster.</p>
-  </div>
-
-  <div class="vs-wrap">
-    <div class="vs-card" data-no-hint="true">
-      <h3>V1</h3>
-      <ul>
-        <li><b>Class:</b> <span class="lang-ru">Supreme Machine, первый прототип серии V.</span><span class="lang-en">Supreme Machine, first prototype of the V series.</span></li>
-        <li><b>Armour:</b> <span class="lang-ru">экспериментальная тонкая; впитывает кровь при контакте.</span><span class="lang-en">experimental thin plating; absorbs blood on contact.</span></li>
-        <li><b>Power:</b> <span class="lang-ru">прямое впитывание крови; внешняя дозаправка не требуется.</span><span class="lang-en">direct blood absorption; no external refuelling required.</span></li>
-        <li><b>Mobility:</b> <span class="lang-ru">dash, slide, wall-jump, slam, dash-jump, slam storage; 3 полосы выносливости.</span><span class="lang-en">dash, slide, wall-jump, slam, dash-jump, slam storage; 3 stamina bars.</span></li>
-        <li><b>Durability:</b> <span class="lang-ru">низкая; компенсируется ремонтом на лету.</span><span class="lang-en">low; offset by on-the-fly repair.</span></li>
-        <li><b>Status:</b> <span class="lang-ru">единственный завершённый экземпляр; в серию не пошёл.</span><span class="lang-en">sole completed unit; never mass-produced.</span></li>
-      </ul>
-    </div>
-    <div class="vs-card" data-no-hint="true">
-      <h3>V2</h3>
-      <ul>
-        <li><b>Class:</b> <span class="lang-ru">Supreme Machine (предположительно), второй прототип.</span><span class="lang-en">Supreme Machine (presumed), second prototype.</span></li>
-        <li><b>Armour:</b> <span class="lang-ru">стандартная толстая плита; повышенная прочность.</span><span class="lang-en">standard heavy plating; increased durability.</span></li>
-        <li><b>Power:</b> <span class="lang-ru">требует внешней дозаправки; кровь напрямую не впитывает.</span><span class="lang-en">requires external refuelling; cannot absorb blood directly.</span></li>
-        <li><b>Mobility:</b> <span class="lang-ru">тяжёлый и прямолинейный; полагается на броню и Whiplash.</span><span class="lang-en">heavy and straightforward; relies on armour and the Whiplash.</span></li>
-        <li><b>Durability:</b> <span class="lang-ru">высокая; но без топлива останавливается.</span><span class="lang-en">high; but stops without fuel.</span></li>
-        <li><b>Status:</b> <span class="lang-ru">единственный прототип; погибает в Алчности.</span><span class="lang-en">sole prototype; dies in Greed.</span></li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- 10. СЕКРЕТНЫЕ УРОВНИ -->
+<!-- 09. СЕКРЕТНЫЕ УРОВНИ -->
 <section class="section" id="section-10">
   <div class="section-head">
-    <span class="sec-num">10</span>
+    <span class="sec-num">09</span>
     <h2><span class="lang-ru">Секретные уровни</span><span class="lang-en">Secret Levels</span></h2>
   </div>
   <div class="lore-body">
@@ -2390,10 +2566,10 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
   </div>
 </section>
 
-<!-- 11. ТЕОРИИ -->
+<!-- 10. ТЕОРИИ -->
 <section class="section" id="section-11">
   <div class="section-head">
-    <span class="sec-num">11</span>
+    <span class="sec-num">10</span>
     <h2><span class="lang-ru">Архив Гипотез: Тайны Машин и Бога</span><span class="lang-en">Archive of Hypotheses: Secrets of Machines and God</span></h2>
   </div>
 
