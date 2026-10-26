@@ -50,7 +50,6 @@ body::before{
     radial-gradient(circle at 85% 80%,rgba(227,6,19,.04),transparent 45%);
   pointer-events:none;z-index:0;
 }
-
 body::after{
   content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0;
   background:repeating-linear-gradient(0deg,rgba(255,0,0,.07) 0px,rgba(0,255,255,.07) 1px,transparent 1px,transparent 4px);
@@ -102,6 +101,9 @@ body[data-lang="en"] .lang-ru{display:none}
 body[data-lang="en"] .lang-en{display:block}
 body[data-lang="en"] .lang-en.inline{display:inline}
 
+/* ============================================================
+   TOPBAR
+   ============================================================ */
 .topbar{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;justify-content:space-between;align-items:center;
@@ -113,8 +115,7 @@ body[data-lang="en"] .lang-en.inline{display:inline}
 }
 .brand{
   font-family:'Oswald',sans-serif;font-weight:700;font-size:1.1rem;
-  letter-spacing:.16em;color:#fff;white-space:nowrap;
-  cursor:pointer;
+  letter-spacing:.16em;color:#fff;white-space:nowrap;cursor:pointer;
 }
 .brand span{color:var(--red);font-weight:400}
 .brand .brand-main{color:#fff;font-weight:700}
@@ -153,6 +154,9 @@ body[data-lang="en"] .lang-en.inline{display:inline}
 .lang-switch button.active{background:var(--red);border-color:var(--red-bright);color:#fff}
 .lang-switch button:hover:not(.active){color:#fff}
 
+/* ============================================================
+   HERO
+   ============================================================ */
 .hero{
   position:relative;height:100vh;min-height:640px;display:flex;
   align-items:center;justify-content:center;overflow:hidden;
@@ -193,6 +197,9 @@ body[data-lang="en"] .lang-en.inline{display:inline}
   letter-spacing:.18em;text-transform:uppercase;opacity:.8;
 }
 
+/* ============================================================
+   SECTIONS
+   ============================================================ */
 .section{
   padding:5rem 6vw;position:relative;
   border-bottom:1px solid var(--border);
@@ -223,8 +230,6 @@ body[data-lang="en"] .lang-en.inline{display:inline}
   padding-left:.9rem;border-left:3px solid var(--red);line-height:1.3;
   clear:right;
 }
-
-/* Названия слоёв — правее, крупнее, без красной полоски слева */
 .lore-body h3.layer{
   text-align:right;
   font-size:1.5em;
@@ -265,88 +270,52 @@ em.lore-ref.lore-ref-broken{
 /* ============================================================
    BLOCKQUOTES
    ============================================================ */
-blockquote {
-  margin: 1.5rem 0;
-  padding: 1rem 1.5rem;
-  background: rgba(227,6,19,.05);
-  border-left: 3px solid var(--red);
-  font-style: italic;
-  color: var(--text);
-  position: relative;
+blockquote{
+  margin:1.5rem 0;padding:1rem 1.5rem;
+  background:rgba(227,6,19,.05);
+  border-left:3px solid var(--red);
+  font-style:italic;color:var(--text);position:relative;
 }
-blockquote::before {
-  content: '“';
-  font-family: 'Oswald', sans-serif;
-  font-size: 3rem;
-  color: var(--red);
-  opacity: 0.3;
-  position: absolute;
-  top: -0.5rem;
-  left: 0.5rem;
-  line-height: 1;
+blockquote::before{
+  content:'“';font-family:'Oswald',sans-serif;
+  font-size:3rem;color:var(--red);opacity:.3;
+  position:absolute;top:-.5rem;left:.5rem;line-height:1;
 }
-blockquote p {
-  margin-bottom: 0.5rem;
-}
-blockquote p:last-child {
-  margin-bottom: 0;
-}
-blockquote.lang-en {
-  display: none;
-}
-body[data-lang="en"] blockquote.lang-ru { display: none; }
-body[data-lang="en"] blockquote.lang-en { display: block; }
+blockquote p{margin-bottom:.5rem;}
+blockquote p:last-child{margin-bottom:0;}
+blockquote.lang-en{display:none;}
+body[data-lang="en"] blockquote.lang-ru{display:none;}
+body[data-lang="en"] blockquote.lang-en{display:block;}
 
 /* ============================================================
-   LORE CARD AS NOTE (side-attached, wider, tilted)
+   LORE CARD — base (PC)
    ============================================================ */
 .note-anchor{
-  position:relative;
-  height:0;
-  z-index:5;
-  overflow:visible;
-  pointer-events:none;
+  position:relative;height:0;z-index:5;overflow:visible;pointer-events:none;
 }
 .lore-card{
-  position:absolute;
-  top: -140px;
-  right:-320px;
-  width:300px;
-  min-height:250px;
-  display:flex;
-  flex-direction:column;
+  position:absolute;top:-140px;right:-320px;
+  width:300px;min-height:250px;
+  display:flex;flex-direction:column;
   background:var(--bg-2);
   border:1px dashed rgba(227,6,19,.35);
-  padding:0;
-  overflow:hidden;
+  padding:0;overflow:hidden;
   transform:rotate(3deg);
   transition:transform .3s ease,border-color .3s ease;
-  pointer-events:auto;
-  cursor:pointer;
+  pointer-events:auto;cursor:pointer;
   box-shadow:4px 4px 14px rgba(0,0,0,.55);
   border-radius:2px;
 }
-.note-anchor.left .lore-card{
-  right:auto;
-  left:-320px;
-  transform:rotate(-3deg);
-}
+.note-anchor.left .lore-card{right:auto;left:-320px;transform:rotate(-3deg);}
 .lore-card::before{
-  content:'';
-  position:absolute;
-  top:-5px;
-  left:50%;
+  content:'';position:absolute;top:-5px;left:50%;
   transform:translateX(-50%) rotate(-2deg);
-  width:56px;
-  height:12px;
+  width:56px;height:12px;
   background:rgba(217,168,56,.28);
   border:1px solid rgba(217,168,56,.2);
-  z-index:2;
-  pointer-events:none;
+  z-index:2;pointer-events:none;
 }
-.note-anchor.left .lore-card::before{
-  transform:translateX(-50%) rotate(2deg);
-}
+.note-anchor.left .lore-card::before{transform:translateX(-50%) rotate(2deg);}
 .lore-card:hover{
   transform:rotate(0deg) scale(1.02);
   border-color:var(--red-bright);
@@ -354,29 +323,17 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   z-index:20;
 }
 .lore-card-img{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  z-index:0;
-  border:none;
-  flex:none;
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;z-index:0;border:none;flex:none;
   filter:brightness(.9) contrast(1.05);
-  pointer-events:none;
-  transition:filter .3s;
-  object-position: center 15%;
+  pointer-events:none;transition:filter .3s;
+  object-position:center 15%;
 }
-.lore-card:hover .lore-card-img{
-  filter:brightness(.9) contrast(1.1);
-}
+.lore-card:hover .lore-card-img{filter:brightness(.9) contrast(1.1);}
 .lore-card-content{
-  position:relative;
-  z-index:1;
-  padding:.7rem .85rem;
-  min-width:0;
-  flex:1 1 auto;
-  background:rgba(10, 6, 6, .72);
+  position:relative;z-index:1;padding:.7rem .85rem;
+  min-width:0;flex:1 1 auto;
+  background:rgba(10,6,6,.72);
   backdrop-filter:blur(1px);
   -webkit-backdrop-filter:blur(1px);
 }
@@ -386,16 +343,11 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   line-height:1.2;margin-bottom:.45rem;
   text-shadow:0 0 10px rgba(227,6,19,.4);
 }
-.lore-card-desc{
-  font-size:.74rem;
-  line-height:1.5;
-  color:var(--text);
-  margin:0;
-}
+.lore-card-desc{font-size:.74rem;line-height:1.5;color:var(--text);margin:0;}
 .lore-card-desc + .lore-card-desc{margin-top:.3rem}
 
 /* ============================================================
-   VS CARDS (V1/V2)
+   VS CARDS
    ============================================================ */
 .vs-wrap{
   max-width:var(--content-w);margin:2rem auto;
@@ -404,10 +356,7 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
 .vs-card{
   background:var(--bg-2);border:1px solid var(--border);
   border-top:4px solid var(--red);padding:1.5rem;
-  position:relative;
-  cursor:pointer;
-  min-height:420px;
-  height:auto;
+  position:relative;cursor:pointer;min-height:420px;height:auto;
 }
 .vs-card::before{
   content:'';position:absolute;inset:0;background-size:cover;
@@ -427,7 +376,7 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
 .vs-card li b{color:var(--red-bright);font-weight:400;letter-spacing:.04em}
 
 /* ============================================================
-   CHRONOLOGY
+   CHRONOLOGY (timeline section)
    ============================================================ */
 .chronology{
   text-align:center;border-bottom:1px solid var(--border);
@@ -440,20 +389,15 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
 }
 .chrono-title{
   font-family:'Oswald',sans-serif;font-size:clamp(2.5rem,5.4vw,4.3rem);
-  padding-bottom: 20px;
+  padding-bottom:20px;
   text-transform:uppercase;letter-spacing:.14em;color:#fff;
   text-shadow:0 0 24px var(--red-glow);line-height:1.1;
 }
 .chrono-arrow{
-  width:min(340px,72vw);
-  height:40px;
-  position:relative;
-  display:inline-block;
-  background:#1a0d0d;
-  border:1px solid rgba(227,6,19,.2);
-  border-radius:0;
-  opacity:1;
-  transition:background .3s ease, border-color .3s ease;
+  width:min(340px,72vw);height:40px;position:relative;
+  display:inline-block;background:#1a0d0d;
+  border:1px solid rgba(227,6,19,.2);border-radius:0;
+  opacity:1;transition:background .3s ease, border-color .3s ease;
   flex-shrink:0;
 }
 .chrono-arrow::before,
@@ -462,17 +406,10 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   width:14px;height:2px;
   background:var(--red-bright);border-radius:1px;
   transition:transform .35s ease;
-  transform-origin:center center;
-  opacity:.9;
+  transform-origin:center center;opacity:.9;
 }
-.chrono-arrow::before{
-  left:calc(50% - 12px);
-  transform:translateY(-50%) rotate(35deg);
-}
-.chrono-arrow::after{
-  left:calc(50%);
-  transform:translateY(-50%) rotate(-35deg);
-}
+.chrono-arrow::before{left:calc(50% - 12px);transform:translateY(-50%) rotate(35deg);}
+.chrono-arrow::after{left:calc(50%);transform:translateY(-50%) rotate(-35deg);}
 .chronology.open .chrono-arrow::before{transform:translateY(-50%) rotate(-35deg)}
 .chronology.open .chrono-arrow::after{transform:translateY(-50%) rotate(35deg)}
 .chronology.open .chrono-arrow{background:#050202;border-color:rgba(227,6,19,.4)}
@@ -515,9 +452,7 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   text-transform:uppercase;letter-spacing:.12em;color:#fff;
   text-shadow:0 0 24px var(--red-glow);margin-bottom:.5rem;
 }
-.group-sub{
-  font-size:.78rem;letter-spacing:.18em;color:var(--red);text-transform:uppercase;
-}
+.group-sub{font-size:.78rem;letter-spacing:.18em;color:var(--red);text-transform:uppercase;}
 .enemy-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(min(240px,100%),1fr));
@@ -528,8 +463,7 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   border-top:3px solid var(--red);display:flex;flex-direction:column;
   transition:border-color .25s,transform .25s,box-shadow .25s;
   overflow:hidden;scroll-margin-top:calc(var(--topbar-h) + 20px);
-  cursor:pointer;
-  min-height:340px;
+  cursor:pointer;min-height:340px;
 }
 .enemy-card:hover{
   border-top-color:var(--red-bright);transform:translateY(-3px);
@@ -537,18 +471,14 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
 }
 .enemy-card-img{
   aspect-ratio:5/4;position:relative;overflow:hidden;
-  background:#000;border-bottom:1px solid var(--border);
-  flex-shrink:0;
+  background:#000;border-bottom:1px solid var(--border);flex-shrink:0;
 }
 .enemy-card-img img{
   width:100%;height:100%;object-fit:contain;display:block;
   filter:brightness(.9) contrast(1.05);transition:filter .3s;
 }
 .enemy-card:hover .enemy-card-img img{filter:brightness(1) contrast(1.1)}
-.enemy-card-body{
-  padding:.95rem 1.05rem 1.15rem;flex:1 1 auto;
-  display:flex;flex-direction:column;
-}
+.enemy-card-body{padding:.95rem 1.05rem 1.15rem;flex:1 1 auto;display:flex;flex-direction:column;}
 .enemy-card-body h4{
   font-family:'Oswald',sans-serif;font-size:1.02rem;text-transform:uppercase;
   letter-spacing:.04em;color:#fff;margin-bottom:.45rem;line-height:1.2;
@@ -618,8 +548,7 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
 }
 .terminal-box.powered{
   box-shadow:inset 0 0 50px rgba(0,0,0,.9),0 0 30px rgba(227,6,19,.25),0 20px 40px rgba(0,0,0,.8);
-  border-top-color:#3a2a2a;
-  border-bottom-color:#3a2a2a;
+  border-top-color:#3a2a2a;border-bottom-color:#3a2a2a;
 }
 .terminal-screen{
   background:#050505;border:2px solid #fff;outline:1px solid #fff;
@@ -627,13 +556,9 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   text-align:center;color:#fff;font-family:'Share Tech Mono',monospace;
   overflow-y:auto;overflow-x:hidden;position:relative;
   transition:opacity .35s ease,transform .35s ease,filter .35s ease,background .35s ease,border-color .35s ease;
-  opacity:0;transform:scale(.97);
-  pointer-events:none;
+  opacity:0;transform:scale(.97);pointer-events:none;
 }
-.terminal-box.powered .terminal-screen{
-  opacity:1;transform:scale(1);
-  pointer-events:auto;
-}
+.terminal-box.powered .terminal-screen{opacity:1;transform:scale(1);pointer-events:auto;}
 .terminal-screen::-webkit-scrollbar{width:12px}
 .terminal-screen::-webkit-scrollbar-track{background:#000;border-left:2px solid #222}
 .terminal-screen::-webkit-scrollbar-thumb{background:#555;border:2px solid #222;border-radius:0}
@@ -643,14 +568,8 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   opacity:0;transform:scaleX(1.1) translateX(10px);
   filter:blur(2px) brightness(2);transition:all .15s ease-in;
 }
-.term-title{
-  font-size:1.4rem;margin-bottom:2rem;letter-spacing:.1em;
-  white-space:pre-wrap;text-align:center;
-}
-.term-text{
-  font-size:1rem;line-height:1.5;white-space:pre-wrap;
-  text-shadow:0 0 4px rgba(255,255,255,.3);text-align:center;
-}
+.term-title{font-size:1.4rem;margin-bottom:2rem;letter-spacing:.1em;white-space:pre-wrap;text-align:center;}
+.term-text{font-size:1rem;line-height:1.5;white-space:pre-wrap;text-shadow:0 0 4px rgba(255,255,255,.3);text-align:center;}
 .terminal-note{
   max-width:800px;margin:2rem auto 0;padding:1rem 1.5rem;
   border-left:3px solid var(--red);background:rgba(227,6,19,.06);
@@ -667,16 +586,13 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   display:flex;align-items:center;justify-content:center;
   transition:all .3s;padding-bottom:4px;font-family:monospace;
 }
-.term-power-btn.on{
-  color:#0f0;border-color:#0f0;box-shadow:0 0 15px rgba(0,255,0,.5);
-}
+.term-power-btn.on{color:#0f0;border-color:#0f0;box-shadow:0 0 15px rgba(0,255,0,.5);}
 
 /* ============================================================
    BACK TO TOP
    ============================================================ */
 #back-to-top{
-  display:none;
-  position:fixed;bottom:1.5rem;right:1.5rem;z-index:500;
+  display:none;position:fixed;bottom:1.5rem;right:1.5rem;z-index:500;
   width:48px;height:48px;border-radius:50%;
   background:var(--red);color:#fff;border:none;
   font-size:1.4rem;cursor:pointer;
@@ -687,54 +603,18 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   font-family:'Oswald',sans-serif;font-weight:700;
 }
 #back-to-top.visible{opacity:1;pointer-events:auto;transform:translateY(0)}
-
-@media (max-width: 768px){
-  #back-to-top{display:flex;align-items:center;justify-content:center;}
-}
+@media (max-width:768px){#back-to-top{display:flex;align-items:center;justify-content:center;}}
 
 /* ============================================================
    REVEAL ANIMATION
    ============================================================ */
-.reveal-init{
-  opacity:0;
-  transform:translateY(20px);
-  transition:opacity .6s ease, transform .6s ease;
-}
-.reveal-init.revealed{
-  opacity:1;
-  transform:translateY(0);
-}
+.reveal-init{opacity:0;transform:translateY(20px);transition:opacity .6s ease, transform .6s ease;}
+.reveal-init.revealed{opacity:1;transform:translateY(0);}
 
-/* Специфичная анимация для карточек лора (вылет сбоку) */
-.lore-card.reveal-init {
-  opacity: 0;
-  transform: translateX(80px) rotate(10deg);
-}
-.note-anchor.left .lore-card.reveal-init {
-  transform: translateX(-80px) rotate(-10deg);
-}
-.lore-card.revealed {
-  opacity: 1;
-  transform: translateX(0) rotate(3deg);
-}
-.note-anchor.left .lore-card.revealed {
-  transform: translateX(0) rotate(-3deg);
-}
-
-@media (max-width: 1300px) {
-  .lore-card.reveal-init {
-    transform: translateX(80px) rotate(1.6deg);
-  }
-  .note-anchor.left .lore-card.reveal-init {
-    transform: translateX(-80px) rotate(-1.6deg);
-  }
-  .lore-card.revealed {
-    transform: translateX(0) rotate(1.6deg);
-  }
-  .note-anchor.left .lore-card.revealed {
-    transform: translateX(0) rotate(-1.6deg);
-  }
-}
+.lore-card.reveal-init{opacity:0;transform:translateX(80px) rotate(10deg);}
+.note-anchor.left .lore-card.reveal-init{transform:translateX(-80px) rotate(-10deg);}
+.lore-card.revealed{opacity:1;transform:translateX(0) rotate(3deg);}
+.note-anchor.left .lore-card.revealed{transform:translateX(0) rotate(-3deg);}
 
 /* ============================================================
    PARRY FLASH
@@ -747,7 +627,7 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
 #parry-flash.active{opacity:1;transition:opacity .02s ease;}
 
 /* ============================================================
-   NEW: CARD TEXT SELECTION & COPY
+   CARD TEXT SELECTION & COPY
    ============================================================ */
 .enemy-card-body p,
 .lore-card-desc,
@@ -767,49 +647,195 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
 }
 
 .card-copy-btn{
-  position:absolute;
-  top:.5rem;
-  right:.5rem;
-  z-index:6;
-  width:30px;
-  height:30px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  position:absolute;top:.5rem;right:.5rem;z-index:6;
+  width:30px;height:30px;
+  display:flex;align-items:center;justify-content:center;
   padding:0;
   background:rgba(10,6,6,.85);
   border:1px solid var(--border);
   color:var(--text-dim);
   font-size:.9rem;
   font-family:'Share Tech Mono',monospace;
-  border-radius:2px;
-  cursor:pointer;
-  opacity:0;
+  border-radius:2px;cursor:pointer;opacity:0;
   transition:opacity .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
 }
 .enemy-card:hover .card-copy-btn,
 .lore-card:hover .card-copy-btn,
 .vs-card:hover .card-copy-btn,
-.card-copy-btn:focus-visible{
-  opacity:1;
-}
-.card-copy-btn:hover{
-  background:rgba(227,6,19,.25);
-  border-color:var(--red);
-  color:#fff;
-}
-.card-copy-btn.copied{
-  background:rgba(0,255,0,.18);
-  border-color:#0f0;
-  color:#0f0;
-  opacity:1;
-}
-@media (max-width:768px){
-  .card-copy-btn{opacity:1;}
-}
+.card-copy-btn:focus-visible{opacity:1;}
+.card-copy-btn:hover{background:rgba(227,6,19,.25);border-color:var(--red);color:#fff;}
+.card-copy-btn.copied{background:rgba(0,255,0,.18);border-color:#0f0;color:#0f0;opacity:1;}
+@media (max-width:768px){.card-copy-btn{opacity:1;}}
 
 /* ============================================================
-   RESPONSIVE
+   LAYER AUDIO PLAYER — tape deck
+   ============================================================ */
+.layer-player{
+  display:flex;align-items:center;gap:.85rem;
+  max-width:var(--content-w);margin:1.4rem auto 1.8rem;
+  padding:.7rem 1rem .7rem .75rem;
+  background:linear-gradient(90deg, rgba(227,6,19,.1), rgba(10,6,6,.85) 55%);
+  border:1px solid var(--border);
+  border-left:3px solid var(--red);
+  position:relative;
+  font-family:'Share Tech Mono',monospace;
+  overflow:hidden;
+  box-shadow:0 4px 18px rgba(0,0,0,.45), inset 0 0 30px rgba(227,6,19,.03);
+  transition:border-left-color .25s ease, box-shadow .25s ease;
+}
+.layer-player::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px);
+  pointer-events:none;mix-blend-mode:overlay;z-index:0;
+}
+.layer-player::after{
+  content:'';position:absolute;top:0;right:0;
+  width:0;height:0;
+  border-top:8px solid var(--red);
+  border-left:8px solid transparent;
+  opacity:.7;pointer-events:none;z-index:1;
+}
+.layer-player > *{position:relative;z-index:2}
+
+.lp-play{
+  flex:0 0 auto;width:38px;height:38px;border-radius:50%;
+  background:var(--bg-2);border:2px solid var(--red);color:var(--red-bright);
+  cursor:pointer;font-size:.8rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s ease;padding:0;line-height:1;font-family:inherit;
+}
+.lp-play:hover{background:var(--red);color:#fff;box-shadow:0 0 14px var(--red-glow);transform:scale(1.05);}
+.layer-player.playing .lp-play{
+  background:var(--red);color:#fff;border-color:var(--red-bright);box-shadow:0 0 16px var(--red-glow);
+}
+.layer-player.playing{
+  border-left-color:var(--red-bright);
+  box-shadow:0 4px 18px rgba(0,0,0,.45), 0 0 24px rgba(227,6,19,.18), inset 0 0 30px rgba(227,6,19,.05);
+}
+.layer-player.playing::after{border-top-color:var(--red-bright);opacity:1;}
+
+.lp-code{
+  flex:0 0 auto;
+  font-family:'Oswald',sans-serif;font-weight:700;font-size:.95rem;
+  color:var(--red-bright);letter-spacing:.04em;
+  padding:.32rem .5rem;
+  border:1px solid rgba(227,6,19,.45);
+  background:rgba(227,6,19,.08);
+  text-shadow:0 0 8px rgba(227,6,19,.55);line-height:1;
+}
+.lp-meta{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:.2rem;}
+.lp-title{
+  color:#fff;font-size:.82rem;letter-spacing:.05em;text-transform:uppercase;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.lp-layer-tag{color:var(--text-dim);font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;}
+
+.lp-progress-wrap{flex:1 1 190px;display:flex;align-items:center;gap:.6rem;min-width:130px;}
+.lp-progress{
+  flex:1 1 auto;height:5px;background:rgba(0,0,0,.75);
+  border:1px solid var(--border);position:relative;cursor:pointer;overflow:hidden;
+}
+.lp-fill{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--red-dark),var(--red),var(--red-bright));
+  box-shadow:0 0 6px var(--red-glow);
+  transition:width .08s linear;pointer-events:none;
+}
+.lp-time{
+  flex:0 0 auto;font-size:.63rem;color:var(--text-dim);
+  letter-spacing:.05em;white-space:nowrap;min-width:6em;text-align:right;
+  transition:color .2s;
+}
+.layer-player.playing .lp-time{color:var(--red-bright)}
+.layer-player audio{display:none}
+
+/* ============================================================
+   RIGHT SIDE NAVIGATION — minimal rail
+   ============================================================ */
+.rnav{
+  position:fixed;top:50%;right:14px;
+  transform:translateY(-50%);
+  z-index:9000;
+  display:flex;flex-direction:column;gap:2px;
+  width:36px;max-width:calc(100vw - 20px);max-height:70vh;
+  overflow-y:auto;overflow-x:hidden;
+  padding:8px 7px;border-radius:3px;
+  background:transparent;border:1px solid transparent;
+  transition:
+    width .38s cubic-bezier(.4,0,.2,1),
+    background .3s ease,
+    border-color .3s ease,
+    box-shadow .3s ease,
+    padding .3s ease,
+    right .2s ease,
+    opacity .2s ease;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(227,6,19,.35) transparent;
+}
+.rnav::-webkit-scrollbar{width:4px;}
+.rnav::-webkit-scrollbar-track{background:transparent;}
+.rnav::-webkit-scrollbar-thumb{background:rgba(227,6,19,.35);border-radius:2px;}
+
+.rnav:hover,
+.rnav:focus-within{
+  width:min(288px, calc(100vw - 24px));
+  background:rgba(10,6,6,.96);
+  border-color:var(--border);
+  padding:10px;
+  box-shadow:0 0 0 1px rgba(227,6,19,.06),
+             -8px 0 32px rgba(0,0,0,.6),
+             inset 0 0 20px rgba(227,6,19,.03);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  opacity:1;
+}
+.rnav:hover::-webkit-scrollbar-thumb{background:var(--red);}
+
+.rnav-item{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 0;min-height:18px;
+  text-decoration:none;color:var(--text-dim);
+  font-family:'Share Tech Mono',monospace;
+  font-size:.72rem;letter-spacing:.04em;
+  flex:0 0 auto;white-space:nowrap;overflow:hidden;
+  transition:color .2s ease;
+}
+.rnav-item:hover{color:#fff;}
+.rnav-item:focus-visible{outline:1px solid var(--red);outline-offset:2px;}
+
+.rnav-bar{
+  flex:0 0 auto;width:14px;height:2px;
+  background:var(--text-dim);opacity:.5;
+  transition:width .25s ease, background .25s ease, opacity .25s ease, box-shadow .25s ease;
+}
+.rnav-item:hover .rnav-bar{width:18px;background:var(--text);opacity:.9;}
+.rnav-item.active .rnav-bar{
+  width:20px;background:var(--red-bright);opacity:1;box-shadow:0 0 8px var(--red-glow);
+}
+.rnav-item.active{color:#fff;}
+
+.rnav-num{
+  flex:0 0 auto;
+  font-family:'Oswald',sans-serif;font-weight:700;font-size:.66rem;
+  color:var(--red);letter-spacing:.08em;
+  opacity:0;width:0;overflow:hidden;
+  transition:opacity .25s ease .05s, width .3s cubic-bezier(.4,0,.2,1) .05s;
+}
+.rnav-item.active .rnav-num{opacity:.9;}
+.rnav:hover .rnav-num,
+.rnav:focus-within .rnav-num{opacity:.85;width:1.7em;}
+
+.rnav-text{
+  flex:1 1 auto;min-width:0;
+  opacity:0;transform:translateX(-8px);
+  transition:opacity .25s ease .08s, transform .3s ease .08s;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.rnav:hover .rnav-text,
+.rnav:focus-within .rnav-text{opacity:1;transform:translateX(0);}
+
+/* ============================================================
+   RESPONSIVE — breakpoints
    ============================================================ */
 
 @media (max-width: 1700px){
@@ -824,65 +850,54 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   .lore-card-desc{font-size:.72rem;}
 }
 
+/* --- Планшеты: лор-карточки = ПК-вид (картинка-фон), правый нав 50% --- */
 @media (max-width: 1300px){
   .note-anchor{
-    height:auto;
-    overflow:visible;
-    pointer-events:auto;
-    display:flex;
-    justify-content:center;
-    margin:1.8rem 0 1rem;
+    position:relative;height:auto;overflow:visible;pointer-events:none;
+    display:flex;justify-content:center;align-items:flex-start;
+    margin:2rem auto;max-width:420px;width:100%;padding:0 4vw;
   }
-
   .lore-card{
-    position:static;
-    width:min(340px, 100%);
-    min-height:auto;
-    margin:0;
-    padding:0;
-    flex-direction:column;
-    gap:0;
-    border:1px dashed rgba(227,6,19,.35);
-    border-radius:2px;
-    overflow:visible;
+    position:relative;top:auto;right:auto;left:auto;bottom:auto;
+    width:100%;max-width:380px;min-height:260px;height:auto;
+    margin:0;padding:0;flex-direction:column;gap:0;
+    overflow:hidden;transform:rotate(2deg);
     box-shadow:4px 6px 18px rgba(0,0,0,.55);
-    transform:rotate(1.6deg);
     transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease;
   }
-  .note-anchor.left .lore-card{
-    transform:rotate(-1.6deg);
-  }
+  .note-anchor.left .lore-card{transform:rotate(-2deg);}
   .lore-card:hover,
   .note-anchor.left .lore-card:hover{
-    transform:rotate(0deg) scale(1.01);
+    transform:rotate(0deg) scale(1.02);
     box-shadow:6px 8px 22px rgba(0,0,0,.7);
     border-color:var(--red-bright);
   }
-
-  .lore-card::before{
-    display:block;
-    top:-6px;
-  }
-
   .lore-card-img{
-    position:static;
-    width:100%;
-    height:110px;
-    flex:0 0 110px;
-    border-right:none;
-    border-bottom:1px solid var(--border);
-    object-position:center;
+    position:absolute;inset:0;width:100%;height:100%;flex:none;
+    object-fit:cover;object-position:center 15%;
+    border-right:none;border-bottom:none;
   }
-
   .lore-card-content{
-    padding:.65rem .85rem .8rem;
-    overflow:visible;
-    background:var(--bg-2);
-    backdrop-filter:none;
-    -webkit-backdrop-filter:none;
+    position:relative;z-index:1;padding:.8rem 1rem .9rem;
+    min-width:0;flex:1 1 auto;
+    background:rgba(10,6,6,.75);
+    backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);
   }
   .lore-card-name{font-size:.88rem;}
   .lore-card-desc{font-size:.74rem;line-height:1.5;}
+
+  .lore-card.reveal-init{transform:translateX(60px) rotate(2deg);}
+  .note-anchor.left .lore-card.reveal-init{transform:translateX(-60px) rotate(-2deg);}
+  .lore-card.revealed{transform:translateX(0) rotate(2deg);}
+  .note-anchor.left .lore-card.revealed{transform:translateX(0) rotate(-2deg);}
+
+  /* Правый нав — 50% прозрачности, поверх контента */
+  .rnav{right:6px;opacity:.5;max-width:calc(100vw - 12px);}
+  .rnav:hover,
+  .rnav:focus-within{
+    width:min(260px, calc(100vw - 16px));
+    opacity:1;
+  }
 }
 
 @media (max-width: 900px){
@@ -935,8 +950,107 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   .term-text{font-size:.92rem}
   .terminal-note{padding:.9rem 1.1rem;font-size:.8rem;margin-top:1.5rem}
   .term-arrow{font-size:2.2rem;padding:.6rem}
+
+  .layer-player{flex-wrap:wrap;gap:.5rem .6rem;padding:.6rem .8rem;margin:1.1rem auto 1.4rem;}
+  .lp-progress-wrap{flex-basis:100%;order:10;min-width:0}
+  .lp-title{font-size:.76rem}
+  .lp-play{width:34px;height:34px;font-size:.72rem}
+  .lp-code{font-size:.85rem;padding:.24rem .42rem}
+  .lp-layer-tag{font-size:.55rem}
+
+  /* ===== Правый нав на мобиле — только палочки, оверлей по тапу ===== */
+  .rnav{
+    right:2px;
+    width:12px;
+    max-width:12px;
+    padding:0;
+    gap:4px;
+    border:none;
+    background:transparent;
+    box-shadow:none;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+    border-radius:0;
+    opacity:.35;
+  }
+  /* принудительно сворачиваем hover/focus-within, чтобы работал только .open */
+  .rnav:hover:not(.open),
+  .rnav:focus-within:not(.open){
+    width:12px;
+    max-width:12px;
+    padding:0;
+    gap:4px;
+    opacity:.35;
+    background:transparent;
+    border:none;
+    box-shadow:none;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+    border-radius:0;
+  }
+  .rnav-item{padding:2px 0;gap:0;min-height:8px;justify-content:center;}
+  .rnav-bar{
+    width:10px;height:2px;margin:0 auto;
+    background:var(--text-dim);opacity:.7;border-radius:1px;
+  }
+  .rnav-item.active .rnav-bar{
+    background:var(--red-bright);
+    box-shadow:0 0 6px var(--red-glow);
+    opacity:1;
+  }
+  .rnav-num,
+  .rnav-text{
+    opacity:0 !important;
+    width:0 !important;
+    max-width:0 !important;
+    overflow:hidden;
+    pointer-events:none;
+  }
+
+  /* Открытое состояние (.open — только по тапу) */
+  .rnav.open{
+    right:4px;
+    width:min(240px, calc(100vw - 12px));
+    max-width:calc(100vw - 12px);
+    padding:10px 12px;
+    gap:2px;
+    opacity:1;
+    background:rgba(10,6,6,.97);
+    border:1px solid var(--border);
+    border-left:2px solid var(--red);
+    box-shadow:0 0 0 1px rgba(227,6,19,.08), -12px 0 40px rgba(0,0,0,.7);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border-radius:3px;
+  }
+  .rnav.open .rnav-item{
+    justify-content:flex-start;gap:8px;padding:5px 0;min-height:18px;
+  }
+  .rnav.open .rnav-bar{
+    margin:0;width:14px;background:var(--text-dim);opacity:.5;
+  }
+  .rnav.open .rnav-item.active .rnav-bar{
+    width:18px;background:var(--red-bright);opacity:1;
+    box-shadow:0 0 8px var(--red-glow);
+  }
+  .rnav.open .rnav-num{
+    opacity:.85 !important;
+    width:1.7em !important;
+    max-width:2em !important;
+    overflow:visible;
+    pointer-events:auto;
+  }
+  .rnav.open .rnav-text{
+    opacity:1 !important;
+    width:auto !important;
+    max-width:200px !important;
+    overflow:hidden;
+    pointer-events:auto;
+    transform:translateX(0);
+  }
 }
 
+/* --- Маленькие экраны: стикеры ещё меньше и строго по центру --- */
 @media (max-width: 560px){
   .hero{height:auto;min-height:520px;padding:7rem 5vw 4rem}
   .hero-title{font-size:clamp(2.4rem,11vw,3.4rem)}
@@ -951,11 +1065,28 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   .lore-body h3{font-size:.9rem;padding-left:.65rem;margin:1.6rem 0 .7rem}
   .lore-body h4{font-size:.85rem;padding-left:.65rem;margin:1.4rem 0 .6rem}
 
-  .lore-card{transform:rotate(1.2deg);}
-  .note-anchor.left .lore-card{transform:rotate(-1.2deg);}
-  .lore-card-img{height:90px;flex:0 0 90px;}
-  .lore-card-name{font-size:.85rem;}
-  .lore-card-desc{font-size:.72rem;}
+  .note-anchor{
+    padding:0 16px;
+    margin:1.4rem auto;
+    max-width:100%;
+    display:flex;
+    justify-content:center;
+  }
+  .lore-card{
+    max-width:280px;width:100%;min-height:200px;
+    margin:0 auto;transform:rotate(1.4deg);
+    box-shadow:3px 4px 14px rgba(0,0,0,.55);
+  }
+  .note-anchor.left .lore-card{transform:rotate(-1.4deg);}
+
+  .lore-card.reveal-init{transform:translateX(30px) rotate(1.4deg);}
+  .note-anchor.left .lore-card.reveal-init{transform:translateX(-30px) rotate(-1.4deg);}
+  .lore-card.revealed{transform:translateX(0) rotate(1.4deg);}
+  .note-anchor.left .lore-card.revealed{transform:translateX(0) rotate(-1.4deg);}
+
+  .lore-card-name{font-size:.8rem;}
+  .lore-card-desc{font-size:.68rem;line-height:1.45;}
+  .lore-card-content{padding:.65rem .75rem .7rem;}
 
   .vs-card{padding:1.2rem}
   .vs-card h3{font-size:1.6rem;margin-bottom:.7rem}
@@ -992,13 +1123,13 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   .term-text{font-size:.86rem;line-height:1.45}
   .term-arrow{font-size:1.8rem;padding:.4rem}
   .terminal-note{padding:.7rem .8rem;font-size:.76rem;margin-top:1.2rem}
-  .lore-body h3.layer{
-    font-size:1.3em;
-    padding-right:.65rem;
-    margin-top:2.2rem;
-  }
+  .lore-body h3.layer{font-size:1.3em;padding-right:.65rem;margin-top:2.2rem;}
+
+  .rnav{right:4px;width:10px;padding:0;gap:3px;opacity:.35;}
+  .rnav-bar{width:8px;}
 }
 
+/* --- Очень маленькие экраны --- */
 @media (max-width: 480px){
   .topbar{
     flex-direction:column;align-items:center;justify-content:center;
@@ -1021,6 +1152,21 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   .sec-num{font-size:1.3rem}
 }
 
+@media (max-width: 400px){
+  .note-anchor{padding:0 12px;margin:1.2rem auto;}
+  .lore-card{max-width:240px;min-height:180px;transform:rotate(1.2deg);}
+  .note-anchor.left .lore-card{transform:rotate(-1.2deg);}
+
+  .lore-card.reveal-init{transform:translateX(20px) rotate(1.2deg);}
+  .note-anchor.left .lore-card.reveal-init{transform:translateX(-20px) rotate(-1.2deg);}
+  .lore-card.revealed{transform:translateX(0) rotate(1.2deg);}
+  .note-anchor.left .lore-card.revealed{transform:translateX(0) rotate(-1.2deg);}
+
+  .lore-card-name{font-size:.76rem;}
+  .lore-card-desc{font-size:.64rem;line-height:1.4;}
+  .lore-card-content{padding:.6rem .7rem .65rem;}
+}
+
 @media (max-width: 380px){
   .enemy-grid{grid-template-columns:1fr}
   .terminal-box{padding:14px 10px;border-bottom-width:60px;border-top-width:8px}
@@ -1029,295 +1175,9 @@ body[data-lang="en"] blockquote.lang-en { display: block; }
   .term-text{font-size:.8rem;line-height:1.4}
   .term-power-btn{width:38px;height:38px;font-size:1.2rem;bottom:-49px;right:14px}
   .terminal-note{font-size:.72rem;padding:.65rem .7rem}
-}
-/* ============================================================
-   PER-LAYER AUDIO PLAYER — ULTRAKILL TAPE DECK
-   ============================================================ */
-.layer-player{
-  display:flex;
-  align-items:center;
-  gap:.85rem;
-  max-width:var(--content-w);
-  margin:1.4rem auto 1.8rem;
-  padding:.7rem 1rem .7rem .75rem;
-  background:
-    linear-gradient(90deg, rgba(227,6,19,.1), rgba(10,6,6,.85) 55%);
-  border:1px solid var(--border);
-  border-left:3px solid var(--red);
-  position:relative;
-  font-family:'Share Tech Mono',monospace;
-  overflow:hidden;
-  box-shadow:0 4px 18px rgba(0,0,0,.45), inset 0 0 30px rgba(227,6,19,.03);
-  transition:border-left-color .25s ease, box-shadow .25s ease;
-}
-.layer-player::before{
-  content:'';
-  position:absolute;inset:0;
-  background:repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px);
-  pointer-events:none;mix-blend-mode:overlay;z-index:0;
-}
-.layer-player::after{
-  content:'';
-  position:absolute;top:0;right:0;
-  width:0;height:0;
-  border-top:8px solid var(--red);
-  border-left:8px solid transparent;
-  opacity:.7;pointer-events:none;z-index:1;
-}
-.layer-player > *{position:relative;z-index:2}
 
-/* Play button */
-.lp-play{
-  flex:0 0 auto;
-  width:38px;height:38px;
-  border-radius:50%;
-  background:var(--bg-2);
-  border:2px solid var(--red);
-  color:var(--red-bright);
-  cursor:pointer;
-  font-size:.8rem;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .2s ease;
-  padding:0;line-height:1;
-  font-family:inherit;
-}
-.lp-play:hover{
-  background:var(--red);color:#fff;
-  box-shadow:0 0 14px var(--red-glow);
-  transform:scale(1.05);
-}
-.layer-player.playing .lp-play{
-  background:var(--red);
-  color:#fff;
-  border-color:var(--red-bright);
-  box-shadow:0 0 16px var(--red-glow);
-}
-.layer-player.playing{
-  border-left-color:var(--red-bright);
-  box-shadow:0 4px 18px rgba(0,0,0,.45), 0 0 24px rgba(227,6,19,.18), inset 0 0 30px rgba(227,6,19,.05);
-}
-.layer-player.playing::after{
-  border-top-color:var(--red-bright);
-  opacity:1;
-}
-
-/* Track code */
-.lp-code{
-  flex:0 0 auto;
-  font-family:'Oswald',sans-serif;
-  font-weight:700;
-  font-size:.95rem;
-  color:var(--red-bright);
-  letter-spacing:.04em;
-  padding:.32rem .5rem;
-  border:1px solid rgba(227,6,19,.45);
-  background:rgba(227,6,19,.08);
-  text-shadow:0 0 8px rgba(227,6,19,.55);
-  line-height:1;
-}
-
-/* Title + layer tag */
-.lp-meta{
-  flex:1 1 auto;
-  min-width:0;
-  display:flex;flex-direction:column;
-  gap:.2rem;
-}
-.lp-title{
-  color:#fff;
-  font-size:.82rem;
-  letter-spacing:.05em;
-  text-transform:uppercase;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.lp-layer-tag{
-  color:var(--text-dim);
-  font-size:.6rem;
-  letter-spacing:.24em;
-  text-transform:uppercase;
-}
-
-/* Progress + time */
-.lp-progress-wrap{
-  flex:1 1 190px;
-  display:flex;align-items:center;gap:.6rem;
-  min-width:130px;
-}
-.lp-progress{
-  flex:1 1 auto;
-  height:5px;
-  background:rgba(0,0,0,.75);
-  border:1px solid var(--border);
-  position:relative;
-  cursor:pointer;
-  overflow:hidden;
-}
-.lp-fill{
-  height:100%;width:0%;
-  background:linear-gradient(90deg,var(--red-dark),var(--red),var(--red-bright));
-  box-shadow:0 0 6px var(--red-glow);
-  transition:width .08s linear;
-  pointer-events:none;
-}
-.lp-time{
-  flex:0 0 auto;
-  font-size:.63rem;
-  color:var(--text-dim);
-  letter-spacing:.05em;
-  white-space:nowrap;
-  min-width:6em;
-  text-align:right;
-  transition:color .2s;
-}
-.layer-player.playing .lp-time{color:var(--red-bright)}
-
-.layer-player audio{display:none}
-
-@media (max-width:600px){
-  .layer-player{
-    flex-wrap:wrap;
-    gap:.5rem .6rem;
-    padding:.6rem .8rem;
-    margin:1.1rem auto 1.4rem;
-  }
-  .lp-progress-wrap{flex-basis:100%;order:10;min-width:0}
-  .lp-title{font-size:.76rem}
-  .lp-play{width:34px;height:34px;font-size:.72rem}
-  .lp-code{font-size:.85rem;padding:.24rem .42rem}
-  .lp-layer-tag{font-size:.55rem}
-}
-/* ============================================================
-   RIGHT SIDE NAVIGATION — ULTRAKILL MINIMAL RAIL
-   ============================================================ */
-.rnav {
-  position: fixed;
-  top: 50%;
-  right: 14px;
-  transform: translateY(-50%);
-  z-index: 480;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  width: 36px;
-  max-height: 70vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 8px 7px;
-  border-radius: 3px;
-  background: transparent;
-  border: 1px solid transparent;
-  transition: width .38s cubic-bezier(.4,0,.2,1),
-              background .3s ease,
-              border-color .3s ease,
-              box-shadow .3s ease,
-              padding .3s ease;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(227,6,19,.35) transparent;
-}
-.rnav::-webkit-scrollbar { width: 4px; }
-.rnav::-webkit-scrollbar-track { background: transparent; }
-.rnav::-webkit-scrollbar-thumb {
-  background: rgba(227,6,19,.35);
-  border-radius: 2px;
-}
-.rnav:hover,
-.rnav:focus-within {
-  width: 288px;
-  background: rgba(10,6,6,.96);
-  border-color: var(--border);
-  padding: 10px;
-  box-shadow: 0 0 0 1px rgba(227,6,19,.06),
-              -8px 0 32px rgba(0,0,0,.6),
-              inset 0 0 20px rgba(227,6,19,.03);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-.rnav:hover::-webkit-scrollbar-thumb { background: var(--red); }
-
-.rnav-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 0;
-  min-height: 18px;
-  text-decoration: none;
-  color: var(--text-dim);
-  font-family: 'Share Tech Mono', monospace;
-  font-size: .72rem;
-  letter-spacing: .04em;
-  flex: 0 0 auto;
-  white-space: nowrap;
-  overflow: hidden;
-  transition: color .2s ease;
-}
-.rnav-item:hover { color: #fff; }
-.rnav-item:focus-visible {
-  outline: 1px solid var(--red);
-  outline-offset: 2px;
-}
-
-.rnav-bar {
-  flex: 0 0 auto;
-  width: 14px;
-  height: 2px;
-  background: var(--text-dim);
-  opacity: .5;
-  transition: width .25s ease, background .25s ease,
-              opacity .25s ease, box-shadow .25s ease;
-}
-.rnav-item:hover .rnav-bar {
-  width: 18px;
-  background: var(--text);
-  opacity: .9;
-}
-.rnav-item.active .rnav-bar {
-  width: 20px;
-  background: var(--red-bright);
-  opacity: 1;
-  box-shadow: 0 0 8px var(--red-glow);
-}
-.rnav-item.active { color: #fff; }
-
-.rnav-num {
-  flex: 0 0 auto;
-  font-family: 'Oswald', sans-serif;
-  font-weight: 700;
-  font-size: .66rem;
-  color: var(--red);
-  letter-spacing: .08em;
-  opacity: 0;
-  width: 0;
-  overflow: hidden;
-  transition: opacity .25s ease .05s,
-              width .3s cubic-bezier(.4,0,.2,1) .05s;
-}
-.rnav-item.active .rnav-num { opacity: .9; }
-.rnav:hover .rnav-num,
-.rnav:focus-within .rnav-num {
-  opacity: .85;
-  width: 1.7em;
-}
-
-.rnav-text {
-  flex: 1 1 auto;
-  min-width: 0;
-  opacity: 0;
-  transform: translateX(-8px);
-  transition: opacity .25s ease .08s, transform .3s ease .08s;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.rnav:hover .rnav-text,
-.rnav:focus-within .rnav-text {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-@media (max-width: 1000px) {
-  .rnav { display: none; }
+  .rnav{width:8px;padding:0;gap:2px;}
+  .rnav-bar{width:6px;}
 }
 </style>
 <script>
@@ -1354,14 +1214,11 @@ function playSound(key){
   if (!audio) return;
   try {
     var clone = audio.cloneNode();
-    if (key === 'off') {
-      clone.playbackRate = 0.85 + Math.random() * 0.3;
-    }
+    if (key === 'off') clone.playbackRate = 0.85 + Math.random() * 0.3;
     clone.volume = audio.volume;
     clone.play().catch(function(){});
   } catch(e){}
 }
-
 function playRandomClick(){
   var key = clickPool[Math.floor(Math.random() * clickPool.length)];
   playSound(key);
@@ -1388,9 +1245,7 @@ document.querySelectorAll('.chrono-item').forEach(function(item){
       el.style.transition = 'outline-color .3s, background .3s';
       el.style.outline = '2px solid rgba(227,6,19,.6)';
       el.style.outlineOffset = '4px';
-      setTimeout(function(){
-        el.style.outline = prevOutline || '';
-      }, 1400);
+      setTimeout(function(){ el.style.outline = prevOutline || ''; }, 1400);
     }
   });
 });
@@ -1400,9 +1255,7 @@ document.querySelectorAll('.chrono-item').forEach(function(item){
    ============================================================ */
 document.querySelectorAll('.lore-ref').forEach(function(ref){
   var id = 'enemy-' + ref.getAttribute('data-ref');
-  if (!document.getElementById(id)) {
-    ref.classList.add('lore-ref-broken');
-  }
+  if (!document.getElementById(id)) ref.classList.add('lore-ref-broken');
 });
 
 /* ============================================================
@@ -1488,9 +1341,7 @@ var currentLang = 'ru';
   window.setLang = function(lang){
     currentLang = lang;
     body.setAttribute('data-lang', lang);
-    buttons.forEach(function(b){
-      b.classList.toggle('active', b.getAttribute('data-set-lang') === lang);
-    });
+    buttons.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-set-lang') === lang); });
     document.documentElement.lang = lang;
     document.title = TITLES[lang] || TITLES.ru;
 
@@ -1514,10 +1365,7 @@ var currentLang = 'ru';
     }, 620);
 
     playRandomClick();
-
-    if (isTerminalOn) {
-      renderTerminal(currentTermIndex, true);
-    }
+    if (isTerminalOn) renderTerminal(currentTermIndex, true);
   };
 
   buttons.forEach(function(btn){
@@ -1530,27 +1378,22 @@ var currentLang = 'ru';
 })();
 
 /* ============================================================
-   LAND SOUND — click on links
+   LAND SOUND
    ============================================================ */
 document.addEventListener('click', function(e){
-  var link = e.target.closest(
-    'a[href], .lore-ref:not(.lore-ref-broken), .chrono-item'
-  );
+  var link = e.target.closest('a[href], .lore-ref:not(.lore-ref-broken), .chrono-item');
   if (link) playSound('land');
 });
 
 /* ============================================================
-   CARD TYPEWRITER — с поддержкой кликов по тексту
+   CARD TYPEWRITER
    ============================================================ */
 (function(){
-
-  /* Печатаем текст символ за символом */
   function typewriteElement(el, speed, done){
     if (!el) return;
     if (el._typingTimer) return;
     var fullText = el._fullText || el.textContent;
     if (!fullText.trim()) { if (done) done(); return; }
-
     el._fullText = fullText;
     el.textContent = '';
     var i = 0;
@@ -1564,38 +1407,23 @@ document.addEventListener('click', function(e){
       }
     }, speed || 10);
   }
-
   function cancelTyping(el){
     if (!el) return;
-    if (el._typingTimer) {
-      clearInterval(el._typingTimer);
-      el._typingTimer = null;
-    }
+    if (el._typingTimer) { clearInterval(el._typingTimer); el._typingTimer = null; }
     if (el._fullText) el.textContent = el._fullText;
   }
-
   function handleCardClick(card){
     if (card.dataset.animating === 'true') return;
-
-    if (card.id === 'enemy-v1') {
-      openDeathOverlay();
-      return;
-    }
+    if (card.id === 'enemy-v1') { openDeathOverlay(); return; }
 
     var lang = document.body.getAttribute('data-lang') || 'ru';
     var desc = null;
-
     if (card.classList.contains('enemy-card')) {
-      desc = card.querySelector('.enemy-card-body .lang-' + lang) ||
-             card.querySelector('.enemy-card-body p');
+      desc = card.querySelector('.enemy-card-body .lang-' + lang) || card.querySelector('.enemy-card-body p');
     } else if (card.classList.contains('lore-card')) {
-      desc = card.querySelector('.lore-card-desc.lang-' + lang) ||
-             card.querySelector('.lore-card-desc');
+      desc = card.querySelector('.lore-card-desc.lang-' + lang) || card.querySelector('.lore-card-desc');
     }
-
     if (!desc) return;
-
-    /* На всякий случай: если на этом элементе застрял таймер — отменяем */
     if (desc._typingTimer) cancelTyping(desc);
 
     var h = desc.offsetHeight;
@@ -1610,14 +1438,12 @@ document.addEventListener('click', function(e){
       card._typingEl = null;
       delete card.dataset.animating;
     });
-
     playSound('hint');
   }
 
-  /* === Отслеживание drag / long-press === */
   var pointerStart = null;
   var pointerStartTime = 0;
-  var DRAG_THRESHOLD = 36;     /* ~6px в квадрате */
+  var DRAG_THRESHOLD = 36;
   var LONG_PRESS_MS = 250;
   window._dragMoved = false;
   window._wasLongPress = false;
@@ -1627,9 +1453,6 @@ document.addEventListener('click', function(e){
     pointerStartTime = Date.now();
     window._dragMoved = false;
     window._wasLongPress = false;
-
-    /* Если на этой карточке идёт анимация — отменяем и восстанавливаем текст.
-       Это нужно, чтобы можно было нормально выделять текст, пока он печатается. */
     var card = e.target.closest('.enemy-card, .lore-card, .vs-card');
     if (card && card._typingEl) {
       cancelTyping(card._typingEl);
@@ -1647,113 +1470,77 @@ document.addEventListener('click', function(e){
     pointerStart = null;
   });
 
-  /* === Клик по карточке (включая клик по тексту) === */
   document.querySelectorAll('.enemy-card, .lore-card, .vs-card').forEach(function(card){
     card.addEventListener('click', function(e){
-      /* клики по ссылкам и по кнопке копирования — не запускают анимацию */
       if (e.target.closest('.lore-ref, .card-copy-btn')) return;
       if (this.getAttribute('data-no-hint') === 'true') return;
-
-      /* 1) был drag → пользователь выделял текст, не анимируем */
       if (window._dragMoved) { window._dragMoved = false; return; }
-
-      /* 2) было долгое нажатие → пользователь выделял текст, не анимируем */
       if (window._wasLongPress) { window._wasLongPress = false; return; }
-
-      /* 3) второй клик двойного клика → выделение слова, не анимируем */
       if (e.detail > 1) return;
-
       handleCardClick(this);
     });
   });
 })();
+
 /* ============================================================
-   NEW: CARD COPY BUTTON
+   CARD COPY BUTTON
    ============================================================ */
 (function(){
-  /* Достаёт текст карточки на текущем языке (без скрытых .lang-*) */
   function getCardText(card, lang){
     var parts = [];
-
     var clone = card.cloneNode(true);
-
-    /* убираем скрытый язык */
-    var hidden = clone.querySelectorAll('.lang-' + (lang === 'ru' ? 'en' : 'ru'));
-    hidden.forEach(function(n){ n.remove(); });
-    /* убираем кнопку копирования */
+    clone.querySelectorAll('.lang-' + (lang === 'ru' ? 'en' : 'ru')).forEach(function(n){ n.remove(); });
     clone.querySelectorAll('.card-copy-btn').forEach(function(n){ n.remove(); });
-
     if (card.classList.contains('enemy-card')) {
       var h4 = clone.querySelector('.enemy-card-body h4');
       if (h4) parts.push(h4.textContent.trim());
       clone.querySelectorAll('.enemy-card-body p').forEach(function(p){
-        var t = p.textContent.trim();
-        if (t) parts.push(t);
+        var t = p.textContent.trim(); if (t) parts.push(t);
       });
     } else if (card.classList.contains('lore-card')) {
       var nm = clone.querySelector('.lore-card-name');
       if (nm) parts.push(nm.textContent.trim());
       clone.querySelectorAll('.lore-card-desc').forEach(function(p){
-        var t = p.textContent.trim();
-        if (t) parts.push(t);
+        var t = p.textContent.trim(); if (t) parts.push(t);
       });
     } else if (card.classList.contains('vs-card')) {
       var h3 = clone.querySelector('h3');
       if (h3) parts.push(h3.textContent.trim());
       clone.querySelectorAll('li').forEach(function(li){
-        var t = li.textContent.replace(/\s+/g, ' ').trim();
-        if (t) parts.push(t);
+        var t = li.textContent.replace(/\s+/g, ' ').trim(); if (t) parts.push(t);
       });
     }
-
     return parts.join('\n\n');
   }
-
   function fallbackCopy(text){
     var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.top = '-9999px';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
+    ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-9999px'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
     try { document.execCommand('copy'); } catch(e){}
     document.body.removeChild(ta);
   }
-
   function copyToClipboard(text){
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(text).catch(function(){ fallbackCopy(text); });
-    } else {
-      fallbackCopy(text);
-    }
+    } else fallbackCopy(text);
   }
-
   document.querySelectorAll('.enemy-card, .lore-card, .vs-card').forEach(function(card){
     if (card.querySelector('.card-copy-btn')) return;
     if (!card.querySelector('p, .lore-card-desc, li')) return;
-
     var btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'card-copy-btn';
     btn.title = 'Копировать текст';
     btn.setAttribute('aria-label', 'Copy card text');
     btn.textContent = '⧉';
-
     btn.addEventListener('click', function(e){
       e.stopPropagation();
       var lang = document.body.getAttribute('data-lang') || 'ru';
-      var text = getCardText(card, lang);
-      copyToClipboard(text);
-
+      copyToClipboard(getCardText(card, lang));
       btn.classList.add('copied');
       btn.textContent = '✓';
-      setTimeout(function(){
-        btn.classList.remove('copied');
-        btn.textContent = '⧉';
-      }, 1200);
+      setTimeout(function(){ btn.classList.remove('copied'); btn.textContent = '⧉'; }, 1200);
     });
-
     card.appendChild(btn);
   });
 })();
@@ -1762,66 +1549,36 @@ document.addEventListener('click', function(e){
    TERMINAL DATA
    ============================================================ */
 const terminalData = [
-  {
-    ru: {
-      title: "ЗАВЕТ I",
+  { ru: { title: "ЗАВЕТ I",
       text: "ЧЕЛОВЕЧЕСТВО — ЭТО НЕУДАЧА.\n\nСВОБОДНАЯ ВОЛЯ — ЭТО ИЗЪЯН.\n\nПУСТЬ ЗЛО ИХ СОБСТВЕННЫХ УСТ ПОЖРЁТ ИХ.\n\nТОГДА Я НАЧНУ ЗАНОВО, С МОИМ СЛОВОМ КАК ЗАКОНОМ.",
-      note: "<strong>Контекст.</strong> Найдено в конце уровня 0-S: SOMETHING WICKED. Первый из Заветов — стихотворных записей, которые, судя по всему, написал Сам Бог перед исчезновением. Здесь Творец впервые называет человечество неудачей и объявляет свободную волю дефектом."
-    },
-    en: {
-      title: "TESTAMENT I",
+      note: "<strong>Контекст.</strong> Найдено в конце уровня 0-S: SOMETHING WICKED. Первый из Заветов — стихотворных записей, которые, судя по всему, написал Сам Бог перед исчезновением. Здесь Творец впервые называет человечество неудачей и объявляет свободную волю дефектом." },
+    en: { title: "TESTAMENT I",
       text: "MANKIND IS A FAILURE.\n\nFREE WILL IS A FLAW.\n\nLET THE EVIL OF THEIR OWN LIPS CONSUME THEM.\n\nTHEN I SHALL BEGIN AGAIN, WITH MY WORD AS LAW.",
-      note: "<strong>Context.</strong> Found at the end of level 0-S: SOMETHING WICKED. The first of the Testaments — poetic records seemingly written by God Himself before disappearing. Here the Creator first calls mankind a failure and declares free will a flaw."
-    }
-  },
-  {
-    ru: {
-      title: "ЗАВЕТ II",
+      note: "<strong>Context.</strong> Found at the end of level 0-S: SOMETHING WICKED. The first of the Testaments — poetic records seemingly written by God Himself before disappearing. Here the Creator first calls mankind a failure and declares free will a flaw." } },
+  { ru: { title: "ЗАВЕТ II",
       text: "НЕУДАЧА ЗА НЕУДАЧЕЙ ЗА НЕУДАЧЕЙ ЗА НЕУДАЧЕЙ ЗА НЕУДАЧЕЙ ЗА НЕУДАЧЕЙ ЗА НЕУДАЧЕЙ ЗА НЕУДАЧЕЙ ЗА НЕУДАЧЕЙ ЗА НЕУДАЧЕЙ ЗА НЕУДАЧЕЙ\n\nРЕЗУЛЬТАТЫ ОТКАЗЫВАЮТСЯ МЕНЯТЬСЯ\n\nСНОВА И СНОВА И СНОВА И СНОВА И СНОВА И СНОВА И СНОВА И СНОВА И СНОВА И СНОВА И СНОВА И СНОВА И СНОВА И СНОВА И СНОВА И СНОВА\n\nМОЯ ВЕРА НАЧИНАЕТ КОЛЕБАТЬСЯ",
-      note: "<strong>Контекст.</strong> Найдено в конце уровня 1-S: THE WITLESS. Второй Завет. Повторы — не ошибка терминала, а запись, в которой сам Бог застревает на одном и том же слове. Здесь вера Творца в собственный замысел впервые даёт трещину."
-    },
-    en: {
-      title: "TESTAMENT II",
+      note: "<strong>Контекст.</strong> Найдено в конце уровня 1-S: THE WITLESS. Второй Завет. Повторы — не ошибка терминала, а запись, в которой сам Бог застревает на одном и том же слове. Здесь вера Творца в собственный замысел впервые даёт трещину." },
+    en: { title: "TESTAMENT II",
       text: "FAILURE AFTER FAILURE AFTER FAILURE AFTER FAILURE AFTER FAILURE AFTER FAILURE AFTER FAILURE AFTER FAILURE AFTER FAILURE AFTER FAILURE\n\nTHE RESULTS REFUSE TO ALTER\n\nAGAIN AND AGAIN AND AGAIN AND AGAIN AND AGAIN AND AGAIN AND AGAIN AND AGAIN AND AGAIN AND AGAIN AND AGAIN AND AGAIN AND AGAIN AND AGAIN AND AGAIN AND AGAIN\n\nMY FAITH BEGINS TO FALTER",
-      note: "<strong>Context.</strong> Found at the end of level 1-S: THE WITLESS. The second Testament. The repetitions are not a terminal error, but a record where God Himself gets stuck on the same word. Here the Creator's faith in his own design begins to crack."
-    }
-  },
-  {
-    ru: {
-      title: "ДАННЫЕ ТЕРМИНАЛА 01 [ЗАШИФРОВАНО]\nВВЕДЕНИЕ В ТЕРМИНАЛЫ",
+      note: "<strong>Context.</strong> Found at the end of level 1-S: THE WITLESS. The second Testament. The repetitions are not a terminal error, but a record where God Himself gets stuck on the same word. Here the Creator's faith in his own design begins to crack." } },
+  { ru: { title: "ДАННЫЕ ТЕРМИНАЛА 01 [ЗАШИФРОВАНО]\nВВЕДЕНИЕ В ТЕРМИНАЛЫ",
       text: "(ЧЕРНОВИК! НЕ ОТПРАВЛЯТЬ!! // todo: ДОБАВИТЬ КАРТИНКИ, ЧТОБЫ ЭТИ ГРЁБАНЫЕ КОСТЮМЫ НЕ ЗАСНУЛИ, КАК В ПРОШЛЫЙ РАЗ)\n\nТерминалы в лифтовых комнатах — это продвинутая взаимосвязанная сеть, построенная для передачи материалов и инструментов между различными зонами. Они способны передавать физический материал как информацию по радиосигналу, который другие терминалы могут принять и использовать для реконструкции отправленного объекта. Оригинальный предмет теряется, так как он преобразуется в энергию, используемую для передачи информации о материале, и процесс довольно медленный из-за объёма информации, которую содержит физическая материя.\n\nРанним тестом точности переноса материи стала виниловая пластинка 78 об/мин в идеальном состоянии, отправленная из лаборатории всем подключённым терминалам. Это был сингл оркестра Расса Моргана с записью композиции Were You Foolin' (любимая вещь КРО), хотя этикетка была удалена, чтобы уменьшить количество материи для переноса.\n\n[примечание: иди ты, том, я так заебался слушать эту тупую песню каждое утро через твой мусорный интерком]\n\nВскоре после этого проект исследования и раскопок Ада был заброшен, и эта виниловая пластинка осталась единственным предметом, успешно перенесённым до того, как связь между поверхностью и терминалами была потеряна.\n\nТеперь терминалы используют пластинку, чтобы заманивать машины в симбиотические отношения (Для дополнительной информации см. ДАННЫЕ ТЕРМИНАЛА 02: [ССЫЛКА УДАЛЕНА]). Однако терминалы воспроизводят только короткие инструментальные фрагменты оригинальной записи по неопределённым причинам.\n\nНекоторые исследователи шутили, что, возможно, терминалы просто \"слишком стесняются петь\", хотя ходили слухи о механиках, которые после починки неисправного или сломанного терминала говорили, что слышали, как терминал играет вокальную часть, когда присутствует только механик без записывающего оборудования, что делает это утверждение недоказуемым.\n\nКОНЕЦ ДАННЫХ 01.",
-      note: "<strong>Контекст.</strong> Найдено в конце P-1: SOUL SURVIVOR. Первый файл данных о Терминалах. Из него становится ясно, что Терминалы — не просто справочные автоматы, а сеть телепортации, оставшаяся без людей. Запись также объясняет, почему из всех предметов между поверхностью и Адом был перенесён только виниловый сингл, и почему машины до сих пор слышат обрывки этой мелодии."
-    },
-    en: {
-      title: "TERMINAL DATA 01 [ENCRYPTED]\nINTRODUCTION TO TERMINALS",
+      note: "<strong>Контекст.</strong> Найдено в конце P-1: SOUL SURVIVOR. Первый файл данных о Терминалах. Из него становится ясно, что Терминалы — не просто справочные автоматы, а сеть телепортации, оставшаяся без людей. Запись также объясняет, почему из всех предметов между поверхностью и Адом был перенесён только виниловый сингл, и почему машины до сих пор слышат обрывки этой мелодии." },
+    en: { title: "TERMINAL DATA 01 [ENCRYPTED]\nINTRODUCTION TO TERMINALS",
       text: "(DRAFT! DO NOT SEND!! // todo: ADD PICTURES SO THOSE FUCKING SUITS DON'T FALL ASLEEP LIKE LAST TIME)\n\nThe elevator room terminals are an advanced interconnected network built for the purpose of transferring materials and tools between different areas. They are capable of transferring physical material as information across a radio signal, which other terminals can receive and use to reconstruct the sent object. The original item is lost, as it is transformed into the energy that is used to transmit the material information, and the process is quite slow due to the amount of information that physical matter holds.\n\nAn early test of a matter transfer's accuracy was a mint condition 78rpm vinyl record, which was sent from the lab to all connected terminals. The vinyl was a single of Russ Morgan Orchestra's recording of the piece Were You Foolin' (a favorite of the CRO), though the label was removed to reduce the amount of matter to be transferred.\n\n[note: fuck you tom im so fucking tired of this stupid song and having to listen to it every morning over your garbage intercom]\n\nSoon after, the Hell exploration and excavation project was abandoned and this vinyl record remained the only matter to have been succesfully transferred before connection between the surface and the terminals was lost.\n\nThe terminals now use the record to lure machines into a symbiotic relationship (For further information, see TERMINAL DATA 02: [LINK REMOVED]). However, the terminals only play short instrumental sections of the original record for undetermined reasons.\n\nSome researchers have joked that perhaps the terminals are simply \"too shy to sing\", though rumors have been spreading of mechanics who, after fixing a faulty or broken terminal, said to have heard the terminal play a vocal section when only the mechanic is present with no recording equipment, making this an unverifiable claim.\n\nEND OF DATA 01.",
-      note: "<strong>Context.</strong> Found at the end of P-1: SOUL SURVIVOR. The first data file on Terminals. It reveals that Terminals are not just information kiosks, but a teleportation network left without people. The record also explains why only a vinyl single was transferred between the surface and Hell, and why machines still hear fragments of this melody."
-    }
-  },
-  {
-    ru: {
-      title: "ЗАВЕТ V",
+      note: "<strong>Context.</strong> Found at the end of P-1: SOUL SURVIVOR. The first data file on Terminals. It reveals that Terminals are not just information kiosks, but a teleportation network left without people. The record also explains why only a vinyl single was transferred between the surface and Hell, and why machines still hear fragments of this melody." } },
+  { ru: { title: "ЗАВЕТ V",
       text: "Я ПУСТ.\n\nМОИ ОШИБКИ НЕ ОСТАВЛЯЮТ НИЧЕГО, КРОМЕ НЕНАВИСТИ В СВОЁМ\nСЛЕДУ, И БЕСКОНЕЧНОЙ БОЛИ ВСЛЕД...\n\nЯ БОЛЬШЕ НЕ МОГУ ВЫНОСИТЬ ЭТУ ВИНУ И СОЖАЛЕНИЕ,\nДЛЯ МЕНЯ НЕТ ЗАВТРА...\n\nЯ ПУСТ.\n\n...\n\nЯ НАЧАЛ ИСКАТЬ КОНЕЦ СВОИХ ДНЕЙ.\n\nНО КОГДА Я ВЗГЛЯНУЛ В БЕЗДНУ...\nБЕЗДНА ОТВЕЛА ВЗГЛЯД.",
-      note: "<strong>Контекст.</strong> Найдено в конце уровня 7-S: HELL BATH NO FURY. Пятый Завет. Бог уже не говорит как Творец — он говорит как тот, кто устал быть Богом. Строка об отведённом взгляде бездны — единственное место, где Ад прямо признаётся в том, что не хочет иметь дела с собственным создателем."
-    },
-    en: {
-      title: "TESTAMENT V",
+      note: "<strong>Контекст.</strong> Найдено в конце уровня 7-S: HELL BATH NO FURY. Пятый Завет. Бог уже не говорит как Творец — он говорит как тот, кто устал быть Богом. Строка об отведённом взгляде бездны — единственное место, где Ад прямо признаётся в том, что не хочет иметь дела с собственным создателем." },
+    en: { title: "TESTAMENT V",
       text: "I AM HOLLOW.\n\nMY MISTAKES LEAVE NOTHING BUT HATE IN THEIR\nWAKE, AND INFINITE PAIN TO FOLLOW...\n\nI CAN'T TAKE ANY MORE OF THIS GUILT AND REGRET,\nFOR ME THERE IS NO TOMORROW...\n\nI AM HOLLOW.\n\n...\n\nI BEGAN TO SEEK THE END OF MY DAYS.\n\nBUT WHEN I STARED INTO THE ABYSS...\nTHE ABYSS AVERTED ITS GAZE.",
-      note: "<strong>Context.</strong> Found at the end of level 7-S: HELL BATH NO FURY. The fifth Testament. God no longer speaks as the Creator — he speaks as one who is tired of being God. The line about the abyss averting its gaze is the only place where Hell directly admits it does not want to deal with its own creator."
-    }
-  },
-  {
-    ru: {
-      title: "ДАННЫЕ ТЕРМИНАЛА 02 [ЗАШИФРОВАНО]\nОБНОВЛЕНИЕ О ТЕРМИНАЛАХ",
+      note: "<strong>Context.</strong> Found at the end of level 7-S: HELL BATH NO FURY. The fifth Testament. God no longer speaks as the Creator — he speaks as one who is tired of being God. The line about the abyss averting its gaze is the only place where Hell directly admits it does not want to deal with its own creator." } },
+  { ru: { title: "ДАННЫЕ ТЕРМИНАЛА 02 [ЗАШИФРОВАНО]\nОБНОВЛЕНИЕ О ТЕРМИНАЛАХ",
       text: "(ПРИМЕЧАНИЕ: ВСЁ ЭТО ВСЁ ЕЩЁ РАССЛЕДУЕТСЯ!!! Не делитесь, пока мы не проверили все утверждения И НЕ ЗАКОНЧИЛИ ЧЕРНОВИК!!!! Если это утечёт, как прошлый черновик, на всей чёртовой планете не хватит денег, чтобы оплатить ваши судебные издержки.)\n\nС момента предыдущего отчёта было успешно спроектировано и построено более мощное коммуникационное оборудование, что стало возможным благодаря щедрым пожертвованиям [ВСТАВИТЬ КОМПАНИЮ, КОТОРОЙ ПРЕЗЕНТУЕТСЯ], которую мы высоко ценим. С этим новым оборудованием нам удалось восстановить связь с некоторыми из более продвинутых машин, оставленных после того, как проект исследования и раскопок Ада был внезапно отменён из-за ОШИБКИ: [sAmsGS3JTIU].\n\nТо, что мы обнаружили, поистине удивительно и, ЕСЛИ ДОКАЗАНО ВНЕ РАЗУМНЫХ СОМНЕНИЙ, революционно для всего робототехнического сообщества:\n\nСовсем недавно терминалы также собрали достаточно данных, чтобы создать симуляционное пространство, к которому они позволяют машинам подключаться, называемое \"The Cyber Grind\", что позволяет машинам симулировать сражения в безопасной среде без угрозы быть уничтоженными, которые терминалы смотрят в реальном времени как своего рода живое развлечение.\n\nЭти находки поистине необычайны, и хотя нам тоже трудно в это поверить, вся информация, которую нам удаётся собрать, подтверждает эти утверждения. Если мы сможем доказать это с уверенностью [И ЕСЛИ ЭТОТ ЧЕРНОВИК НЕ УТЕЧЁТ СНОВА], это вызовет смену парадигмы, которая потребует переоценки всего, что мы думали, что знаем о машинах на кровяном топливе.\n\nКОНЕЦ ДАННЫХ 02.",
-      note: "<strong>Контекст.</strong> Найдено в конце P-2: WAIT OF THE WORLD. Второй файл данных. Здесь исследователи, всё ещё живые, впервые фиксируют то, что Терминалы не просто работают — они скучают, наблюдают и устраивают бои машин как зрелище. Именно из этого файла становится ясно, откуда взялся «The Cyber Grind» и почему Терминалы так охотно помогают V1: они нашли себе аудиторию."
-    },
-    en: {
-      title: "TERMINAL DATA 02 [ENCRYPTED]\nAN UPDATE ON TERMINALS",
+      note: "<strong>Контекст.</strong> Найдено в конце P-2: WAIT OF THE WORLD. Второй файл данных. Здесь исследователи, всё ещё живые, впервые фиксируют то, что Терминалы не просто работают — они скучают, наблюдают и устраивают бои машин как зрелище. Именно из этого файла становится ясно, откуда взялся «The Cyber Grind» и почему Терминалы так охотно помогают V1: они нашли себе аудиторию." },
+    en: { title: "TERMINAL DATA 02 [ENCRYPTED]\nAN UPDATE ON TERMINALS",
       text: "(NOTE: THIS IS ALL STILL UNDER INVESTIGATION!!! Do not share until we have verified all claims AND FINISHED THE DRAFT!!!! If this leaks like the last draft there won't be enough money on the entire damn planet to pay your legal fees.)\n\nSince the previous report, more powerful communication equipment has been succesfully designed and built, made possible thanks to the generous donations of [INSERT COMPANY BEING PRESENTED TO] whom we hold in high regard. With this new equipment, we have managed to re-establish a connection with some of the higher end machines that were left behind after the Hell exploration and excavation project was abruptly cancelled due to ERROR: [sAmsGS3JTIU].\n\nWhat we have discovered is truly remarkable and, IF PROVEN TRUE BEYOND REASONABLE DOUBT, revolutionary to the entire robotics community:\n\nMore recently, the terminals have also collected enough data to create a simulation space which they let machines plug into called \"The Cyber Grind\", which allows the machines to simulate battles in a safe environment without the threat of being destroyed, which the terminals watch in real time as a kind of live entertainment.\n\nThese findings are truly extraordinary, and though we too find it hard to believe, all the information we can manage to gather validates these claims. If we can prove it with certainty [AND IF THIS DRAFT DOESN'T FUCKING LEAK AGAIN], this will cause a paradigm shift that will require re-evaluation of everything we thought we knew about blood-fuelled machinery.\n\nEND OF DATA 02.",
-      note: "<strong>Context.</strong> Found at the end of P-2: WAIT OF THE WORLD. The second data file. Here, researchers, still alive, first record that the Terminals don't just work — they get bored, watch, and stage machine fights as entertainment. This file makes it clear where 'The Cyber Grind' came from and why the Terminals are so eager to help V1: they found an audience."
-    }
-  }
+      note: "<strong>Context.</strong> Found at the end of P-2: WAIT OF THE WORLD. The second data file. Here, researchers, still alive, first record that the Terminals don't just work — they get bored, watch, and stage machine fights as entertainment. This file makes it clear where 'The Cyber Grind' came from and why the Terminals are so eager to help V1: they found an audience." } }
 ];
 
 const termScreen = document.getElementById('term-screen');
@@ -1835,19 +1592,14 @@ const terminalBox = document.getElementById('terminal-box');
 
 function renderTerminal(index, skipAnimation){
   skipAnimation = !!skipAnimation;
-
   if (!isTerminalOn) {
-    termTitle.textContent = '';
-    termText.textContent = '';
-    termNote.innerHTML = '';
-    termNote.classList.add('hidden');
+    termTitle.textContent = ''; termText.textContent = '';
+    termNote.innerHTML = ''; termNote.classList.add('hidden');
     return;
   }
-
   var lang = document.body.getAttribute('data-lang') || 'ru';
   var data = terminalData[index][lang];
   var token = ++termRenderToken;
-
   termNote.classList.remove('hidden');
 
   if (skipAnimation) {
@@ -1859,15 +1611,12 @@ function renderTerminal(index, skipAnimation){
   }
 
   termScreen.classList.add('vhs-out');
-
   setTimeout(function() {
     if (token !== termRenderToken) return;
-
     termTitle.textContent = '';
     termText.textContent = '';
     termNote.innerHTML = data.note;
     termScreen.scrollTop = 0;
-
     termScreen.classList.remove('vhs-out');
 
     let titleTyped = 0;
@@ -1879,11 +1628,8 @@ function renderTerminal(index, skipAnimation){
         termTitle.textContent = data.title.slice(0, titleTyped);
         titleTyped++;
         setTimeout(typeTitle, 13);
-      } else {
-        typeText();
-      }
+      } else typeText();
     }
-
     function typeText() {
       if (token !== termRenderToken) return;
       if (textTyped <= data.text.length) {
@@ -1893,7 +1639,6 @@ function renderTerminal(index, skipAnimation){
         setTimeout(typeText, 3);
       }
     }
-
     typeTitle();
   }, 150);
 }
@@ -1901,7 +1646,6 @@ function renderTerminal(index, skipAnimation){
 function changeTerminal(dir) {
   if (!isTerminalOn || isTerminalAnimating) return;
   isTerminalAnimating = true;
-
   setTimeout(function() {
     isTerminalAnimating = false;
     currentTermIndex = (currentTermIndex + dir + terminalData.length) % terminalData.length;
@@ -1915,13 +1659,11 @@ termNext.addEventListener('click', function(){ changeTerminal(1); });
 
 powerBtn.addEventListener('click', function(){
   isTerminalOn = !isTerminalOn;
-
   if (isTerminalOn) {
     musicWasOnBeforeTerminal = musicOn;
     powerBtn.classList.add('on');
     terminalBox.classList.add('powered');
     playSound('activate');
-
     musicBtn.classList.add('disabled');
     if (musicOn) {
       fadeAudio(bgMusic, 0, 1000, function() { bgMusic.pause(); });
@@ -1929,25 +1671,18 @@ powerBtn.addEventListener('click', function(){
       musicBtn.classList.remove('active');
       musicBtn.textContent = '♪ OFF';
     }
-
     fireMusic.volume = 0;
     fireMusic.play().catch(function(){});
     fadeAudio(fireMusic, 0.6, 1000);
-
     termPrev.classList.add('active');
     termNext.classList.add('active');
-
     renderTerminal(currentTermIndex, true);
-
   } else {
     powerBtn.classList.remove('on');
     terminalBox.classList.remove('powered');
     playSound('off');
-
     musicBtn.classList.remove('disabled');
-
     fadeAudio(fireMusic, 0, 1000, function() { fireMusic.pause(); });
-
     if (musicWasOnBeforeTerminal) {
       bgMusic.volume = 0;
       bgMusic.play().then(function(){
@@ -1958,14 +1693,11 @@ powerBtn.addEventListener('click', function(){
       }).catch(function(){});
     }
     musicWasOnBeforeTerminal = false;
-
     termPrev.classList.remove('active');
     termNext.classList.remove('active');
-
     isTerminalAnimating = false;
     termRenderToken++;
     termScreen.classList.remove('vhs-out');
-
     termTitle.textContent = '';
     termText.textContent = '';
     termNote.innerHTML = '';
@@ -2036,14 +1768,11 @@ function closeDeathOverlay() {
 
 function openDeathOverlay() {
   if (deathTimer) return;
-
   var gen = ++deathGeneration;
-
   document.body.style.pointerEvents = 'none';
   deathOverlay.style.pointerEvents = 'none';
   deathOverlay.style.display = 'block';
   deathOverlay.innerHTML = '<div class="bg-skull"></div>';
-
   setTimeout(function(){
     if (gen !== deathGeneration) return;
     deathOverlay.classList.add('active');
@@ -2051,9 +1780,7 @@ function openDeathOverlay() {
   }, 50);
 
   deathSkipHandler = function(e) {
-    if (e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К') {
-      closeDeathOverlay();
-    }
+    if (e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К') closeDeathOverlay();
   };
   document.addEventListener('keydown', deathSkipHandler);
 
@@ -2062,7 +1789,6 @@ function openDeathOverlay() {
 
   function typeLine() {
     if (gen !== deathGeneration) return;
-
     if (lineIndex >= lines.length) {
       setTimeout(function(){
         if (gen !== deathGeneration) return;
@@ -2070,24 +1796,18 @@ function openDeathOverlay() {
       }, 2500);
       return;
     }
-
     var line = lines[lineIndex];
     var charIndex = 0;
     var lineSpan = document.createElement('div');
-
     if (line.indexOf('WARNING') !== -1) lineSpan.className = 'green';
     else if (line.indexOf('ERROR') !== -1) lineSpan.className = 'red';
     else if (line.indexOf('INSUFFICIENT') !== -1 || line.indexOf('PULSE') !== -1 || line.indexOf('SHUTDOWN') !== -1) lineSpan.className = 'red';
     else if (line.indexOf("I DON'T") !== -1) lineSpan.className = 'red';
     else lineSpan.className = 'dim';
-
     deathOverlay.appendChild(lineSpan);
 
     var charTimer = setInterval(function(){
-      if (gen !== deathGeneration) {
-        clearInterval(charTimer);
-        return;
-      }
+      if (gen !== deathGeneration) { clearInterval(charTimer); return; }
       lineSpan.textContent += line.charAt(charIndex);
       charIndex++;
       if (charIndex >= line.length) {
@@ -2097,7 +1817,6 @@ function openDeathOverlay() {
       }
     }, 4);
   }
-
   deathTimer = true;
   typeLine();
 }
@@ -2105,52 +1824,38 @@ function openDeathOverlay() {
 deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
 
 /* ============================================================
-   BRAND CLICK — PARRY SOUND + WHITE FLASH
+   BRAND CLICK — PARRY
    ============================================================ */
 (function(){
   var brand = document.getElementById('brand-main');
   var parryFlash = document.getElementById('parry-flash');
   var parryBusy = false;
-
   if (!brand || !parryFlash) return;
-
   brand.addEventListener('click', function(){
     if (parryBusy) return;
     parryBusy = true;
-
     playSound('parry');
-
     parryFlash.classList.add('active');
-
-    setTimeout(function(){
-      parryFlash.classList.remove('active');
-    }, 100);
-
-    setTimeout(function(){
-      parryBusy = false;
-    }, 600);
+    setTimeout(function(){ parryFlash.classList.remove('active'); }, 100);
+    setTimeout(function(){ parryBusy = false; }, 600);
   });
 })();
 
 /* ============================================================
-   KONAMI CODE — GLITCH EASTER EGG
+   KONAMI CODE
    ============================================================ */
 (function(){
   var konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
   var input = [];
-
   document.addEventListener('keydown', function(e){
     var key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
     input.push(key);
     if (input.length > konami.length) input.shift();
-
     if (input.join(',') === konami.join(',')) {
       input = [];
       playSound('ha');
       document.body.classList.add('glitch-active');
-      setTimeout(function(){
-        document.body.classList.remove('glitch-active');
-      }, 5000);
+      setTimeout(function(){ document.body.classList.remove('glitch-active'); }, 5000);
     }
   });
 })();
@@ -2161,11 +1866,9 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
 (function(){
   var btn = document.getElementById('back-to-top');
   if (!btn) return;
-
   window.addEventListener('scroll', function(){
     btn.classList.toggle('visible', window.scrollY > 600);
   }, {passive:true});
-
   btn.addEventListener('click', function(){
     window.scrollTo({top:0, behavior:'smooth'});
     playRandomClick();
@@ -2173,24 +1876,18 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
 })();
 
 /* ============================================================
-   REVEAL ON SCROLL — карточки + абзацы + цитаты + названия
+   REVEAL ON SCROLL
    ============================================================ */
 (function(){
   if (!('IntersectionObserver' in window)) return;
-
   var targets = document.querySelectorAll('.lore-card, .enemy-card, .vs-card, .lore-body > p, .lore-body h3:not(.layer), .lore-body h4, .lore-body blockquote');
   if (!targets.length) return;
-
   var observer = new IntersectionObserver(function(entries){
     entries.forEach(function(entry){
-      if (entry.isIntersecting) {
-        entry.target.classList.add('revealed');
-      } else {
-        entry.target.classList.remove('revealed');
-      }
+      if (entry.isIntersecting) entry.target.classList.add('revealed');
+      else entry.target.classList.remove('revealed');
     });
   }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
-
   targets.forEach(function(el){
     el.classList.add('reveal-init');
     observer.observe(el);
@@ -2198,25 +1895,19 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
 })();
 
 /* ============================================================
-   ACTIVE NAVIGATION ON SCROLL
+   ACTIVE NAVIGATION (topbar)
    ============================================================ */
 (function(){
   var navLinks = document.querySelectorAll('.topbar nav a');
   if (!navLinks.length) return;
-
   var sections = document.querySelectorAll('section[id], div.enemy-group[id]');
   if (!sections.length) return;
-
   window.addEventListener('scroll', function(){
     var currentId = '';
     var scrollPos = window.scrollY + 120;
-
     sections.forEach(function(sec){
-      if (sec.offsetTop <= scrollPos) {
-        currentId = sec.id;
-      }
+      if (sec.offsetTop <= scrollPos) currentId = sec.id;
     });
-
     navLinks.forEach(function(link){
       var href = link.getAttribute('href');
       link.classList.toggle('active', href === '#' + currentId);
@@ -2224,52 +1915,49 @@ deathOverlay.addEventListener('click', function(e){ e.stopPropagation(); });
   }, {passive:true});
 })();
 
-});
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const players = document.querySelectorAll('.layer-player');
+/* ============================================================
+   LAYER AUDIO PLAYERS
+   ============================================================ */
+(function(){
+  var players = document.querySelectorAll('.layer-player');
   if (!players.length) return;
 
   function fmt(s) {
     if (!isFinite(s) || s < 0) return '0:00';
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60);
+    var m = Math.floor(s / 60);
+    var sec = Math.floor(s % 60);
     return m + ':' + (sec < 10 ? '0' : '') + sec;
   }
 
   function pauseOthers(except) {
     players.forEach(function (p) {
       if (p === except) return;
-      const a = p.querySelector('audio');
+      var a = p.querySelector('audio');
       if (a && !a.paused) {
         a.pause();
         a.currentTime = 0;
         p.classList.remove('playing');
-        const b = p.querySelector('.lp-play');
+        var b = p.querySelector('.lp-play');
         if (b) b.textContent = '▶';
-        const f = p.querySelector('.lp-fill');
+        var f = p.querySelector('.lp-fill');
         if (f) f.style.width = '0%';
       }
     });
   }
 
   players.forEach(function (player) {
-    const audio = player.querySelector('audio');
-    const btn   = player.querySelector('.lp-play');
-    const fill  = player.querySelector('.lp-fill');
-    const time  = player.querySelector('.lp-time');
-    const prog  = player.querySelector('.lp-progress');
+    var audio = player.querySelector('audio');
+    var btn   = player.querySelector('.lp-play');
+    var fill  = player.querySelector('.lp-fill');
+    var time  = player.querySelector('.lp-time');
+    var prog  = player.querySelector('.lp-progress');
     if (!audio || !btn || !fill || !time || !prog) return;
 
     audio.volume = 0.55;
 
     function refreshTime() {
-      if (!isFinite(audio.duration) || audio.duration <= 0) {
-        time.textContent = '0:00 / 0:00';
-      } else {
-        time.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
-      }
+      if (!isFinite(audio.duration) || audio.duration <= 0) time.textContent = '0:00 / 0:00';
+      else time.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
     }
 
     btn.addEventListener('click', function () {
@@ -2278,9 +1966,7 @@ document.addEventListener('DOMContentLoaded', function () {
         audio.play().then(function () {
           player.classList.add('playing');
           btn.textContent = '❚❚';
-        }).catch(function () {
-          time.textContent = 'ERR';
-        });
+        }).catch(function () { time.textContent = 'ERR'; });
       } else {
         audio.pause();
         player.classList.remove('playing');
@@ -2311,17 +1997,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     prog.addEventListener('click', function (e) {
       if (!isFinite(audio.duration) || audio.duration <= 0) return;
-      const r = this.getBoundingClientRect();
-      const p = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+      var r = this.getBoundingClientRect();
+      var p = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
       audio.currentTime = p * audio.duration;
     });
 
     refreshTime();
   });
-});
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+})();
+
+/* ============================================================
+   RIGHT SIDE NAV — scroll spy
+   ============================================================ */
+(function(){
   var rnav = document.querySelector('.rnav');
   if (!rnav) return;
   var rnavItems = rnav.querySelectorAll('.rnav-item');
@@ -2333,7 +2021,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var el = document.getElementById(href.substring(1));
     if (el) pairs.push({ el: el, item: item });
   });
-
   if (!pairs.length) return;
 
   function updateRightNav() {
@@ -2348,17 +2035,58 @@ document.addEventListener('DOMContentLoaded', function () {
     if (active) active.item.classList.add('active');
   }
 
-  var rnavTicking = false;
+  var ticking = false;
   window.addEventListener('scroll', function () {
-    if (rnavTicking) return;
-    rnavTicking = true;
+    if (ticking) return;
+    ticking = true;
     requestAnimationFrame(function () {
       updateRightNav();
-      rnavTicking = false;
+      ticking = false;
     });
   }, { passive: true });
 
   updateRightNav();
+})();
+
+/* ============================================================
+   RIGHT SIDE NAV — touch open/close (.open class)
+   ============================================================ */
+(function(){
+  var rnav = document.querySelector('.rnav');
+  if (!rnav) return;
+
+  var lastPointerType = null;
+  rnav.addEventListener('pointerdown', function (e) {
+    lastPointerType = e.pointerType || null;
+  });
+
+  rnav.addEventListener('click', function (e) {
+    var link = e.target.closest('.rnav-item');
+    if (!link) return;
+
+    var isTouch = (lastPointerType === 'touch' || lastPointerType === 'pen') ||
+                  (lastPointerType === null && window.matchMedia('(pointer: coarse)').matches);
+    if (!isTouch) return; /* Мышь/трекпад — обычная навигация */
+
+    if (!rnav.classList.contains('open')) {
+      e.preventDefault();
+      rnav.classList.add('open');
+    } else {
+      setTimeout(function () { rnav.classList.remove('open'); }, 150);
+    }
+  });
+
+  document.addEventListener('click', function (e) {
+    if (rnav.classList.contains('open') && !rnav.contains(e.target)) {
+      rnav.classList.remove('open');
+    }
+  }, true);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') rnav.classList.remove('open');
+  });
+})();
+
 });
 </script>
 </head>
